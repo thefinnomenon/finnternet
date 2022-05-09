@@ -6,7 +6,7 @@ export default siteConfig({
 
   // if you want to restrict pages to a single notion workspace (optional)
   // (this should be a Notion ID; see the docs for how to extract this)
-  rootNotionSpaceId: 'fde5ac74eea345278f004482710e1af3',
+  rootNotionSpaceId: '1dea0269-80a9-443d-9dac-67dc9d567558',
 
   // basic site info (required)
   name: 'Finnternet',
@@ -23,8 +23,8 @@ export default siteConfig({
 
   // default notion icon and cover images for site-wide consistency (optional)
   // page-specific values will override these site-wide defaults
-  defaultPageIcon: 'https://transitivebullsh.it/page-icon.png',
-  defaultPageCover: 'https://transitivebullsh.it/page-cover.jpg',
+  defaultPageIcon: 'https://finnternet.com/page-icon.png',
+  defaultPageCover: 'https://finnternet.com/page-cover.jpg',
   defaultPageCoverPosition: 0.5,
 
   // whether or not to enable support for LQIP preview images (optional)
@@ -33,7 +33,7 @@ export default siteConfig({
   // whether or not redis is enabled for caching generated preview images (optional)
   // NOTE: if you enable redis, you need to set the `REDIS_HOST` and `REDIS_PASSWORD`
   // environment variables. see the readme for more info
-  isRedisEnabled: true,
+  isRedisEnabled: false,
 
   // map of notion page IDs to URL paths (optional)
   // any pages defined here will override their default URL paths
@@ -45,9 +45,7 @@ export default siteConfig({
   // }
   pageUrlOverrides: null,
 
-  pageUrlAdditions: {
-    '/the-social-audio-revolution': 'c4deaf33cc924ad7a5b9f69c6ae04a01'
-  },
+  pageUrlAdditions: null,
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages
@@ -55,11 +53,11 @@ export default siteConfig({
   navigationLinks: [
     {
       title: 'About',
-      pageId: '8d0062776d0c4afca96eb1ace93a7538'
+      pageId: '4e7e3bce623c4788b17189f4910d869b'
     },
     {
       title: 'Contact',
-      pageId: '9a7ddf2973444067bbc5ce0a4e0e0058'
+      pageId: 'acb3fe0f89384fcead083da1165510a3'
     }
   ]
 })
