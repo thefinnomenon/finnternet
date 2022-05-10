@@ -37,6 +37,7 @@ import { Footer } from './Footer'
 import { NotionPageHeader } from './NotionPageHeader'
 
 import styles from './styles.module.css'
+import ScrollToTop from './ScrollToTop'
 
 // -----------------------------------------------------------------------------
 // dynamic imports for optional components
@@ -322,6 +323,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
         pageTitle={tagsPage && propertyToFilterName ? title : undefined}
         pageCover={pageCover}
       />
+
+      <ScrollToTop />
     </>
   )
 }
