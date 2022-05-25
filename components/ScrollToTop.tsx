@@ -29,7 +29,7 @@ export default function ScrollToTop(): JSX.Element {
   return (
     <div className={`cursor-pointer transition-opacity border-none outline-none fixed right-[0px] bottom-[16px] ${visible ? 'opacity-100' : 'opacity-0' } hover:motion-safe:animate-bounce`} onClick={() => scrollToTop()}>
       <img 
-        src='toTop.png'
+        src='/toTop.png'
         alt='Click to rocket boost to the top of the page!'
       />
     </div>
