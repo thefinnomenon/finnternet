@@ -6,8 +6,10 @@ import { notion } from './notion-api'
 import { getCanonicalPageId } from './get-canonical-page-id'
 import * as config from './config'
 import * as types from './types'
+import ExpiryMap from 'expiry-map'
 
 const uuid = !!includeNotionIdInUrls
+const cache = new ExpiryMap(10000)
 
 export async function getSiteMap(): Promise<types.SiteMap> {
   const partialSiteMap = await getAllPages(
@@ -22,7 +24,8 @@ export async function getSiteMap(): Promise<types.SiteMap> {
 }
 
 const getAllPages = pMemoize(getAllPagesImpl, {
-  cacheKey: (...args) => JSON.stringify(args)
+  cacheKey: (...args) => JSON.stringify(args),
+  cache
 })
 
 async function getAllPagesImpl(
