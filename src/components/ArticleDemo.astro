@@ -1,0 +1,15 @@
+---
+import Window from './Window.astro';
+import SpringPlayground from './SpringPlayground';
+import { translations, type Locale } from '../lib/i18n';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<div class="article-demo">
+  <Window title={translations[locale].playground}
+    ><SpringPlayground locale={locale} client:visible /></Window
+  >
+</div>

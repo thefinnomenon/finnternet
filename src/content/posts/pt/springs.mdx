@@ -1,0 +1,61 @@
+---
+title: Dando vida às interfaces
+description: Um pequeno experimento com molas, movimento e Solid.
+lang: pt
+translationKey: springs
+path: dando-vida-as-interfaces
+published: 2026-11-02
+readingMinutes: 3
+demo: true
+---
+
+import ArticleDemo from '../../../components/ArticleDemo.astro';
+
+A melhor forma de entender uma mola é brincar com ela. Mude um valor, observe o que acontece e crie uma intuição antes de partir para a matemática.
+
+Este pequeno laboratório começa com uma pergunta: o que faz um movimento parecer vivo?
+
+## Comece com uma mola
+
+A rigidez puxa um objeto para a posição de repouso. O amortecimento retira energia do sistema. Juntos, eles determinam se o movimento parece animado, pesado ou tranquilo.
+
+<ArticleDemo locale="pt" />
+
+Tente deixar o amortecimento perto do mínimo. O bloco passa da posição de repouso, muda de direção e continua oscilando. Aumente o amortecimento e ele para mais cedo. Em excesso, ele demora para chegar.
+
+Não existe uma configuração perfeita. Um botão divertido e um painel grande provavelmente não deveriam se mover exatamente da mesma forma.
+
+## Um pouco de Solid já resolve
+
+Os controles são pequenos estados reativos. Cada controle deslizante muda um sinal, e a mola lê os valores atuais enquanto se move.
+
+```tsx
+import { createSignal } from 'solid-js';
+
+const [stiffness, setStiffness] = createSignal(120);
+const [damping, setDamping] = createSignal(14);
+```
+
+O modelo tem três ingredientes: posição, velocidade e a força que atua no bloco. Para uma massa de um, o essencial é isto:
+
+```ts
+const force = -stiffness * position - damping * velocity;
+velocity += force * dt;
+position += velocity * dt;
+```
+
+Passos pequenos ajudam a manter essa aproximação numérica estável. Os quadros da animação decidem quando desenhar; eles não precisam determinar o tamanho de cada passo da simulação.
+
+## Deixe espaço para a calma
+
+O movimento deve ajudar a entender. O laboratório respeita a preferência do sistema de reduzir movimentos, funciona com o teclado e deixa de solicitar quadros quando a mola para.
+
+O artigo em si é HTML estático. Só o laboratório precisa de Solid no navegador, e ele carrega quando aparece na tela.
+
+## O que testar depois
+
+Compare uma mola rígida com bastante amortecimento com outra mais suave e com pouco amortecimento. Imagine cada uma em um elemento diferente da interface.
+
+> Um pequeno laboratório pode explicar algo que um parágrafo só descreve.
+
+É para isso que existe este cantinho da internet.

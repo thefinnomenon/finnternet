@@ -1,0 +1,77 @@
+---
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Window from '../components/Window.astro';
+import { translations, localePath } from '../lib/i18n';
+import { postPath, publishedPosts, type Post } from '../lib/posts';
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const locale = post.data.lang;
+const t = translations[locale];
+const { Content, headings } = await render(post);
+const versions = (await publishedPosts()).filter(
+  (entry) => entry.data.translationKey === post.data.translationKey,
+);
+const alternates = Object.fromEntries(
+  versions.map((entry) => [entry.data.lang, postPath(entry)]),
+);
+const contents = headings.filter((heading) => heading.depth === 2);
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  locale={locale}
+  path={`writing/${post.data.path}`}
+  alternates={alternates}
+>
+  <div class="article-page">
+    <a class="back-link" href={localePath(locale, 'writing')}>← {t.back}</a>
+    <div class="article-layout">
+      <Window title={`${post.data.path}.mdx`} class="article-window">
+        <article>
+          <header class="article-header">
+            <h1>{post.data.title}</h1><p class="article-subtitle">
+              {post.data.description}
+            </p><p class="article-meta">
+              <span>{t.by} <a href={localePath(locale, 'about')}>Finn</a></span>
+              <span aria-hidden="true">·</span>
+              <span>{`${post.data.readingMinutes} ${t.minRead}`}</span>{
+                post.data.demo && (
+                  <span class="demo-meta">
+                    <span aria-hidden="true">·</span> {t.example}
+                  </span>
+                )
+              }
+            </p>
+          </header>
+          <div class="prose"><Content /></div>
+          <div class="article-end">
+            <span aria-hidden="true">✳</span><a
+              href={localePath(locale, 'writing')}>{t.allWriting} →</a
+            >
+          </div>
+        </article>
+      </Window>
+      {
+        contents.length > 0 && (
+          <aside class="article-sidebar">
+            <Window title={t.contents}>
+              <nav aria-label={t.contents}>
+                <ol class="toc">
+                  {contents.map((heading) => (
+                    <li>
+                      <a href={`#${heading.slug}`}>{heading.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </Window>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</Base>

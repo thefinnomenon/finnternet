@@ -1,0 +1,61 @@
+---
+title: Making interfaces feel alive
+description: A small experiment with springs, motion, and Solid.
+lang: en
+translationKey: springs
+path: making-interfaces-feel-alive
+published: 2026-11-02
+readingMinutes: 3
+demo: true
+---
+
+import ArticleDemo from '../../../components/ArticleDemo.astro';
+
+The best way to understand a spring is to play with one. Change a value, watch what happens, and build an intuition before reaching for the maths.
+
+This little playground starts with a simple question: what makes a movement feel alive?
+
+## Start with a spring
+
+Stiffness pulls an object towards its resting position. Damping takes energy out of the system. Together, they decide whether a movement feels lively, heavy, or calm.
+
+<ArticleDemo locale="en" />
+
+Try setting the damping close to its minimum. The block flies past its resting position, changes direction, and keeps oscillating. Add more damping and it settles sooner. Too much, and it takes its time getting there.
+
+There isn't one perfect setting. A playful little button and a large panel probably shouldn't move in exactly the same way.
+
+## A little Solid goes a long way
+
+The controls are small pieces of reactive state. Each slider changes a signal, and the spring reads the current values as it moves.
+
+```tsx
+import { createSignal } from 'solid-js';
+
+const [stiffness, setStiffness] = createSignal(120);
+const [damping, setDamping] = createSignal(14);
+```
+
+The model has three ingredients: position, velocity, and the force acting on the block. For a mass of one, the interesting bit is just this:
+
+```ts
+const force = -stiffness * position - damping * velocity;
+velocity += force * dt;
+position += velocity * dt;
+```
+
+Small simulation steps help keep this numerical approximation stable. Animation frames decide when to draw; they don't have to dictate the size of every physics step.
+
+## Leave room for stillness
+
+Motion should support understanding. The playground respects the system's reduced-motion preference, keeps its controls keyboard accessible, and stops requesting animation frames when the spring settles.
+
+The article itself is static HTML. Only the playground needs Solid in the browser, and it loads when it comes into view.
+
+## What to try next
+
+Compare a stiff spring with high damping against a softer spring with low damping. Then imagine using each one for a different interface element.
+
+> A small playground can explain something that a paragraph only describes.
+
+That's the kind of space this little corner of the internet is for.

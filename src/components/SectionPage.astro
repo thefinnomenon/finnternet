@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Window from './Window.astro';
+import PostList from './PostList.astro';
+import Computer from './Computer.astro';
+import SpringPlayground from './SpringPlayground';
+import { locales, localePath, translations, type Locale } from '../lib/i18n';
+import { postsForLocale, postPath } from '../lib/posts';
+export type Section = 'writing' | 'projects' | 'about';
+interface Props {
+  locale: Locale;
+  section: Section;
+}
+const { locale, section } = Astro.props;
+const t = translations[locale];
+const posts = await postsForLocale(locale);
+const alternates = Object.fromEntries(
+  locales.map((lang) => [lang, localePath(lang, section)]),
+);
+const description =
+  section === 'writing'
+    ? t.writingIntro
+    : section === 'projects'
+      ? t.projectsIntro
+      : t.aboutIntro;
+---
+
+<Base
+  title={t[section]}
+  description={description}
+  locale={locale}
+  path={section}
+  alternates={alternates}
+>
+  <div class="section-page">
+    <a class="back-link" href={localePath(locale)}>← {t.home}</a>
+    <Window title={t[section]}>
+      {
+        section === 'writing' && (
+          <>
+            <>
+              <div class="section-heading">
+                <>
+                  <h1>{t.writing}</h1>
+                  <p>{t.writingIntro}</p>
+                </>
+              </div>
+              <PostList posts={posts} locale={locale} />
+            </>
+          </>
+        )
+      }
+      {
+        section === 'projects' && (
+          <>
+            <>
+              <div class="section-heading">
+                <>
+                  <h1>{t.projects}</h1>
+                  <p>{t.projectsIntro}</p>
+                </>
+              </div>
+              <div class="project-entry">
+                <SpringPlayground locale={locale} client:visible />
+                {posts[0] && (
+                  <a class="text-link" href={postPath(posts[0])}>
+                    {t.experimentLink} <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </div>
+            </>
+          </>
+        )
+      }
+      {
+        section === 'about' && (
+          <div class="about-content">
+            <>
+              <div>
+                <>
+                  <h1>{t.aboutTitle}</h1>
+                  <p>{t.aboutIntro}</p>
+                  <p>{t.aboutBody}</p>
+                  <p>{t.aboutLanguages}</p>
+                  <a class="text-link" href={localePath(locale, 'writing')}>
+                    {t.aboutLink} <span aria-hidden="true">→</span>
+                  </a>
+                </>
+              </div>
+              <Computer />
+            </>
+          </div>
+        )
+      }
+    </Window>
+  </div>
+</Base>

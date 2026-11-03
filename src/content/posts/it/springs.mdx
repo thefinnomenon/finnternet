@@ -1,0 +1,61 @@
+---
+title: Dare vita alle interfacce
+description: Un piccolo esperimento con molle, movimento e Solid.
+lang: it
+translationKey: springs
+path: dare-vita-alle-interfacce
+published: 2026-11-02
+readingMinutes: 3
+demo: true
+---
+
+import ArticleDemo from '../../../components/ArticleDemo.astro';
+
+Il modo migliore per capire una molla è giocarci. Cambia un valore, osserva cosa succede e costruisci un'intuizione prima di passare alla matematica.
+
+Questo piccolo laboratorio parte da una domanda: cosa fa sembrare vivo un movimento?
+
+## Parti da una molla
+
+La rigidità tira un oggetto verso la posizione di riposo. Lo smorzamento sottrae energia al sistema. Insieme decidono se un movimento sembra vivace, pesante o tranquillo.
+
+<ArticleDemo locale="it" />
+
+Prova ad abbassare lo smorzamento al minimo. Il blocco supera la posizione di riposo, cambia direzione e continua a oscillare. Aggiungi smorzamento e si fermerà prima. Troppo, e impiegherà più tempo ad arrivare.
+
+Non esiste un'impostazione perfetta. Un pulsante giocoso e un grande pannello probabilmente non dovrebbero muoversi nello stesso modo.
+
+## Basta un po' di Solid
+
+I controlli sono piccoli pezzi di stato reattivo. Ogni cursore cambia un segnale e la molla legge i valori correnti mentre si muove.
+
+```tsx
+import { createSignal } from 'solid-js';
+
+const [stiffness, setStiffness] = createSignal(120);
+const [damping, setDamping] = createSignal(14);
+```
+
+Il modello ha tre ingredienti: posizione, velocità e la forza che agisce sul blocco. Con una massa pari a uno, il punto essenziale è questo:
+
+```ts
+const force = -stiffness * position - damping * velocity;
+velocity += force * dt;
+position += velocity * dt;
+```
+
+Passi piccoli aiutano a mantenere stabile questa approssimazione numerica. I fotogrammi decidono quando disegnare; non devono per forza determinare la dimensione di ogni passo della simulazione.
+
+## Lascia spazio alla quiete
+
+Il movimento dovrebbe aiutare a capire. Il laboratorio rispetta la preferenza del sistema per il movimento ridotto, è utilizzabile da tastiera e smette di richiedere fotogrammi quando la molla si ferma.
+
+L'articolo è HTML statico. Solo il laboratorio richiede Solid nel browser e si carica quando entra nello schermo.
+
+## Cosa provare dopo
+
+Confronta una molla rigida con molto smorzamento con una più morbida e poco smorzamento. Immaginale su elementi diversi dell'interfaccia.
+
+> Un piccolo laboratorio può spiegare qualcosa che un paragrafo si limita a descrivere.
+
+Questo angolo di internet serve proprio a questo.

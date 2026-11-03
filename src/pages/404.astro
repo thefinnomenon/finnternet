@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Window from '../components/Window.astro';
+import { translations } from '../lib/i18n';
+const t = translations.en;
+---
+
+<Base title="404 — File not found" description={t.notFoundBody} locale="en"
+  ><div class="section-page">
+    <Window title="404 — File not found"
+      ><div class="section-heading">
+        <p class="error-number">404</p><h1>{t.notFound}</h1><p>
+          {t.notFoundBody}
+        </p><a class="retro-button" href="/">{t.backHome} →</a>
+      </div></Window
+    >
+  </div></Base
+>

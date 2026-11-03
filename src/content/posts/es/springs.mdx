@@ -1,0 +1,61 @@
+---
+title: Dar vida a las interfaces
+description: Un pequeño experimento con muelles, movimiento y Solid.
+lang: es
+translationKey: springs
+path: dar-vida-a-las-interfaces
+published: 2026-11-02
+readingMinutes: 3
+demo: true
+---
+
+import ArticleDemo from '../../../components/ArticleDemo.astro';
+
+La mejor forma de entender un muelle es jugar con él. Cambia un valor, observa qué pasa y construye una intuición antes de recurrir a las matemáticas.
+
+Este pequeño laboratorio parte de una pregunta: ¿qué hace que un movimiento parezca vivo?
+
+## Empieza con un muelle
+
+La rigidez tira de un objeto hacia su posición de reposo. La amortiguación le quita energía al sistema. Juntas deciden si el movimiento se siente animado, pesado o tranquilo.
+
+<ArticleDemo locale="es" />
+
+Prueba a bajar la amortiguación al mínimo. El bloque supera su posición de reposo, cambia de dirección y sigue oscilando. Añade más amortiguación y se detendrá antes. Demasiada, y tardará en llegar.
+
+No hay una configuración perfecta. Un botón juguetón y un panel grande probablemente no deberían moverse de la misma manera.
+
+## Un poco de Solid basta
+
+Los controles son pequeñas piezas de estado reactivo. Cada control deslizante cambia una señal y el muelle lee los valores actuales mientras se mueve.
+
+```tsx
+import { createSignal } from 'solid-js';
+
+const [stiffness, setStiffness] = createSignal(120);
+const [damping, setDamping] = createSignal(14);
+```
+
+El modelo tiene tres ingredientes: posición, velocidad y la fuerza que actúa sobre el bloque. Para una masa de uno, lo esencial es esto:
+
+```ts
+const force = -stiffness * position - damping * velocity;
+velocity += force * dt;
+position += velocity * dt;
+```
+
+Los pasos pequeños ayudan a mantener estable esta aproximación numérica. Los fotogramas de animación deciden cuándo dibujar; no tienen por qué determinar el tamaño de cada paso de la simulación.
+
+## Deja espacio para la calma
+
+El movimiento debe ayudar a comprender. El laboratorio respeta la preferencia del sistema de reducir el movimiento, permite usar el teclado y deja de solicitar fotogramas cuando el muelle se detiene.
+
+El artículo es HTML estático. Solo el laboratorio necesita Solid en el navegador y se carga cuando aparece en pantalla.
+
+## Qué probar después
+
+Compara un muelle rígido con mucha amortiguación con otro más suave y con poca amortiguación. Imagina cada uno en un elemento distinto de la interfaz.
+
+> Un pequeño laboratorio puede explicar algo que un párrafo solo describe.
+
+Para eso está este rincón de internet.

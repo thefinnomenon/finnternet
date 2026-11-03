@@ -1,0 +1,16 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SectionPage from '../../components/SectionPage.astro';
+import { locales } from '../../lib/i18n';
+export const getStaticPaths = (() =>
+  locales
+    .filter((locale) => locale !== 'en')
+    .flatMap((locale) =>
+      (['writing', 'projects', 'about'] as const).map((section) => ({
+        params: { lang: locale, section },
+        props: { locale, section },
+      })),
+    )) satisfies GetStaticPaths;
+---
+
+<SectionPage locale={Astro.props.locale} section={Astro.props.section} />

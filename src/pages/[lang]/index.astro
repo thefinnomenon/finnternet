@@ -1,0 +1,14 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Home from '../../components/Home.astro';
+import { locales } from '../../lib/i18n';
+export const getStaticPaths = (() =>
+  locales
+    .filter((locale) => locale !== 'en')
+    .map((locale) => ({
+      params: { lang: locale },
+      props: { locale },
+    }))) satisfies GetStaticPaths;
+---
+
+<Home locale={Astro.props.locale} />

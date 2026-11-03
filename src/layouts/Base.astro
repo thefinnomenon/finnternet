@@ -1,0 +1,132 @@
+---
+import Header from '../components/Header.astro';
+import PixelIcon from '../components/PixelIcon.astro';
+import { htmlLanguage, locales, translations, type Locale } from '../lib/i18n';
+import '../styles/global.css';
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  path?: string;
+  alternates?: Partial<Record<Locale, string>>;
+}
+const { title, description, locale, path = '', alternates } = Astro.props;
+const t = translations[locale];
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={htmlLanguage(locale)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title === 'Finnternet' ? title : `${title} — Finnternet`}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="theme-color"
+      content="#edece7"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#20211f"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    {
+      alternates &&
+        locales.map(
+          (lang) =>
+            alternates[lang] && (
+              <link
+                rel="alternate"
+                hreflang={htmlLanguage(lang)}
+                href={new URL(alternates[lang], Astro.site)}
+              />
+            ),
+        )
+    }
+    {
+      alternates?.en && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(alternates.en, Astro.site)}
+        />
+      )
+    }
+    <meta
+      property="og:type"
+      content={path.startsWith('writing/') ? 'article' : 'website'}
+    />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Finnternet" />
+    <meta name="twitter:card" content="summary" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`Finnternet — ${t.writing}`}
+      href={locale === 'en' ? '/rss.xml' : `/${locale}/rss.xml`}
+    />
+    <script is:inline>
+      (() => {
+        let mode = 'system';
+        try {
+          const saved = localStorage.getItem('finnternet-theme');
+          if (saved === 'light' || saved === 'dark') mode = saved;
+        } catch {
+          /* A blocked store still permits system theme. */
+        }
+        document.documentElement.dataset.theme = mode;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skip}</a>
+    <Header locale={locale} path={path} alternates={alternates} />
+    <main id="main" tabindex="-1"><slot /></main>
+    <footer class="site-footer">
+      <div>
+        <span>{t.madeBy}</span><a
+          href={locale === 'en' ? '/rss.xml' : `/${locale}/rss.xml`}
+          ><PixelIcon name="rss" size={15} />{t.rss}</a
+        >
+      </div>
+    </footer>
+    <script>
+      type Theme = 'light' | 'dark' | 'system';
+      const buttons = document.querySelectorAll<HTMLButtonElement>(
+        '[data-theme-choice]',
+      );
+      const updateButtons = (mode: Theme) =>
+        buttons.forEach((button) =>
+          button.setAttribute(
+            'aria-pressed',
+            String(button.dataset.themeChoice === mode),
+          ),
+        );
+      const current = document.documentElement.dataset.theme;
+      updateButtons(
+        current === 'light' || current === 'dark' ? current : 'system',
+      );
+      buttons.forEach((button) =>
+        button.addEventListener('click', () => {
+          const mode = button.dataset.themeChoice;
+          if (mode !== 'light' && mode !== 'dark' && mode !== 'system') return;
+          document.documentElement.dataset.theme = mode;
+          updateButtons(mode);
+          try {
+            if (mode === 'system') localStorage.removeItem('finnternet-theme');
+            else localStorage.setItem('finnternet-theme', mode);
+          } catch {
+            /* The current page can change theme without persistence. */
+          }
+        }),
+      );
+    </script>
+  </body>
+</html>

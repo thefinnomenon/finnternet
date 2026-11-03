@@ -1,0 +1,14 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Article from '../../layouts/Article.astro';
+import { publishedPosts } from '../../lib/posts';
+export const getStaticPaths = (async () =>
+  (await publishedPosts())
+    .filter((post) => post.data.lang === 'en')
+    .map((post) => ({
+      params: { slug: post.data.path },
+      props: { post },
+    }))) satisfies GetStaticPaths;
+---
+
+<Article post={Astro.props.post} />

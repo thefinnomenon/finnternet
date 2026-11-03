@@ -1,0 +1,95 @@
+---
+import PixelIcon from './PixelIcon.astro';
+import {
+  locales,
+  languageNames,
+  localePath,
+  translations,
+  type Locale,
+} from '../lib/i18n';
+interface Props {
+  locale: Locale;
+  path?: string;
+  alternates?: Partial<Record<Locale, string>> | undefined;
+}
+const { locale, path = '', alternates } = Astro.props;
+const t = translations[locale];
+const links = [
+  { label: t.writing, path: 'writing' },
+  { label: t.projects, path: 'projects' },
+  { label: t.about, path: 'about' },
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a
+      class="brand"
+      href={localePath(locale)}
+      aria-label={`Finnternet — ${t.home}`}
+    >
+      <PixelIcon name="globe" size={30} /><span>Finnternet</span>
+    </a>
+    <nav class="main-nav" aria-label={t.home}>
+      {
+        links.map((link) => (
+          <a
+            href={localePath(locale, link.path)}
+            aria-current={
+              path === link.path || path.startsWith(`${link.path}/`)
+                ? 'page'
+                : undefined
+            }
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="header-preferences">
+      <nav class="language-nav" aria-label={t.language}>
+        {
+          locales.map((lang) => {
+            const href = alternates ? alternates[lang] : localePath(lang, path);
+            return (
+              href && (
+                <a
+                  href={href}
+                  lang={lang}
+                  hreflang={lang === 'pt' ? 'pt-BR' : lang}
+                  aria-label={languageNames[lang]}
+                  aria-current={lang === locale ? 'true' : undefined}
+                >
+                  {lang.toUpperCase()}
+                </a>
+              )
+            );
+          })
+        }
+      </nav>
+      <div class="theme-controls" role="group" aria-label={t.changeTheme}>
+        <button
+          type="button"
+          data-theme-choice="light"
+          title={t.light}
+          aria-label={t.light}
+          aria-pressed="false"><PixelIcon name="sun" size={19} /></button
+        >
+        <button
+          type="button"
+          data-theme-choice="dark"
+          title={t.dark}
+          aria-label={t.dark}
+          aria-pressed="false"><PixelIcon name="moon" size={18} /></button
+        >
+        <button
+          type="button"
+          data-theme-choice="system"
+          title={t.system}
+          aria-label={t.system}
+          aria-pressed="true"><PixelIcon name="monitor" size={18} /></button
+        >
+      </div>
+    </div>
+  </div>
+</header>
