@@ -10,16 +10,28 @@ interface Props {
 }
 
 const { src, alt, caption, priority = false } = Astro.props;
+const ratio = src.width / src.height;
+// Keep the figure and responsive image selection within the same height limits.
+const imageWidth = `${src.width}px, ${32 * ratio}rem, ${70 * ratio}svh`;
+const sizes = [
+  ['(max-width: 600px)', 'calc(100vw - 76px)'],
+  ['(max-width: 800px)', 'calc(100vw - 116px)'],
+  ['(max-width: 1000px)', 'calc(100vw - 320px)'],
+  ['(max-width: 1160px)', 'calc(100vw - 374px)'],
+  ['', '786px'],
+]
+  .map(([media, width]) => `${media} min(${width}, ${imageWidth})`.trim())
+  .join(', ');
 ---
 
-<figure class="post-image">
+<figure class="post-image" style={`--post-image-width: min(${imageWidth})`}>
   <Image
     src={src}
     alt={alt}
     format="webp"
     quality={80}
     widths={[360, 720, 1080, 1440]}
-    sizes="(max-width: 600px) calc(100vw - 76px), (max-width: 800px) calc(100vw - 116px), (max-width: 1000px) calc(100vw - 320px), (max-width: 1160px) calc(100vw - 374px), 786px"
+    sizes={sizes}
     layout="constrained"
     priority={priority}
   />

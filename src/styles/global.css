@@ -710,7 +710,8 @@
 
 @layer content {
   .post-image {
-    margin: var(--space-8) 0;
+    width: min(100%, var(--post-image-width));
+    margin: var(--space-8) auto;
   }
   .post-image img {
     display: block;
