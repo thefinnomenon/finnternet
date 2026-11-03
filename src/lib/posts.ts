@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { localePath, type Locale } from './i18n';
+import { htmlLanguage, localePath, type Locale } from './i18n';
 
 export type Post = CollectionEntry<'posts'>;
 
@@ -18,6 +18,7 @@ export async function publishedPosts(): Promise<Post[]> {
   }
   return posts.sort(
     (a, b) =>
+      Number(a.data.demo) - Number(b.data.demo) ||
       b.data.published.getTime() - a.data.published.getTime() ||
       a.id.localeCompare(b.id),
   );
@@ -29,4 +30,11 @@ export async function postsForLocale(locale: Locale): Promise<Post[]> {
 
 export function postPath(post: Post): string {
   return localePath(post.data.lang, `writing/${post.data.path}`);
+}
+
+export function postDate(post: Post, locale: Locale): string {
+  return new Intl.DateTimeFormat(htmlLanguage(locale), {
+    dateStyle: 'medium',
+    timeZone: 'UTC',
+  }).format(post.data.published);
 }

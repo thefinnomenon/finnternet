@@ -1,0 +1,22 @@
+---
+interface Props {
+  id: string;
+  title: string;
+}
+const { id, title } = Astro.props;
+if (!/^[A-Za-z0-9_-]{11}$/.test(id))
+  throw new Error('Invalid YouTube video ID');
+---
+
+<div class="video-embed">
+  <iframe
+    src={`https://www.youtube-nocookie.com/embed/${id}`}
+    title={title}
+    loading="lazy"
+    width="1280"
+    height="720"
+    allow="encrypted-media; picture-in-picture; fullscreen"
+    allowfullscreen
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>

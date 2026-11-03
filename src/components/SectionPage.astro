@@ -14,6 +14,9 @@ interface Props {
 const { locale, section } = Astro.props;
 const t = translations[locale];
 const posts = await postsForLocale(locale);
+const experimentPost = posts.find(
+  (post) => post.data.translationKey === 'springs',
+);
 const alternates = Object.fromEntries(
   locales.map((lang) => [lang, localePath(lang, section)]),
 );
@@ -33,65 +36,63 @@ const description =
   alternates={alternates}
 >
   <div class="section-page">
-    <a class="back-link" href={localePath(locale)}>← {t.home}</a>
+    <a class="back-link" href={localePath(locale)}>
+      ← {t.home}
+    </a>
     <Window title={t[section]}>
-      {
-        section === 'writing' && (
+      {section === 'writing' && (
+        <>
           <>
-            <>
-              <div class="section-heading">
-                <>
-                  <h1>{t.writing}</h1>
-                  <p>{t.writingIntro}</p>
-                </>
-              </div>
-              <PostList posts={posts} locale={locale} />
-            </>
+            <div class="section-heading">
+              <>
+                <h1>{t.writing}</h1>
+                <p>{t.writingIntro}</p>
+              </>
+            </div>
+            <PostList posts={posts} locale={locale} />
           </>
-        )
-      }
-      {
-        section === 'projects' && (
+        </>
+      )}
+      {section === 'projects' && (
+        <>
           <>
-            <>
-              <div class="section-heading">
-                <>
-                  <h1>{t.projects}</h1>
-                  <p>{t.projectsIntro}</p>
-                </>
-              </div>
-              <div class="project-entry">
-                <SpringPlayground locale={locale} client:visible />
-                {posts[0] && (
-                  <a class="text-link" href={postPath(posts[0])}>
-                    {t.experimentLink} <span aria-hidden="true">→</span>
-                  </a>
-                )}
-              </div>
-            </>
+            <div class="section-heading">
+              <>
+                <h1>{t.projects}</h1>
+                <p>{t.projectsIntro}</p>
+              </>
+            </div>
+            <div class="project-entry">
+              <h2>{t.playground}</h2>
+              <p>{t.springProject}</p>
+              <SpringPlayground locale={locale} client:visible />
+              {experimentPost && (
+                <a class="text-link" href={postPath(experimentPost)}>
+                  {t.experimentLink} <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </div>
           </>
-        )
-      }
-      {
-        section === 'about' && (
-          <div class="about-content">
-            <>
-              <div>
-                <>
-                  <h1>{t.aboutTitle}</h1>
-                  <p>{t.aboutIntro}</p>
-                  <p>{t.aboutBody}</p>
-                  <p>{t.aboutLanguages}</p>
-                  <a class="text-link" href={localePath(locale, 'writing')}>
-                    {t.aboutLink} <span aria-hidden="true">→</span>
-                  </a>
-                </>
-              </div>
-              <Computer />
-            </>
-          </div>
-        )
-      }
+        </>
+      )}
+      {section === 'about' && (
+        <div class="about-content">
+          <>
+            <div>
+              <>
+                <h1>{t.aboutTitle}</h1>
+                <p>{t.aboutIntro}</p>
+                <p>{t.aboutBody}</p>
+                <p>{t.aboutLanguages}</p>
+                <a class="text-link" href={localePath(locale, 'writing')}>
+                  {t.aboutLink} <span aria-hidden="true">→</span>
+                </a>
+              </>
+            </div>
+            <Computer />
+          </>
+        </div>
+      )}
     </Window>
   </div>
 </Base>

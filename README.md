@@ -37,7 +37,26 @@ demo: false
 
 Use the same `translationKey` across translations, with a language-specific `path`. Posts do not need all four translations. Only existing translations appear in the article language switcher and alternate metadata. Drafts are excluded from pages, listings, feeds, and the sitemap. Duplicate URLs and duplicate language versions of the same post fail the build.
 
-The initial spring article is clearly marked as a demo. Replace its content and the starter biography before launching the personal site publicly. The project listing currently contains the working spring experiment; add real portfolio entries when their copy and destination URLs are ready.
+The ten original English travel posts are migrated from Finnternet's public Notion pages, including their original dates, captions, links, 87 photos, and 10 YouTube embeds. The original photos live under `src/assets/travel/`; the site does not depend on Notion to serve articles or photos. The migration manifest is `src/data/travel-migration.json`.
+
+The spring article remains clearly marked as a demo and appears after real articles in listings. The project listing currently contains the working spring experiment; add real portfolio entries when their copy and destination URLs are ready.
+
+## Images and video
+
+Use `PostImage.astro` in MDX to generate responsive WebP images at build time, with accurate sizes, inferred dimensions, and lazy loading. Set `priority` only on an image immediately visible at the top of a page. Keep original content images in `src/assets/`; files copied directly to `public/` are not optimized.
+
+```mdx
+import PostImage from '../../../components/PostImage.astro';
+import photo from '../../../assets/travel/your-photo.jpg';
+
+<PostImage
+  src={photo}
+  alt="A specific description"
+  caption="An optional caption"
+/>
+```
+
+YouTube embeds use `VideoEmbed.astro`, a reserved 16:9 layout, lazy loading, and the `youtube-nocookie.com` embed origin.
 
 ## Interactive posts
 
@@ -59,6 +78,10 @@ The default theme follows the system. Choosing light or dark saves the preferenc
 
 ## Hosting
 
-`npm run build` writes the complete static site to `dist/`. The Sites manifest in `.openai/hosting.json` points to that directory. No adapter, environment secrets, or server functions are required.
+`npm run build` writes the complete static site to `dist/`. `wrangler.jsonc` deploys that directory to Cloudflare Workers Static Assets with static 404 handling. No runtime adapter, database, or server functions are required. Run `npm run deploy` after building and authenticating with Wrangler.
 
-The private review deployment uses a ChatGPT Sites URL. Before connecting `finnternet.com`, update `site` in `astro.config.mjs` to the custom domain and rebuild so canonical URLs, RSS, and the sitemap use the final origin. The existing website and its DNS are unaffected by this preview.
+Connect `thefinnomenon/finnternet` to Cloudflare Workers Builds, with `main` as the production branch, repository root as the root directory, `npm run check && npm run build` as the build command, and `npm run deploy` as the deploy command. Use the Node version in `.node-version`. GitHub Actions independently runs formatting, lint, typechecking, and a production build on pushes and pull requests. The existing Notion issue-sync workflow is retained.
+
+`public/_redirects` preserves the old travel slugs and Notion UUID URLs. `public/_headers` caches hashed assets for a year; HTML uses Cloudflare's default revalidation. `vercel.json` disables new automatic deployments on the retired Vercel integration so a push cannot replace the old live site before the Cloudflare cutover.
+
+The original private review deployment uses a ChatGPT Sites URL, retained in `.openai/hosting.json`. The production canonical origin is now `https://finnternet.com`. Connect the custom domain to Cloudflare only after verifying the new deployment. Source migration and a repository push do not change DNS.

@@ -11,6 +11,7 @@
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",
+    "deploy": "wrangler deploy",
     "check": "astro check",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
@@ -28,8 +29,9 @@
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "~3.2.1",
     "prettier": "^3.6.2",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^1.1.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.72.1"
+    "typescript-eslint": "^8.72.1",
+    "wrangler": "^4.156.2"
   }
 }

@@ -9,7 +9,7 @@ const { locale } = Astro.props;
 ---
 
 <div class="article-demo">
-  <Window title={translations[locale].playground}
-    ><SpringPlayground locale={locale} client:visible /></Window
-  >
+  <Window title={translations[locale].playground}>
+    <SpringPlayground locale={locale} client:visible />
+  </Window>
 </div>

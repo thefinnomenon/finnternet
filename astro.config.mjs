@@ -3,10 +3,11 @@ import mdx from '@astrojs/mdx';
 import solid from '@astrojs/solid-js';
 
 export default defineConfig({
-  site: 'https://finnternet-retro.thefinnternet.chatgpt.site',
+  site: 'https://finnternet.com',
   output: 'static',
   trailingSlash: 'always',
   integrations: [mdx(), solid()],
+  image: { layout: 'constrained' },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'es', { path: 'pt', codes: ['pt-BR'] }, 'it'],

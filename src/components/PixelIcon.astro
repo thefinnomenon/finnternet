@@ -26,73 +26,59 @@ const { name, size = 24, class: className } = Astro.props;
   aria-hidden="true"
   class:list={['pixel-icon', className]}
 >
-  {
-    name === 'globe' && (
+  {name === 'globe' && (
+    <>
       <>
-        <>
-          <path
-            class="globe-fill"
-            d="M10 2h12v3h5v5h3v12h-3v5h-5v3H10v-3H5v-5H2V10h3V5h5Z"
-          />
-          <path d="M2 12h28M2 20h28M16 2v28M10 3 7 12v8l3 9M22 3l3 9v8l-3 9M6 6l7 2 8-2M6 26l7-2 8 2" />
-        </>
+        <path
+          class="globe-fill"
+          d="M10 2h12v3h5v5h3v12h-3v5h-5v3H10v-3H5v-5H2V10h3V5h5Z"
+        />
+        <path d="M2 12h28M2 20h28M16 2v28M10 3 7 12v8l3 9M22 3l3 9v8l-3 9M6 6l7 2 8-2M6 26l7-2 8 2" />
       </>
-    )
-  }
-  {
-    name === 'folder' && (
+    </>
+  )}
+  {name === 'folder' && (
+    <>
       <>
-        <>
-          <path class="folder-fill" d="M2 9V5h11l4 5h13v18H2Z" />
-          <path d="M2 10h28M5 25h22" />
-        </>
+        <path class="folder-fill" d="M2 9V5h11l4 5h13v18H2Z" />
+        <path d="M2 10h28M5 25h22" />
       </>
-    )
-  }
-  {
-    name === 'document' && (
+    </>
+  )}
+  {name === 'document' && (
+    <>
       <>
-        <>
-          <path class="document-fill" d="M6 2h14l7 7v21H6Z" />
-          <path d="M20 2v8h7M10 15h13M10 20h13M10 25h10" />
-        </>
+        <path class="document-fill" d="M6 2h14l7 7v21H6Z" />
+        <path d="M20 2v8h7M10 15h13M10 20h13M10 25h10" />
       </>
-    )
-  }
+    </>
+  )}
   {name === 'arrow' && <path d="M4 16h24M20 8l8 8-8 8" />}
-  {
-    name === 'sun' && (
+  {name === 'sun' && (
+    <>
       <>
-        <>
-          <path d="M12 10h8l3 6-3 6h-8l-3-6Z" />
-          <path d="M16 1v5M16 26v5M1 16h5M26 16h5M5 5l4 4M23 23l4 4M5 27l4-4M23 9l4-4" />
-        </>
+        <path d="M12 10h8l3 6-3 6h-8l-3-6Z" />
+        <path d="M16 1v5M16 26v5M1 16h5M26 16h5M5 5l4 4M23 23l4 4M5 27l4-4M23 9l4-4" />
       </>
-    )
-  }
-  {
-    name === 'moon' && (
-      <path d="M17 3c-9 1-14 11-9 19 5 9 18 9 22-1-9 4-19-7-13-18Z" />
-    )
-  }
-  {
-    name === 'monitor' && (
+    </>
+  )}
+  {name === 'moon' && (
+    <path d="M17 3c-9 1-14 11-9 19 5 9 18 9 22-1-9 4-19-7-13-18Z" />
+  )}
+  {name === 'monitor' && (
+    <>
       <>
-        <>
-          <path d="M2 4h28v20H2ZM16 24v5M9 29h14" />
-          <path d="M2 19h28" />
-        </>
+        <path d="M2 4h28v20H2ZM16 24v5M9 29h14" />
+        <path d="M2 19h28" />
       </>
-    )
-  }
-  {
-    name === 'rss' && (
+    </>
+  )}
+  {name === 'rss' && (
+    <>
       <>
-        <>
-          <path d="M5 5c12 0 22 10 22 22M5 13c8 0 14 6 14 14" />
-          <path d="M5 23h4v4H5Z" fill="currentColor" />
-        </>
+        <path d="M5 5c12 0 22 10 22 22M5 13c8 0 14 6 14 14" />
+        <path d="M5 23h4v4H5Z" fill="currentColor" />
       </>
-    )
-  }
+    </>
+  )}
 </svg>

@@ -1,7 +1,7 @@
 ---
 import PixelIcon from './PixelIcon.astro';
 import { translations, type Locale } from '../lib/i18n';
-import { postPath, type Post } from '../lib/posts';
+import { postDate, postPath, type Post } from '../lib/posts';
 interface Props {
   posts: Post[];
   locale: Locale;
@@ -11,31 +11,31 @@ const t = translations[locale];
 ---
 
 <ul class="post-list" role="list">
-  {
-    posts.map((post) => (
-      <li>
-        <>
-          <PixelIcon name="document" size={31} />
-          <div>
-            <>
-              <a href={postPath(post)}>{post.data.title}</a>
-              <p>{post.data.description}</p>
-              <span class="post-meta">
-                {post.data.demo && (
-                  <>
-                    {t.example}
-                    <span aria-hidden="true"> · </span>
-                  </>
-                )}
-                {post.data.readingMinutes} {t.minRead}
-              </span>
-            </>
-          </div>
-          <span class="list-arrow" aria-hidden="true">
-            ↗
-          </span>
-        </>
-      </li>
-    ))
-  }
+  {posts.map((post) => (
+    <li>
+      <>
+        <PixelIcon name="document" size={31} />
+        <div>
+          <>
+            <a href={postPath(post)}>{post.data.title}</a>
+            <p>{post.data.description}</p>
+            <span class="post-meta">
+              {post.data.demo ? (
+                <span>{t.example}</span>
+              ) : (
+                <time datetime={post.data.published.toISOString()}>
+                  {postDate(post, locale)}
+                </time>
+              )}
+              <span aria-hidden="true"> · </span>
+              <span>{`${post.data.readingMinutes} ${t.minRead}`}</span>
+            </span>
+          </>
+        </div>
+        <span class="list-arrow" aria-hidden="true">
+          ↗
+        </span>
+      </>
+    </li>
+  ))}
 </ul>
