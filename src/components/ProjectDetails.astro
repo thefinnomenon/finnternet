@@ -1,0 +1,246 @@
+---
+import Window from './Window.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  completedOn?: string;
+  website: string;
+  inactive?: boolean;
+  github?: string;
+  stack: { label: string; tools: string }[];
+  features: string[];
+}
+
+const {
+  title,
+  description,
+  completedOn,
+  website,
+  inactive = false,
+  github,
+  stack,
+  features,
+} = Astro.props;
+const domain = new URL(website).hostname;
+const completionDate = completedOn
+  ? new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(`${completedOn}T00:00:00Z`))
+  : undefined;
+---
+
+<aside class="project-details" aria-labelledby="project-title">
+  <Window title="Project details">
+    <div class="project-summary">
+      <h1 id="project-title">{title}</h1>
+      <p class="project-description">{description}</p>
+      <dl class="project-links">
+        {completedOn && (
+          <div>
+            <dt>Completed</dt>
+            <dd>
+              <time datetime={completedOn}>{completionDate}</time>
+            </dd>
+          </div>
+        )}
+        <div>
+          <dt>Website</dt>
+          <dd>
+            {inactive ? (
+              <span class="project-domain">{domain}</span>
+            ) : (
+              <a href={website}>{domain}</a>
+            )}
+            <span class="project-status">
+              {inactive ? '(inactive)' : '(active)'}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>GitHub</dt>
+          <dd>
+            {github ? (
+              <a href={github}>Source code</a>
+            ) : (
+              <span class="project-private">Not public yet</span>
+            )}
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <details class="project-breakdown" data-project-breakdown>
+      <summary>Tech stack &amp; functionality</summary>
+      <div class="project-breakdown-content">
+        <section aria-labelledby="project-stack-title">
+          <h2 id="project-stack-title">Tech stack</h2>
+          <dl class="project-stack">
+            {stack.map((group) => (
+              <div>
+                <dt>{group.label}</dt>
+                <dd>{group.tools}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+        <section aria-labelledby="project-features-title">
+          <h2 id="project-features-title">What it does</h2>
+          <ul class="project-features">
+            {features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </details>
+  </Window>
+</aside>
+
+<style>
+  .project-details {
+    min-width: 0;
+  }
+  .project-details :global(.window-body) {
+    padding: 22px;
+  }
+  .project-summary h1 {
+    font-size: 29px;
+    line-height: 1.15;
+    letter-spacing: -0.9px;
+  }
+  .project-description {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .project-links {
+    display: grid;
+    gap: 11px;
+    margin: 20px 0 0;
+    padding: 0;
+    font-size: 13px;
+  }
+  .project-links > div {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 10px;
+    align-items: baseline;
+  }
+  .project-links dt {
+    color: var(--muted);
+  }
+  .project-links dd {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-domain {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .project-status,
+  .project-private {
+    color: var(--muted);
+  }
+  .project-status {
+    font-size: 12px;
+  }
+  .project-breakdown {
+    margin-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+  .project-breakdown > summary {
+    padding: 16px 0 0;
+    color: var(--link);
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .project-breakdown-content {
+    display: grid;
+    gap: 23px;
+    padding-top: 20px;
+  }
+  .project-breakdown h2 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.15px;
+  }
+  .project-stack {
+    display: grid;
+    gap: 12px;
+    margin: 13px 0 0;
+    padding: 0;
+  }
+  .project-stack dt {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .project-stack dd {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .project-features {
+    display: grid;
+    gap: 12px;
+    padding-left: 18px;
+    margin: 14px 0 0;
+  }
+  .project-features li {
+    padding-left: 2px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  @media (min-width: 1040px) {
+    .project-breakdown[open] > summary {
+      display: none;
+    }
+  }
+  @media (max-width: 1039px) {
+    .project-details :global(.window-body) {
+      padding: 20px;
+    }
+    .project-summary h1 {
+      font-size: 28px;
+    }
+    .project-description {
+      margin-top: 8px;
+      max-width: 650px;
+    }
+    .project-links {
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .project-breakdown {
+      margin-top: 18px;
+    }
+  }
+  @media (pointer: coarse) {
+    .project-breakdown > summary {
+      min-height: 44px;
+    }
+  }
+</style>
+
+<script>
+  const wide = window.matchMedia('(min-width: 1040px)');
+  const breakdown = document.querySelector<HTMLDetailsElement>(
+    '[data-project-breakdown]',
+  );
+  const fitBreakdown = () => {
+    if (breakdown) breakdown.open = wide.matches;
+  };
+  wide.addEventListener('change', fitBreakdown);
+  fitBreakdown();
+</script>

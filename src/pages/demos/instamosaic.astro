@@ -1,0 +1,288 @@
+---
+import '../../styles/demos/instamosaic-original.css';
+import '../../styles/demos/instamosaic.css';
+import sample from '../../../public/demos/instamosaic/sample.json';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'"
+    />
+    <title>InstaMosaic</title>
+    <link rel="preload" href="/demos/instamosaic/neymar.jpg" as="image" />
+  </head>
+  <body>
+    <div class="page" id="instamosaic-demo">
+      <header class="topbar">
+        <div class="brand" id="demo-landing-brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>InstaMosaic</span>
+        </div>
+        <a
+          class="brand"
+          id="demo-status-brand"
+          href="/demos/instamosaic/"
+          hidden
+        >
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>InstaMosaic</span>
+        </a>
+      </header>
+
+      <main>
+        <div id="demo-form-screen" class="landing-layout">
+          <section class="panel form-panel" aria-labelledby="demo-form-title">
+            <div class="panel-header">
+              <h1 id="demo-form-title" tabindex="-1">
+                Turn your Instagram into print-ready wall art.
+              </h1>
+              <p class="lede">
+                Enter your Instagram, email, and image that becomes your mosaic.
+              </p>
+            </div>
+            <form id="demo-form" class="form-grid">
+              <div class="label">
+                <label for="demo-username">Instagram username</label>
+                <div class="username-field-wrap" id="demo-username-wrap">
+                  <input
+                    id="demo-username"
+                    class="field username-field"
+                    name="username"
+                    placeholder="yourhandle"
+                    readonly
+                    inputmode="none"
+                    autocomplete="off"
+                  />
+                  <span
+                    id="demo-username-check"
+                    class="username-check-control"
+                    aria-hidden="true"
+                  ></span>
+                </div>
+              </div>
+              <div class="label">
+                <label for="demo-email">Email</label>
+                <div class="email-field-wrap" id="demo-email-wrap">
+                  <input
+                    id="demo-email"
+                    class="field email-field"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    readonly
+                    inputmode="none"
+                    autocomplete="off"
+                  />
+                  <span
+                    id="demo-email-check"
+                    class="email-check-control"
+                    aria-hidden="true"
+                  ></span>
+                </div>
+              </div>
+              <div class="label">
+                <span id="demo-photo-label">Mosaic image</span>
+                <button
+                  class="file-drop"
+                  id="demo-photo"
+                  type="button"
+                  aria-labelledby="demo-photo-label demo-photo-title"
+                >
+                  <span class="file-icon">
+                    <span id="demo-photo-icon" aria-hidden="true">
+                      ＋
+                    </span>
+                    <img
+                      id="demo-photo-thumb"
+                      class="file-thumbnail"
+                      src="/demos/instamosaic/neymar.jpg"
+                      alt=""
+                      width="42"
+                      height="42"
+                      hidden
+                    />
+                  </span>
+                  <span class="file-meta">
+                    <span id="demo-photo-title" class="file-title">
+                      Choose the image to recreate
+                    </span>
+                    <span id="demo-photo-subtitle" class="file-subtitle">
+                      JPG, PNG, or WEBP up to 15MB.
+                    </span>
+                  </span>
+                </button>
+              </div>
+              <button
+                class="button button-primary"
+                id="demo-generate"
+                type="submit"
+                disabled
+              >
+                Generate Mosaic
+              </button>
+            </form>
+          </section>
+        </div>
+
+        <section
+          id="demo-status-screen"
+          class="panel status-panel"
+          aria-labelledby="demo-status-title"
+          hidden
+        >
+          <div class="status-hero" id="demo-status-hero">
+            <div class="status-copy">
+              <p class="eyebrow">@neymarjr</p>
+              <h1 id="demo-status-title" tabindex="-1">
+                Your mosaic is processing.
+              </h1>
+              <p id="demo-status-description" class="lede">
+                Checking Instagram…
+              </p>
+            </div>
+            <div
+              class="status-image-wrap status-image-processing"
+              id="demo-artwork"
+              role="region"
+              aria-label="Mosaic image"
+              tabindex="0"
+            >
+              <img
+                id="demo-artwork-image"
+                class="status-hero-image"
+                src="/demos/instamosaic/neymar.jpg"
+                alt="Selected photograph of Neymar"
+                width="960"
+                height="1440"
+                draggable="false"
+              />
+              <div
+                class="preview-controls"
+                id="demo-preview-controls"
+                aria-label="Mosaic controls"
+                hidden
+              >
+                <button
+                  class="button button-secondary icon-button preview-control"
+                  type="button"
+                  id="demo-zoom-out"
+                  aria-label="Zoom out"
+                  disabled
+                >
+                  −
+                </button>
+                <output
+                  class="preview-zoom-label"
+                  id="demo-zoom-label"
+                  aria-live="polite"
+                >
+                  100%
+                </output>
+                <button
+                  class="button button-secondary icon-button preview-control"
+                  type="button"
+                  id="demo-zoom-in"
+                  aria-label="Zoom in"
+                >
+                  ＋
+                </button>
+                <button
+                  class="button button-secondary icon-button preview-control"
+                  type="button"
+                  id="demo-fullscreen"
+                  aria-label="Toggle fullscreen"
+                >
+                  ⛶
+                </button>
+              </div>
+              <div
+                class="processing-overlay"
+                id="demo-processing-overlay"
+                aria-hidden="true"
+              >
+                <div class="tile-break-overlay">
+                  {Array.from({ length: 80 }, (_, index) => (
+                    <span
+                      class="tile-break-cell"
+                      style={`--tile-index: ${index}`}
+                    ></span>
+                  ))}
+                </div>
+                <div class="processing-scan"></div>
+                <div class="processing-spinner">
+                  <span class="demo-spinner"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="demo-processing-details">
+            <div class="status-progress-row">
+              <span id="demo-progress-number">0%</span>
+              <span id="demo-progress-stage">Checking Instagram…</span>
+            </div>
+            <div
+              class="progress-shell"
+              id="demo-progress"
+              role="progressbar"
+              aria-label="Mosaic generation"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="demo-progress-fill" class="progress-fill"></div>
+            </div>
+            <p class="demo-processing-note" id="demo-processing-note">
+              You can leave this page. We’ll email you when your mosaic is
+              ready.
+            </p>
+          </div>
+          <div id="demo-results" class="status-result" hidden>
+            <div class="stat-grid">
+              <div class="stat">
+                <span>Instagram photos used</span>
+                <strong>{sample.photos}</strong>
+              </div>
+              <div class="stat">
+                <span>Processing time</span>
+                <strong>{sample.processingSeconds}s</strong>
+              </div>
+            </div>
+            <div class="result-actions">
+              <a
+                class="button button-primary"
+                href="/demos/instamosaic/instamosaic-neymarjr-digital-files.zip"
+                download="instamosaic-neymarjr-digital-files.zip"
+              >
+                Download Digital Files
+              </a>
+              <button
+                class="button button-secondary"
+                id="demo-share-reveal"
+                type="button"
+              >
+                Share Reveal Video
+              </button>
+            </div>
+            <p class="message" id="demo-share-message" role="status" hidden></p>
+          </div>
+          <p
+            class="demo-announcement"
+            id="demo-announcement"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </section>
+      </main>
+    </div>
+    <script>
+      import '../../lib/demos/instamosaic/client';
+    </script>
+  </body>
+</html>

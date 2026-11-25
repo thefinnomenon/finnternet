@@ -1,0 +1,28 @@
+{
+  "username": "neymarjr",
+  "collection": "Existing sample photo collection",
+  "photos": 80,
+  "cells": 3456,
+  "processingSeconds": 9,
+  "photograph": {
+    "title": "Neymar 2018",
+    "author": "Balkan Photos",
+    "source": "https://commons.wikimedia.org/wiki/File:Neymar_2018.jpg",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "changes": "Cropped, resized, and used as the target for a generated photomosaic."
+  },
+  "revealVideo": "reveal.mp4",
+  "assets": [
+    "master-24x36.jpg",
+    "preview-social-1080x1350.jpg",
+    "preview-square-1080x1080.jpg",
+    "print-12x18.jpg",
+    "print-18x24.jpg",
+    "print-20x30.jpg",
+    "reveal-1080x1920.jpg",
+    "wallpaper-desktop.jpg",
+    "wallpaper-phone.jpg",
+    "reveal.mp4"
+  ]
+}

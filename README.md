@@ -15,6 +15,7 @@ npm run dev
 npm run format:check
 npm run lint
 npm run check
+npm test
 npm run build
 npm run preview
 ```
@@ -39,7 +40,13 @@ Use the same `translationKey` across translations, with a language-specific `pat
 
 The ten original English travel posts are migrated from Finnternet's public Notion pages, including their original dates, captions, links, 87 photos, and 10 YouTube embeds. The original photos live under `src/assets/travel/`; the site does not depend on Notion to serve articles or photos. The migration manifest is `src/data/travel-migration.json`.
 
-The spring article remains clearly marked as a demo and appears after real articles in listings. The project listing currently contains the working spring experiment; add real portfolio entries when their copy and destination URLs are ready.
+The spring article remains clearly marked as a demo and appears after real articles in listings. Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. InstaMosaic is also featured in the homepage's Projects window.
+
+## Portfolio demos
+
+The InstaMosaic page pairs a resizable product window with project details, completion date, source link, grouped tech stack, and functionality. Its isolated iframe uses the original product styling with preset interactions and precomputed image and video exports. It does not call the original backend, process user uploads, send email, or start a checkout. The former `/previews/instamosaic/` URL forwards to `/projects/instamosaic/`.
+
+Fmail is a browser-local inbox shared across the site. Demo notifications survive navigation, repeated runs replace previous notifications, and opening an email removes it from the inbox. Email bodies have no navigation links. The mailbox tests run with `npm test`.
 
 ## Images and video
 
@@ -74,7 +81,7 @@ The rest of the article stays static HTML. The spring playground stops its anima
 
 English uses `/`, Spanish `/es/`, Brazilian Portuguese `/pt/`, and Italian `/it/`. Interface dictionaries live in `src/lib/i18n.ts`. Each language has an RSS feed, localized metadata, and a sitemap entry.
 
-The default theme follows the system. Choosing light or dark saves the preference locally; choosing the monitor icon restores system behavior. The initial theme is applied in the document head before rendering.
+The header uses compact language and theme dropdowns, with Fmail at the far right. Navigation moves into a menu on narrow screens so the header stays on one row. The default theme follows the system. Choosing light or dark saves the preference locally; choosing System restores system behavior. The initial theme is applied in the document head before rendering.
 
 ## Hosting
 

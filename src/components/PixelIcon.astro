@@ -8,6 +8,10 @@ interface Props {
     | 'sun'
     | 'moon'
     | 'monitor'
+    | 'mail'
+    | 'resize'
+    | 'menu'
+    | 'chevron-down'
     | 'rss';
   size?: number;
   class?: string;
@@ -54,6 +58,12 @@ const { name, size = 24, class: className } = Astro.props;
     </>
   )}
   {name === 'arrow' && <path d="M4 16h24M20 8l8 8-8 8" />}
+  {name === 'mail' && (
+    <path d="M3 6h26v20H3ZM3 7l13 11L29 7M3 25l9-9M29 25l-9-9" />
+  )}
+  {name === 'resize' && <path d="M9 27 27 9M17 27l10-10M25 27l2-2" />}
+  {name === 'menu' && <path d="M4 8h24M4 16h24M4 24h24" />}
+  {name === 'chevron-down' && <path d="m6 11 10 10 10-10" />}
   {name === 'sun' && (
     <>
       <>

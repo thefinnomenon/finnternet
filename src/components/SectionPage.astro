@@ -36,9 +36,6 @@ const description =
   alternates={alternates}
 >
   <div class="section-page">
-    <a class="back-link" href={localePath(locale)}>
-      ← {t.home}
-    </a>
     <Window title={t[section]}>
       {section === 'writing' && (
         <>
@@ -62,6 +59,12 @@ const description =
                 <p>{t.projectsIntro}</p>
               </>
             </div>
+            <article class="project-entry">
+              <h2>
+                <a href="/projects/instamosaic/">InstaMosaic</a>
+              </h2>
+              <p>{t.instamosaicDescription}</p>
+            </article>
             <div class="project-entry">
               <h2>{t.playground}</h2>
               <p>{t.springProject}</p>

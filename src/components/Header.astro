@@ -1,5 +1,7 @@
 ---
 import PixelIcon from './PixelIcon.astro';
+import Fmail from './Fmail.astro';
+import HeaderDropdown from './HeaderDropdown.astro';
 import {
   locales,
   languageNames,
@@ -14,11 +16,22 @@ interface Props {
 }
 const { locale, path = '', alternates } = Astro.props;
 const t = translations[locale];
+const flags: Record<Locale, string> = {
+  en: '🇺🇸',
+  es: '🇪🇸',
+  pt: '🇧🇷',
+  it: '🇮🇹',
+};
 const links = [
   { label: t.writing, path: 'writing' },
   { label: t.projects, path: 'projects' },
   { label: t.about, path: 'about' },
 ];
+const themes = [
+  { mode: 'light', icon: 'sun', label: t.light },
+  { mode: 'dark', icon: 'moon', label: t.dark },
+  { mode: 'system', icon: 'monitor', label: t.system },
+] as const;
 ---
 
 <header class="site-header">
@@ -31,7 +44,7 @@ const links = [
       <PixelIcon name="globe" size={30} />
       <span>Finnternet</span>
     </a>
-    <nav class="main-nav" aria-label={t.home}>
+    <nav class="main-nav" aria-label={t.navigation}>
       {links.map((link) => (
         <a
           href={localePath(locale, link.path)}
@@ -46,53 +59,90 @@ const links = [
       ))}
     </nav>
     <div class="header-preferences">
-      <nav class="language-nav" aria-label={t.language}>
-        {locales.map((lang) => {
-          const href = alternates ? alternates[lang] : localePath(lang, path);
-          return (
-            href && (
-              <a
-                href={href}
-                lang={lang}
-                hreflang={lang === 'pt' ? 'pt-BR' : lang}
-                aria-label={languageNames[lang]}
-                aria-current={lang === locale ? 'true' : undefined}
-              >
-                {lang.toUpperCase()}
-              </a>
-            )
-          );
-        })}
-      </nav>
-      <div class="theme-controls" role="group" aria-label={t.changeTheme}>
-        <button
-          type="button"
-          data-theme-choice="light"
-          title={t.light}
-          aria-label={t.light}
-          aria-pressed="false"
+      <HeaderDropdown
+        id="navigation-dropdown"
+        label={t.navigation}
+        class="mobile-navigation"
+        align="start"
+      >
+        <PixelIcon slot="trigger" name="menu" size={20} />
+        <nav class="header-menu-options" aria-label={t.navigation}>
+          {links.map((link) => (
+            <a
+              href={localePath(locale, link.path)}
+              aria-current={
+                path === link.path || path.startsWith(`${link.path}/`)
+                  ? 'page'
+                  : undefined
+              }
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </HeaderDropdown>
+      <HeaderDropdown
+        id="language-dropdown"
+        label={`${t.language}: ${languageNames[locale]}`}
+      >
+        <span slot="trigger" class="language-flag" aria-hidden="true">
+          {flags[locale]}
+        </span>
+        <nav class="header-menu-options" aria-label={t.language}>
+          {locales.map((lang) => {
+            const href = alternates ? alternates[lang] : localePath(lang, path);
+            return (
+              href && (
+                <a
+                  href={href}
+                  lang={lang}
+                  hreflang={lang === 'pt' ? 'pt-BR' : lang}
+                  aria-current={lang === locale ? 'true' : undefined}
+                >
+                  <span class="language-flag" aria-hidden="true">
+                    {flags[lang]}
+                  </span>
+                  <span>{languageNames[lang]}</span>
+                </a>
+              )
+            );
+          })}
+        </nav>
+      </HeaderDropdown>
+      <HeaderDropdown
+        id="theme-dropdown"
+        label={t.changeTheme}
+        class="theme-dropdown"
+      >
+        <span slot="trigger" class="theme-trigger-icons">
+          {themes.map((theme) => (
+            <span class="header-theme-icon" data-theme-icon={theme.mode}>
+              <PixelIcon name={theme.icon} size={20} />
+            </span>
+          ))}
+        </span>
+        <div
+          class="header-menu-options"
+          role="group"
+          aria-label={t.changeTheme}
         >
-          <PixelIcon name="sun" size={19} />
-        </button>
-        <button
-          type="button"
-          data-theme-choice="dark"
-          title={t.dark}
-          aria-label={t.dark}
-          aria-pressed="false"
-        >
-          <PixelIcon name="moon" size={18} />
-        </button>
-        <button
-          type="button"
-          data-theme-choice="system"
-          title={t.system}
-          aria-label={t.system}
-          aria-pressed="true"
-        >
-          <PixelIcon name="monitor" size={18} />
-        </button>
-      </div>
+          {themes.map((theme) => (
+            <button
+              type="button"
+              data-theme-choice={theme.mode}
+              aria-pressed={theme.mode === 'system' ? 'true' : 'false'}
+            >
+              <PixelIcon name={theme.icon} size={20} />
+              <span>{theme.label}</span>
+            </button>
+          ))}
+        </div>
+      </HeaderDropdown>
+      <Fmail locale={locale} />
     </div>
   </div>
 </header>
+
+<script>
+  import '../lib/header-ui';
+</script>

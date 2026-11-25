@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+
+const stack = [
+  { label: 'Web', tools: 'Next.js, React, TypeScript' },
+  { label: 'Image & video processing', tools: 'Node.js, Sharp, FFmpeg' },
+  {
+    label: 'Data & hosting',
+    tools: 'PostgreSQL, Prisma, Vercel, Cloud Run, Cloud Tasks, Cloudflare R2',
+  },
+  {
+    label: 'Integrations',
+    tools:
+      'Instagram API (Instagram120), Instagram Graph API, Stripe, PrintShrimp, Resend',
+  },
+];
+const features = [
+  'Fetch public Instagram photos through Instagram API (Instagram120) and assemble a mosaic of your chosen image.',
+  'Export print files, wallpapers, social previews, and a reveal video.',
+  'Show generation progress and send status emails.',
+  'Sell digital downloads and physical prints through Stripe, with PrintShrimp handling print fulfillment.',
+  'Automate a daily mosaic from a list of popular Instagram accounts and post it to InstaMosaic’s Instagram.',
+];
+---
+
+<Base
+  title="InstaMosaic"
+  description="Turn Instagram photos into a photo mosaic."
+  locale="en"
+  path="projects/instamosaic"
+  alternates={{ en: '/projects/instamosaic/' }}
+>
+  <div class="demo-preview-page">
+    <div class="project-layout">
+      <div class="project-info-panel">
+        <ProjectDetails
+          title="InstaMosaic"
+          description="A service that turns your Instagram photos into a mosaic of an image you choose."
+          completedOn="2026-08-03"
+          website="https://instamosaic.net/"
+          github="https://github.com/thefinnomenon/instamosaic"
+          inactive
+          stack={stack}
+          features={features}
+        />
+      </div>
+      <div class="project-demo-panel">
+        <ProjectDemo />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .demo-preview-page {
+    width: min(1340px, calc(100% - 40px));
+    margin: 36px auto 64px;
+  }
+  .project-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-areas: 'demo details';
+    gap: 24px;
+    align-items: start;
+  }
+  .project-info-panel {
+    grid-area: details;
+    min-width: 0;
+  }
+  .project-demo-panel {
+    grid-area: demo;
+    min-width: 0;
+  }
+  @media (max-width: 1039px) {
+    .project-layout {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'details' 'demo';
+      gap: 22px;
+    }
+  }
+  @media (max-width: 560px) {
+    .demo-preview-page {
+      width: min(100% - 20px, 1160px);
+      margin-top: 22px;
+    }
+  }
+</style>

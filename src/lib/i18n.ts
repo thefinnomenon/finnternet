@@ -10,11 +10,12 @@ export const languageNames = {
 
 const en = {
   home: 'Home',
+  navigation: 'Navigation',
   writing: 'Writing',
   projects: 'Projects',
   about: 'About',
   welcome: 'Welcome to Finnternet',
-  hello: 'Hi, I’m Finn.',
+  hello: 'Hi, I’m Chris Finn.',
   tagline: 'Welcome to my corner of the internet.',
   intro: 'Things I’m building, ideas I’m exploring, and notes along the way.',
   latest: 'Latest writing',
@@ -33,8 +34,7 @@ const en = {
   contents: 'On this page',
   by: 'By',
   minRead: 'min read',
-  madeBy: 'Made by Finn.',
-  back: 'Back to writing',
+  madeBy: 'Made by Chris Finn.',
   skip: 'Skip to content',
   changeTheme: 'Change color theme',
   light: 'Light',
@@ -54,6 +54,8 @@ const en = {
   example: 'Demo article',
   springProject:
     'A small experiment in motion. Move a slider and find out what makes an interface feel alive.',
+  instamosaicDescription:
+    'Turn your Instagram photos into a mosaic of an image you choose.',
   rss: 'RSS feed',
   notFound: 'This file wandered off.',
   notFoundBody:
@@ -68,11 +70,12 @@ export const translations = {
   en,
   es: {
     home: 'Inicio',
+    navigation: 'Navegación',
     writing: 'Artículos',
     projects: 'Proyectos',
     about: 'Sobre mí',
     welcome: 'Bienvenido a Finnternet',
-    hello: 'Hola, soy Finn.',
+    hello: 'Hola, soy Chris Finn.',
     tagline: 'Bienvenido a mi rincón de internet.',
     intro: 'Cosas que construyo, ideas que exploro y notas por el camino.',
     latest: 'Últimos artículos',
@@ -92,8 +95,7 @@ export const translations = {
     contents: 'En esta página',
     by: 'Por',
     minRead: 'min de lectura',
-    madeBy: 'Hecho por Finn.',
-    back: 'Volver a los artículos',
+    madeBy: 'Hecho por Chris Finn.',
     skip: 'Saltar al contenido',
     changeTheme: 'Cambiar el tema',
     light: 'Claro',
@@ -113,6 +115,8 @@ export const translations = {
     example: 'Artículo de ejemplo',
     springProject:
       'Un pequeño experimento de movimiento. Mueve un control y descubre qué hace que una interfaz cobre vida.',
+    instamosaicDescription:
+      'Convierte tus fotos de Instagram en un mosaico de la imagen que elijas.',
     rss: 'Canal RSS',
     notFound: 'Este archivo se ha perdido.',
     notFoundBody:
@@ -122,11 +126,12 @@ export const translations = {
   },
   pt: {
     home: 'Início',
+    navigation: 'Navegação',
     writing: 'Artigos',
     projects: 'Projetos',
     about: 'Sobre mim',
     welcome: 'Bem-vindo ao Finnternet',
-    hello: 'Oi, eu sou Finn.',
+    hello: 'Oi, eu sou Chris Finn.',
     tagline: 'Bem-vindo ao meu cantinho da internet.',
     intro:
       'Coisas que estou criando, ideias que estou explorando e notas pelo caminho.',
@@ -147,8 +152,7 @@ export const translations = {
     contents: 'Nesta página',
     by: 'Por',
     minRead: 'min de leitura',
-    madeBy: 'Feito por Finn.',
-    back: 'Voltar aos artigos',
+    madeBy: 'Feito por Chris Finn.',
     skip: 'Pular para o conteúdo',
     changeTheme: 'Mudar o tema',
     light: 'Claro',
@@ -168,6 +172,8 @@ export const translations = {
     example: 'Artigo de exemplo',
     springProject:
       'Um pequeno experimento de movimento. Mexa nos controles e descubra o que dá vida a uma interface.',
+    instamosaicDescription:
+      'Transforme suas fotos do Instagram em um mosaico da imagem que você escolher.',
     rss: 'Feed RSS',
     notFound: 'Este arquivo se perdeu.',
     notFoundBody:
@@ -177,11 +183,12 @@ export const translations = {
   },
   it: {
     home: 'Home',
+    navigation: 'Navigazione',
     writing: 'Articoli',
     projects: 'Progetti',
     about: 'Chi sono',
     welcome: 'Benvenuto su Finnternet',
-    hello: 'Ciao, sono Finn.',
+    hello: 'Ciao, sono Chris Finn.',
     tagline: 'Benvenuto nel mio angolo di internet.',
     intro: 'Cose che costruisco, idee che esploro e appunti lungo il percorso.',
     latest: 'Ultimi articoli',
@@ -201,8 +208,7 @@ export const translations = {
     contents: 'In questa pagina',
     by: 'Di',
     minRead: 'min di lettura',
-    madeBy: 'Fatto da Finn.',
-    back: 'Torna agli articoli',
+    madeBy: 'Fatto da Chris Finn.',
     skip: 'Vai al contenuto',
     changeTheme: 'Cambia tema',
     light: 'Chiaro',
@@ -222,6 +228,8 @@ export const translations = {
     example: 'Articolo dimostrativo',
     springProject:
       'Un piccolo esperimento sul movimento. Muovi un cursore e scopri cosa rende viva un’interfaccia.',
+    instamosaicDescription:
+      'Trasforma le tue foto di Instagram in un mosaico di un’immagine a tua scelta.',
     rss: 'Feed RSS',
     notFound: 'Questo file si è perso.',
     notFoundBody:

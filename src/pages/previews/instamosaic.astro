@@ -1,0 +1,27 @@
+---
+const destination = '/projects/instamosaic/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content={`0;url=${destination}`} />
+    <link rel="canonical" href={new URL(destination, Astro.site)} />
+    <title>InstaMosaic — Finnternet</title>
+    <script is:inline>
+      const destination = new URL(
+        '/projects/instamosaic/',
+        window.location.origin,
+      );
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      window.location.replace(destination.href);
+    </script>
+  </head>
+  <body>
+    <a href={destination}>Open InstaMosaic</a>
+  </body>
+</html>
