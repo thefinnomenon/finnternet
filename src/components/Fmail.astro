@@ -49,7 +49,7 @@ const { locale } = Astro.props;
     </header>
     <div class="fmail-envelope">
       <p>
-        <span>From</span> InstaMosaic
+        <span>From</span> <span id="fmail-from">InstaMosaic</span>
       </p>
       <p>
         <span>To</span> user@finnternet.com
@@ -73,7 +73,7 @@ const { locale } = Astro.props;
         <PixelIcon name="mail" size={24} />
       </span>
       <span class="fmail-toast-copy">
-        <span>Fmail · InstaMosaic</span>
+        <span id="fmail-toast-sender">Fmail · InstaMosaic</span>
         <strong id="fmail-toast-subject"></strong>
         <span id="fmail-toast-snippet"></span>
       </span>
@@ -265,7 +265,7 @@ const { locale } = Astro.props;
   .fmail-envelope p + p {
     margin-top: 5px;
   }
-  .fmail-envelope p > span {
+  .fmail-envelope p > span:first-child {
     display: inline-block;
     color: var(--muted);
     min-width: 45px;

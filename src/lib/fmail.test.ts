@@ -219,3 +219,93 @@ test('old stored inboxes collapse to the latest message of each type', () => {
     ['new:ready', 'new:processing'],
   );
 });
+
+test('FaceReel mail retains its sender identity after navigation and scheduled completion', () => {
+  const clock = fixture();
+  const firstPage = clock.create();
+  firstPage.start('face-1', 'facereel');
+  firstPage.markRead('face-1:processing');
+  clock.setTime(9000);
+  const nextPage = clock.create();
+  nextPage.deliverDue();
+  assert.deepEqual(
+    nextPage
+      .snapshot()
+      .messages.map(({ kind, project, read }) => ({ kind, project, read })),
+    [
+      { kind: 'ready', project: 'facereel', read: false },
+      { kind: 'processing', project: 'facereel', read: true },
+    ],
+  );
+});
+
+test('switching demos keeps existing email identity and delivers the latest project', () => {
+  const clock = fixture();
+  const mail = clock.create();
+  mail.start('mosaic-1');
+  clock.setTime(1500);
+  mail.complete('mosaic-1');
+  clock.setTime(2000);
+  mail.start('face-2', 'facereel');
+  assert.deepEqual(
+    mail.snapshot().messages.map(({ kind, project }) => ({ kind, project })),
+    [
+      { kind: 'processing', project: 'facereel' },
+      { kind: 'ready', project: 'instamosaic' },
+    ],
+  );
+  clock.setTime(10000);
+  mail.deliverDue();
+  assert.deepEqual(
+    mail.snapshot().messages.map(({ kind, project }) => ({ kind, project })),
+    [
+      { kind: 'ready', project: 'facereel' },
+      { kind: 'processing', project: 'facereel' },
+    ],
+  );
+});
+
+test('legacy mail defaults to InstaMosaic while unknown stored projects are rejected', () => {
+  const clock = fixture();
+  clock.storage.setItem(
+    FMAIL_STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      messages: [
+        {
+          id: 'legacy:processing',
+          runId: 'legacy',
+          kind: 'processing',
+          receivedAt: 1000,
+          read: true,
+        },
+        {
+          id: 'bad:ready',
+          runId: 'bad',
+          kind: 'ready',
+          project: 'unknown',
+          receivedAt: 2000,
+          read: false,
+        },
+      ],
+      pending: [
+        { runId: 'legacy', readyAt: 3000 },
+        { runId: 'bad', project: 'unknown', readyAt: 4000 },
+      ],
+    }),
+  );
+  const mail = clock.create();
+  assert.deepEqual(
+    mail.snapshot().messages.map(({ id, project }) => ({ id, project })),
+    [{ id: 'legacy:processing', project: 'instamosaic' }],
+  );
+  clock.setTime(3000);
+  mail.deliverDue();
+  assert.deepEqual(
+    mail.snapshot().messages.map(({ id, project }) => ({ id, project })),
+    [
+      { id: 'legacy:ready', project: 'instamosaic' },
+      { id: 'legacy:processing', project: 'instamosaic' },
+    ],
+  );
+});

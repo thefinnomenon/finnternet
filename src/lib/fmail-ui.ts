@@ -5,6 +5,38 @@ import {
   getFmailStore,
   type FmailMessage,
 } from './fmail';
+import { demoProjects } from './demo-projects';
+
+function messageCopy(message: FmailMessage) {
+  const { title, username } = demoProjects[message.project];
+  const ready = message.kind === 'ready';
+  const faceReel = message.project === 'facereel';
+  return {
+    sender: title,
+    subject: fmailSubject(message.kind, message.project),
+    paragraphs: faceReel
+      ? ready
+        ? [`FaceReel for @${username}.`]
+        : [
+            `FaceReel for @${username}.`,
+            "You don't need to stay on the status page. We'll email you when your FaceReel is ready, or if we need you to try again.",
+          ]
+      : ready
+        ? ['Your InstaMosaic for @neymarjr is ready.']
+        : [
+            'We’re downloading your Instagram photos now.',
+            'This usually takes 5–15 minutes.',
+            'Please keep your Instagram public until processing finishes.',
+          ],
+    snippet: ready
+      ? faceReel
+        ? `Your FaceReel for @${username} is ready to view.`
+        : 'Your mosaic for @neymarjr is ready to view.'
+      : faceReel
+        ? 'We’re creating your FaceReel from Instagram photos.'
+        : 'We’re downloading your Instagram photos now.',
+  };
+}
 
 function required<T extends HTMLElement>(
   selector: string,
@@ -58,28 +90,20 @@ window.addEventListener(
 );
 
 function openMessage(message: FmailMessage): void {
+  const copy = messageCopy(message);
   toast.hidden = true;
   store.markRead(message.id);
   if (popup.matches(':popover-open')) popup.hidePopover();
-  required('#fmail-subject', HTMLHeadingElement).textContent = fmailSubject(
-    message.kind,
-  );
+  required('#fmail-subject', HTMLHeadingElement).textContent = copy.subject;
+  required('#fmail-from', HTMLSpanElement).textContent = copy.sender;
   const date = required('#fmail-date', HTMLTimeElement);
   date.dateTime = new Date(message.receivedAt).toISOString();
   date.textContent = new Intl.DateTimeFormat(locale, {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(message.receivedAt);
-  const paragraphs =
-    message.kind === 'ready'
-      ? ['Your InstaMosaic for @neymarjr is ready.']
-      : [
-          'We’re downloading your Instagram photos now.',
-          'This usually takes 5–15 minutes.',
-          'Please keep your Instagram public until processing finishes.',
-        ];
   required('#fmail-content', HTMLDivElement).replaceChildren(
-    ...paragraphs.map((text) => {
+    ...copy.paragraphs.map((text) => {
       const p = document.createElement('p');
       p.textContent = text;
       return p;
@@ -89,6 +113,7 @@ function openMessage(message: FmailMessage): void {
 }
 
 function messageRow(message: FmailMessage): HTMLLIElement {
+  const copy = messageCopy(message);
   const item = document.createElement('li');
   const button = document.createElement('button');
   button.type = 'button';
@@ -97,7 +122,7 @@ function messageRow(message: FmailMessage): HTMLLIElement {
   const top = document.createElement('span');
   top.className = 'fmail-message-top';
   const from = document.createElement('span');
-  from.textContent = 'InstaMosaic';
+  from.textContent = copy.sender;
   const date = document.createElement('time');
   date.dateTime = new Date(message.receivedAt).toISOString();
   date.textContent = new Intl.DateTimeFormat(locale, {
@@ -107,13 +132,10 @@ function messageRow(message: FmailMessage): HTMLLIElement {
   top.append(from, date);
   const subject = document.createElement('span');
   subject.className = 'fmail-message-subject';
-  subject.textContent = fmailSubject(message.kind);
+  subject.textContent = copy.subject;
   const snippet = document.createElement('span');
   snippet.className = 'fmail-message-snippet';
-  snippet.textContent =
-    message.kind === 'ready'
-      ? 'Your mosaic for @neymarjr is ready to view.'
-      : 'We’re downloading your Instagram photos now.';
+  snippet.textContent = copy.snippet;
   button.append(top, subject, snippet);
   if (!message.read) {
     const unread = document.createElement('span');
@@ -150,15 +172,14 @@ function render(): void {
       });
   const latest = box.messages[0];
   if (latest && latest.id !== lastMessageId) {
+    const copy = messageCopy(latest);
     required('#fmail-announcement', HTMLSpanElement).textContent =
-      `Fmail: ${fmailSubject(latest.kind)}.`;
-    required('#fmail-toast-subject', HTMLElement).textContent = fmailSubject(
-      latest.kind,
-    );
+      `Fmail: ${copy.subject}.`;
+    required('#fmail-toast-sender', HTMLSpanElement).textContent =
+      `Fmail · ${copy.sender}`;
+    required('#fmail-toast-subject', HTMLElement).textContent = copy.subject;
     required('#fmail-toast-snippet', HTMLSpanElement).textContent =
-      latest.kind === 'ready'
-        ? 'Your mosaic for @neymarjr is ready to view.'
-        : 'We’re downloading your Instagram photos now.';
+      copy.snippet;
     toastMessageId = latest.id;
     toast.hidden = false;
   }

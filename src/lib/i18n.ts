@@ -56,6 +56,8 @@ const en = {
     'A small experiment in motion. Move a slider and find out what makes an interface feel alive.',
   instamosaicDescription:
     'Turn your Instagram photos into a mosaic of an image you choose.',
+  faceReelDescription:
+    'Turn photos of the same face from Instagram into a reel.',
   rss: 'RSS feed',
   notFound: 'This file wandered off.',
   notFoundBody:
@@ -117,6 +119,8 @@ export const translations = {
       'Un pequeño experimento de movimiento. Mueve un control y descubre qué hace que una interfaz cobre vida.',
     instamosaicDescription:
       'Convierte tus fotos de Instagram en un mosaico de la imagen que elijas.',
+    faceReelDescription:
+      'Convierte las fotos de una misma persona en Instagram en un reel.',
     rss: 'Canal RSS',
     notFound: 'Este archivo se ha perdido.',
     notFoundBody:
@@ -174,6 +178,8 @@ export const translations = {
       'Um pequeno experimento de movimento. Mexa nos controles e descubra o que dá vida a uma interface.',
     instamosaicDescription:
       'Transforme suas fotos do Instagram em um mosaico da imagem que você escolher.',
+    faceReelDescription:
+      'Transforme fotos do mesmo rosto no Instagram em um reel.',
     rss: 'Feed RSS',
     notFound: 'Este arquivo se perdeu.',
     notFoundBody:
@@ -230,6 +236,8 @@ export const translations = {
       'Un piccolo esperimento sul movimento. Muovi un cursore e scopri cosa rende viva un’interfaccia.',
     instamosaicDescription:
       'Trasforma le tue foto di Instagram in un mosaico di un’immagine a tua scelta.',
+    faceReelDescription:
+      'Trasforma le foto dello stesso volto su Instagram in un reel.',
     rss: 'Feed RSS',
     notFound: 'Questo file si è perso.',
     notFoundBody:

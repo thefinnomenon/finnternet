@@ -1,0 +1,209 @@
+---
+import FaceReelIcon from '../../components/demos/FaceReelIcon.astro';
+import '../../styles/demos/facereel-original.css';
+import '../../styles/demos/facereel.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>FaceReel</title>
+    <script is:inline>
+      (() => {
+        let theme = matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+        try {
+          const saved = localStorage.getItem('finnternet-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+        } catch {
+          /* Use the system theme if storage is blocked. */
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="page" id="facereel-demo" data-phase="form">
+      <header class="topbar">
+        <a class="brand" href="/demos/facereel/">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>FaceReel</span>
+        </a>
+      </header>
+      <div class="landing-layout" id="demo-form-screen">
+        <section class="panel form-panel" aria-labelledby="demo-form-title">
+          <div class="panel-header">
+            <h1 id="demo-form-title">
+              Create a face-aligned reel from Instagram photos.
+            </h1>
+            <p class="lede">
+              Upload one clear target face, enter a public Instagram handle, and
+              get a shareable video.
+            </p>
+          </div>
+          <form class="form-grid" id="demo-form">
+            <div class="label">
+              <label for="demo-username">Instagram username</label>
+              <div class="username-field-wrap" id="demo-username-wrap">
+                <input
+                  id="demo-username"
+                  class="field username-field"
+                  name="username"
+                  placeholder="yourhandle"
+                  autocomplete="off"
+                  readonly
+                  required
+                />
+                <div class="username-check-control" aria-live="polite">
+                  <span id="demo-username-loading" hidden>
+                    <FaceReelIcon
+                      name="loader"
+                      label="Checking Instagram username"
+                    />
+                  </span>
+                  <span id="demo-username-check" hidden>
+                    <FaceReelIcon
+                      name="check"
+                      label="Instagram profile is public"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="label">
+              <label for="demo-email">Email</label>
+              <div class="email-field-wrap" id="demo-email-wrap">
+                <input
+                  id="demo-email"
+                  class="field email-field"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="off"
+                  readonly
+                  required
+                />
+                <div class="email-check-control" aria-live="polite">
+                  <span id="demo-email-check" hidden>
+                    <FaceReelIcon name="check" label="Email looks good" />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="label">
+              <span id="demo-target-label">Target face</span>
+              <button
+                class="file-drop"
+                id="demo-target"
+                type="button"
+                aria-pressed="false"
+                aria-labelledby="demo-target-label demo-target-title"
+              >
+                <span class="file-icon" id="demo-target-icon">
+                  <FaceReelIcon name="image" />
+                </span>
+                <span class="file-meta">
+                  <span class="file-title" id="demo-target-title">
+                    Choose a clear face photo
+                  </span>
+                  <span class="file-subtitle" id="demo-target-filename">
+                    One face, JPG, PNG, or WEBP up to 15MB.
+                  </span>
+                </span>
+              </button>
+            </div>
+            <button
+              class="button button-primary"
+              id="demo-generate"
+              type="submit"
+              disabled
+            >
+              <FaceReelIcon name="sparkles" /> Generate FaceReel{' '}
+              <FaceReelIcon name="arrow" />
+            </button>
+          </form>
+        </section>
+      </div>
+      <section
+        class="panel form-panel status-card"
+        id="demo-status-screen"
+        aria-labelledby="demo-status-title"
+        hidden
+      >
+        <h1 id="demo-status-title" tabindex="-1">
+          Queued
+        </h1>
+        <div
+          class="progress-track"
+          id="demo-progress"
+          role="progressbar"
+          aria-label="FaceReel generation"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <div
+            class="progress-fill"
+            id="demo-progress-fill"
+            style="width: 0%"
+          ></div>
+        </div>
+        <p id="demo-progress-text">0% · queued</p>
+        <div
+          class="status-box status-wait-message"
+          id="demo-wait-message"
+          role="status"
+        >
+          <FaceReelIcon name="mail" size={20} />
+          <span>
+            <strong>You don't need to stay on this page.</strong>
+            <br />
+            We'll email you when your FaceReel is ready, or if we need you to
+            try again.
+          </span>
+        </div>
+        <div class="completed-result" id="demo-results" hidden>
+          <div class="video-preview">
+            <div class="video-shell">
+              <video
+                id="demo-video"
+                class="result-video"
+                controls
+                preload="none"
+                playsinline
+                aria-label="FaceReel for Cristiano"
+              >
+                Your browser does not support video playback.
+              </video>
+            </div>
+          </div>
+          <div class="download-list download-actions">
+            <a
+              class="button button-primary"
+              href="/demos/facereel/facereel.mp4"
+              download="facereel-cristiano.mp4"
+            >
+              <FaceReelIcon name="download" /> Download video
+            </a>
+            <button
+              class="button button-secondary"
+              id="demo-share"
+              type="button"
+            >
+              <FaceReelIcon name="share" />
+              <span id="demo-share-label">Share video</span>
+            </button>
+          </div>
+          <p class="message" id="demo-action-message" role="status" hidden></p>
+        </div>
+      </section>
+    </div>
+    <script>
+      import '../../lib/demos/facereel/client';
+    </script>
+  </body>
+</html>

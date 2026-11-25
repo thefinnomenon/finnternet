@@ -11,6 +11,7 @@ export const GET: APIRoute = async ({ site }) => {
       locales.map((lang) => ({ lang, path: localePath(lang, path) })),
     ),
     [{ lang: 'en' as const, path: '/projects/instamosaic/' }],
+    [{ lang: 'en' as const, path: '/projects/facereel/' }],
     ...[...new Set(posts.map((post) => post.data.translationKey))].map((key) =>
       posts
         .filter((post) => post.data.translationKey === key)

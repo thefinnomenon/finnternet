@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectLayout from '../../components/ProjectLayout.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+
+const stack = [
+  { label: 'Web', tools: 'Next.js, React, TypeScript' },
+  {
+    label: 'Face & video processing',
+    tools: 'Node.js, TensorFlow.js, @vladmandic/face-api, Sharp, FFmpeg',
+  },
+  {
+    label: 'Data & hosting',
+    tools: 'PostgreSQL, Prisma, Vercel, Cloud Run, Cloud Tasks, Cloudflare R2',
+  },
+  {
+    label: 'Integrations',
+    tools: 'Instagram API (Instagram120), Instagram Graph API, Resend',
+  },
+];
+const features = [
+  'Find photos matching an uploaded target face in a public Instagram account.',
+  'Align faces using facial landmarks and arrange the photos chronologically.',
+  'Render a 1080 × 1920 H.264 video for downloading and sharing.',
+  'Show generation progress and send status emails.',
+  'Automate generating reels from a list of public Instagram accounts and publishing them to Instagram.',
+];
+---
+
+<Base
+  title="FaceReel"
+  description="Turn matching Instagram photos into a face-aligned reel."
+  locale="en"
+  path="projects/facereel"
+  alternates={{ en: '/projects/facereel/' }}
+>
+  <ProjectLayout>
+    <ProjectDetails
+      slot="details"
+      title="FaceReel"
+      description="A service that finds the same face across Instagram photos and turns them into a reel."
+      completedOn="2026-07-31"
+      website="https://facereel.net/"
+      inactive
+      stack={stack}
+      features={features}
+    />
+    <ProjectDemo slot="demo" project="facereel" />
+  </ProjectLayout>
+</Base>

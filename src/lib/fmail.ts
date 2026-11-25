@@ -1,3 +1,9 @@
+import {
+  demoProjects,
+  isDemoProject,
+  type DemoProject,
+} from './demo-projects.ts';
+
 export const FMAIL_STORAGE_KEY = 'finnternet-fmail-v1';
 export const FMAIL_CHANGE_EVENT = 'fmail:changed';
 export type EmailKind = 'processing' | 'ready';
@@ -5,13 +11,17 @@ export interface FmailMessage {
   id: string;
   runId: string;
   kind: EmailKind;
+  project: DemoProject;
   receivedAt: number;
   read: boolean;
 }
 interface PendingEmail {
   runId: string;
   readyAt: number;
+  project: DemoProject;
 }
+type LegacyMessage = Omit<FmailMessage, 'project'> & { project?: DemoProject };
+type LegacyPending = Omit<PendingEmail, 'project'> & { project?: DemoProject };
 interface Mailbox {
   version: 1;
   messages: FmailMessage[];
@@ -20,7 +30,7 @@ interface Mailbox {
 type StoragePort = Pick<Storage, 'getItem' | 'setItem'>;
 export interface FmailStore {
   snapshot(): Mailbox;
-  start(runId: string): void;
+  start(runId: string, project?: DemoProject): void;
   complete(runId: string): void;
   cancel(runId: string): void;
   markRead(id: string): void;
@@ -38,7 +48,7 @@ const validTime = (value: unknown): value is number =>
   value > 0 &&
   value < 8640000000000000;
 
-function isMessage(value: unknown): value is FmailMessage {
+function isMessage(value: unknown): value is LegacyMessage {
   return (
     typeof value === 'object' &&
     value !== null &&
@@ -46,6 +56,7 @@ function isMessage(value: unknown): value is FmailMessage {
     validRunId(value.runId) &&
     'kind' in value &&
     (value.kind === 'processing' || value.kind === 'ready') &&
+    (!('project' in value) || isDemoProject(value.project)) &&
     'id' in value &&
     value.id === `${value.runId}:${value.kind}` &&
     'receivedAt' in value &&
@@ -54,12 +65,13 @@ function isMessage(value: unknown): value is FmailMessage {
     typeof value.read === 'boolean'
   );
 }
-function isPending(value: unknown): value is PendingEmail {
+function isPending(value: unknown): value is LegacyPending {
   return (
     typeof value === 'object' &&
     value !== null &&
     'runId' in value &&
     validRunId(value.runId) &&
+    (!('project' in value) || isDemoProject(value.project)) &&
     'readyAt' in value &&
     validTime(value.readyAt)
   );
@@ -81,6 +93,14 @@ function parseMailbox(raw: string | null): Mailbox | null {
       return null;
     const messages = data.messages
       .filter(isMessage)
+      .map(({ id, runId, kind, receivedAt, read, project }) => ({
+        id,
+        runId,
+        kind,
+        receivedAt,
+        read,
+        project: project ?? 'instamosaic',
+      }))
       .sort((a, b) => b.receivedAt - a.receivedAt);
     return {
       version: 1,
@@ -92,6 +112,11 @@ function parseMailbox(raw: string | null): Mailbox | null {
         .slice(0, MAX_MESSAGES),
       pending: data.pending
         .filter(isPending)
+        .map(({ runId, readyAt, project }) => ({
+          runId,
+          readyAt,
+          project: project ?? 'instamosaic',
+        }))
         .sort((a, b) => b.readyAt - a.readyAt)
         .slice(0, 1),
     };
@@ -132,39 +157,39 @@ export function createFmailStore(
     runId: string,
     kind: EmailKind,
     receivedAt: number,
+    project: DemoProject,
   ) => {
     const id = `${runId}:${kind}`;
     if (box.messages.some((message) => message.id === id)) return;
     box.messages = box.messages.filter((message) => message.kind !== kind);
-    box.messages.push({ id, runId, kind, receivedAt, read: false });
+    box.messages.push({ id, runId, kind, project, receivedAt, read: false });
   };
   return {
     snapshot,
-    start(runId) {
-      if (!validRunId(runId)) return;
+    start(runId, project = 'instamosaic') {
+      if (!validRunId(runId) || !isDemoProject(project)) return;
       const box = snapshot();
       if (
         box.messages.some((message) => message.runId === runId) ||
         box.pending.some((item) => item.runId === runId)
       )
         return;
-      add(box, runId, 'processing', now());
-      box.pending.push({ runId, readyAt: now() + GENERATION_MS });
+      add(box, runId, 'processing', now(), project);
+      box.pending.push({ runId, readyAt: now() + GENERATION_MS, project });
       box.pending = box.pending.slice(-1);
       save(box);
     },
     complete(runId) {
       if (!validRunId(runId)) return;
       const box = snapshot();
-      if (
-        !box.messages.some((message) => message.runId === runId) &&
-        !box.pending.some((item) => item.runId === runId)
-      )
-        return;
+      const run =
+        box.pending.find((item) => item.runId === runId) ??
+        box.messages.find((message) => message.runId === runId);
+      if (!run) return;
       if (box.messages.some((message) => message.id === `${runId}:ready`))
         return;
       box.pending = box.pending.filter((item) => item.runId !== runId);
-      add(box, runId, 'ready', now());
+      add(box, runId, 'ready', now(), run.project);
       save(box);
     },
     cancel(runId) {
@@ -184,7 +209,9 @@ export function createFmailStore(
       const box = snapshot();
       const due = box.pending.filter((item) => item.readyAt <= now());
       if (!due.length) return;
-      due.forEach((item) => add(box, item.runId, 'ready', item.readyAt));
+      due.forEach((item) =>
+        add(box, item.runId, 'ready', item.readyAt, item.project),
+      );
       box.pending = box.pending.filter((item) => item.readyAt > now());
       save(box);
     },
@@ -207,8 +234,12 @@ export function getFmailStore(): FmailStore {
   return browserStore;
 }
 
-export function fmailSubject(kind: EmailKind): string {
+export function fmailSubject(
+  kind: EmailKind,
+  project: DemoProject = 'instamosaic',
+): string {
+  const title = demoProjects[project].title;
   return kind === 'ready'
-    ? 'Your InstaMosaic is ready'
-    : 'We’re creating your InstaMosaic';
+    ? `Your ${title} is ready`
+    : `We’re creating your ${title}`;
 }

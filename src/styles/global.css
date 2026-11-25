@@ -606,6 +606,11 @@
     font-weight: 650;
     font-size: 1rem;
   }
+  .home-project + .home-project {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--rule);
+  }
   .project-folder span:last-child {
     margin-left: auto;
   }
@@ -1052,7 +1057,7 @@
     .home-columns {
       grid-template-columns: 1fr;
     }
-    .projects-window .window-body {
+    .home-project {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
@@ -1120,7 +1125,7 @@
     .home-columns {
       gap: var(--space-5);
     }
-    .projects-window .window-body {
+    .home-project {
       display: block;
     }
     .project-folder {

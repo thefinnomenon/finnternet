@@ -40,13 +40,15 @@ Use the same `translationKey` across translations, with a language-specific `pat
 
 The ten original English travel posts are migrated from Finnternet's public Notion pages, including their original dates, captions, links, 87 photos, and 10 YouTube embeds. The original photos live under `src/assets/travel/`; the site does not depend on Notion to serve articles or photos. The migration manifest is `src/data/travel-migration.json`.
 
-The spring article remains clearly marked as a demo and appears after real articles in listings. Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. InstaMosaic is also featured in the homepage's Projects window.
+The spring article remains clearly marked as a demo and appears after real articles in listings. Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. InstaMosaic and FaceReel also feature in the homepage's Projects window.
 
 ## Portfolio demos
 
 The InstaMosaic page pairs a resizable product window with project details, completion date, source link, grouped tech stack, and functionality. Its isolated iframe uses the original product styling with preset interactions and precomputed image and video exports. It does not call the original backend, process user uploads, send email, or start a checkout. The former `/previews/instamosaic/` URL forwards to `/projects/instamosaic/`.
 
-Fmail is a browser-local inbox shared across the site. Demo notifications survive navigation, repeated runs replace previous notifications, and opening an email removes it from the inbox. Email bodies have no navigation links. The mailbox tests run with `npm test`.
+FaceReel uses the same container and project details, with its original form and progress stages followed by an existing Cristiano render. Its video and poster URLs are assigned only after showing the result. The demo does not run face recognition, fetch Instagram photos, or call the original backend.
+
+Fmail is a browser-local inbox shared across the site. Each notification retains its project's sender and subject. Demo notifications survive navigation, repeated runs replace previous notifications, and opening an email removes it from the inbox. Email bodies have no navigation links. The mailbox tests run with `npm test`.
 
 ## Images and video
 

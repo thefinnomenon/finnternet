@@ -1,17 +1,29 @@
 ---
 import Window from './Window.astro';
 import PixelIcon from './PixelIcon.astro';
+import { demoProjects, type DemoProject } from '../lib/demo-projects';
+interface Props {
+  project?: DemoProject;
+}
+const { project = 'instamosaic' } = Astro.props;
+const { title } = demoProjects[project];
 ---
 
-<section id="project-demo" class="project-demo" aria-label="InstaMosaic">
+<section
+  id="project-demo"
+  class="project-demo"
+  aria-label={title}
+  data-demo-project={project}
+>
   <div id="demo-stage" class="demo-stage">
     <div id="demo-browser" class="demo-browser">
-      <Window title="InstaMosaic" class="demo-window">
+      <Window title={title} class="demo-window">
         <iframe
-          id="instamosaic-frame"
-          src="/demos/instamosaic/"
-          title="InstaMosaic"
+          id={`${project}-frame`}
+          src={`/demos/${project}/`}
+          title={title}
           height="640"
+          loading="lazy"
           allow="fullscreen; web-share; clipboard-write"
           sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"
         ></iframe>
@@ -20,7 +32,7 @@ import PixelIcon from './PixelIcon.astro';
         type="button"
         id="demo-resize-handle"
         class="demo-resize-handle"
-        aria-label="Resize InstaMosaic window"
+        aria-label={`Resize ${title} window`}
         aria-describedby="demo-resize-help"
       >
         <PixelIcon name="resize" size={18} />
@@ -109,8 +121,9 @@ import PixelIcon from './PixelIcon.astro';
 
 <script>
   import { getFmailStore } from '../lib/fmail';
+  import { isDemoProject, type DemoProject } from '../lib/demo-projects';
   type Phase = 'form' | 'processing' | 'ready';
-  type DemoMessage = { type: 'instamosaic:state'; phase: Phase };
+  type DemoMessage = { type: `${DemoProject}:state`; phase: Phase };
   function element<T extends HTMLElement>(
     selector: string,
     constructor: { new (): T },
@@ -120,7 +133,9 @@ import PixelIcon from './PixelIcon.astro';
       throw new Error(`Project element missing: ${selector}`);
     return node;
   }
-  const frame = element('#instamosaic-frame', HTMLIFrameElement);
+  const projectId = element('#project-demo', HTMLElement).dataset.demoProject;
+  if (!isDemoProject(projectId)) throw new Error('Unknown portfolio demo.');
+  const frame = element(`#${projectId}-frame`, HTMLIFrameElement);
   const browser = element('#demo-browser', HTMLDivElement);
   const stage = element('#demo-stage', HTMLDivElement);
   const handle = element('#demo-resize-handle', HTMLButtonElement);
@@ -144,7 +159,7 @@ import PixelIcon from './PixelIcon.astro';
   function syncTheme(): void {
     const mode = document.documentElement.dataset.theme;
     send({
-      type: 'instamosaic:theme',
+      type: `${projectId}:theme`,
       theme:
         mode === 'dark' || (mode !== 'light' && systemDark.matches)
           ? 'dark'
@@ -155,7 +170,7 @@ import PixelIcon from './PixelIcon.astro';
     syncTheme();
     if (showInitialResult) {
       showInitialResult = false;
-      send({ type: 'instamosaic:show-result' });
+      send({ type: `${projectId}:show-result` });
     }
   });
   new MutationObserver(syncTheme).observe(document.documentElement, {
@@ -213,7 +228,7 @@ import PixelIcon from './PixelIcon.astro';
   function isDemoMessage(value: unknown): value is DemoMessage {
     if (!value || typeof value !== 'object' || !('type' in value)) return false;
     return (
-      value.type === 'instamosaic:state' &&
+      value.type === `${projectId}:state` &&
       'phase' in value &&
       (value.phase === 'form' ||
         value.phase === 'processing' ||
@@ -231,7 +246,7 @@ import PixelIcon from './PixelIcon.astro';
     phase = event.data.phase;
     if (phase === 'processing' && previous !== 'processing') {
       activeRun = crypto.randomUUID();
-      mail.start(activeRun);
+      mail.start(activeRun, projectId);
     }
     if (phase === 'ready' && activeRun) mail.complete(activeRun);
     if (phase === 'form') {
