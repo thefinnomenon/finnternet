@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectLayout from '../../components/ProjectLayout.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+
+const stack = [
+  { label: 'Web', tools: 'Next.js, React, TypeScript, Tailwind CSS' },
+  {
+    label: 'Data & hosting',
+    tools: 'Firebase, Firestore, Cloud Functions, Vercel, Cloudflare R2',
+  },
+  {
+    label: 'Media processing',
+    tools: 'Uppy, S3 multipart uploads, FFmpeg, Cloud Tasks',
+  },
+  {
+    label: 'Integrations',
+    tools: 'Stripe, Resend, React Email, QRCode, Canvas, Mixpanel, Sentry',
+  },
+];
+const features = [
+  'Create a shared photo and video gallery for an event, with a one-time payment through Stripe.',
+  'Generate a gallery QR code and five printable card designs to share with guests.',
+  'Let guests upload photos and videos from their phones without installing an app or creating an account.',
+  'Process uploaded media in the background and bring it together in a browsable gallery.',
+  'View, share, and download event photos and videos, with email notifications for the organizer.',
+];
+---
+
+<Base
+  title="Guestography"
+  description="Collect guests’ photos and videos in one shared event gallery."
+  locale="en"
+  path="projects/guestography"
+  alternates={{ en: '/projects/guestography/' }}
+>
+  <ProjectLayout>
+    <ProjectDetails
+      slot="details"
+      title="Guestography"
+      description="A shared photo and video gallery for weddings and events, where guests contribute through a QR code."
+      completedOn="2026-08-10"
+      website="https://guestography.com/"
+      inactive
+      stack={stack}
+      features={features}
+    />
+    <ProjectDemo slot="demo" project="guestography" />
+  </ProjectLayout>
+</Base>

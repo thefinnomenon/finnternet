@@ -174,7 +174,9 @@ export function createFmailStore(
         box.pending.some((item) => item.runId === runId)
       )
         return;
-      add(box, runId, 'processing', now(), project);
+      // Guestography originally sends its gallery-ready email after creation.
+      if (project !== 'guestography')
+        add(box, runId, 'processing', now(), project);
       box.pending.push({ runId, readyAt: now() + GENERATION_MS, project });
       box.pending = box.pending.slice(-1);
       save(box);
@@ -238,6 +240,11 @@ export function fmailSubject(
   kind: EmailKind,
   project: DemoProject = 'instamosaic',
 ): string {
+  if (project === 'guestography') {
+    return kind === 'ready'
+      ? `${demoProjects.guestography.eventTitle} - Your Event Gallery is Ready! 📸`
+      : 'We’re creating your event gallery';
+  }
   const title = demoProjects[project].title;
   return kind === 'ready'
     ? `Your ${title} is ready`

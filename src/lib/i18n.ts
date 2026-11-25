@@ -58,6 +58,8 @@ const en = {
     'Turn your Instagram photos into a mosaic of an image you choose.',
   faceReelDescription:
     'Turn photos of the same face from Instagram into a reel.',
+  guestographyDescription:
+    'Collect guests’ photos and videos in one shared event gallery.',
   rss: 'RSS feed',
   notFound: 'This file wandered off.',
   notFoundBody:
@@ -121,6 +123,8 @@ export const translations = {
       'Convierte tus fotos de Instagram en un mosaico de la imagen que elijas.',
     faceReelDescription:
       'Convierte las fotos de una misma persona en Instagram en un reel.',
+    guestographyDescription:
+      'Reúne las fotos y los vídeos de tus invitados en una galería del evento.',
     rss: 'Canal RSS',
     notFound: 'Este archivo se ha perdido.',
     notFoundBody:
@@ -180,6 +184,8 @@ export const translations = {
       'Transforme suas fotos do Instagram em um mosaico da imagem que você escolher.',
     faceReelDescription:
       'Transforme fotos do mesmo rosto no Instagram em um reel.',
+    guestographyDescription:
+      'Reúna as fotos e os vídeos dos convidados em uma galeria do evento.',
     rss: 'Feed RSS',
     notFound: 'Este arquivo se perdeu.',
     notFoundBody:
@@ -238,6 +244,8 @@ export const translations = {
       'Trasforma le tue foto di Instagram in un mosaico di un’immagine a tua scelta.',
     faceReelDescription:
       'Trasforma le foto dello stesso volto su Instagram in un reel.',
+    guestographyDescription:
+      'Raccogli le foto e i video degli invitati in una galleria dell’evento.',
     rss: 'Feed RSS',
     notFound: 'Questo file si è perso.',
     notFoundBody:

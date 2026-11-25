@@ -12,6 +12,7 @@ export const GET: APIRoute = async ({ site }) => {
     ),
     [{ lang: 'en' as const, path: '/projects/instamosaic/' }],
     [{ lang: 'en' as const, path: '/projects/facereel/' }],
+    [{ lang: 'en' as const, path: '/projects/guestography/' }],
     ...[...new Set(posts.map((post) => post.data.translationKey))].map((key) =>
       posts
         .filter((post) => post.data.translationKey === key)

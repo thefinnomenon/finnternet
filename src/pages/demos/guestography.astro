@@ -1,0 +1,341 @@
+---
+import { demoProjects } from '../../lib/demo-projects';
+import '../../styles/demos/guestography-original.css';
+import '../../styles/demos/guestography.css';
+const { eventTitle } = demoProjects.guestography;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Guestography</title>
+    <script is:inline>
+      (() => {
+        let theme = matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+        try {
+          const saved = localStorage.getItem('finnternet-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+        } catch {
+          /* Use the system theme when storage is unavailable. */
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="guestography-demo" data-screen="create">
+      <nav class="bg-indigo-500" aria-label="Guestography">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div class="relative flex h-16 items-center justify-between">
+            <a
+              class="guest-brand flex items-center text-white"
+              href="/demos/guestography/"
+              aria-label="Guestography home"
+            >
+              <img
+                class="mr-4"
+                src="/demos/guestography/icon-white.png"
+                alt=""
+                width="40"
+                height="40"
+              />
+              <span class="text-xl font-medium">Guestography</span>
+            </a>
+            <button
+              type="button"
+              id="guest-upload-nav"
+              class="guest-nav-button rounded-md bg-white px-6 py-3 text-base font-medium text-indigo-500 shadow-sm"
+              hidden
+            >
+              UPLOAD
+            </button>
+          </div>
+        </div>
+      </nav>
+      <main>
+        <section
+          id="guest-create-screen"
+          class="guest-screen guest-pattern overflow-hidden bg-white py-16 px-4 sm:px-6 lg:px-8 lg:py-24"
+          aria-labelledby="guest-create-title"
+        >
+          <div class="relative mx-auto max-w-xl">
+            <h1
+              id="guest-create-title"
+              class="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+            >
+              Create Event
+            </h1>
+            <form id="guest-create-form" class="mt-12 grid grid-cols-1 gap-y-6">
+              <div>
+                <label
+                  for="guest-title"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Title
+                </label>
+                <input
+                  id="guest-title"
+                  class="guest-field mt-1 block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm"
+                  placeholder="Sarah & Dave's Wedding"
+                  autocomplete="off"
+                  readonly
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="guest-email"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Email
+                </label>
+                <input
+                  id="guest-email"
+                  class="guest-field mt-1 block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="off"
+                  readonly
+                  required
+                />
+              </div>
+              <div class="relative rounded-lg bg-white border-gray-300 border-2 px-4 py-4 sm:px-6 sm:py-5 mt-3">
+                <div class="flex justify-between items-center mb-3">
+                  <p class="text-xl sm:text-2xl font-bold">GALLERY</p>
+                  <p class="text-lg sm:text-xl font-medium">$49</p>
+                </div>
+                <div class="guest-plan-features space-y-2">
+                  <p>100GB of gallery storage</p>
+                  <p>Media stored for 12 months</p>
+                  <p>7-Day Money Back Guarantee</p>
+                </div>
+              </div>
+              <button
+                id="guest-create"
+                class="guest-primary mt-8 inline-flex w-full items-center justify-center rounded-md bg-indigo-700 px-6 py-3 text-base font-medium text-white shadow-sm"
+                type="submit"
+                disabled
+              >
+                <span id="guest-create-label">CREATE</span>
+                <span
+                  id="guest-create-spinner"
+                  class="guest-spinner"
+                  role="status"
+                  aria-label="Creating event"
+                  hidden
+                ></span>
+              </button>
+            </form>
+          </div>
+        </section>
+        <section
+          id="guest-success-screen"
+          class="guest-screen guest-success guest-pattern bg-white px-4 py-16"
+          aria-labelledby="guest-success-title"
+          hidden
+        >
+          <div class="relative mx-auto max-w-xl text-center">
+            <h1
+              id="guest-success-title"
+              class="text-4xl font-bold tracking-tight text-gray-900 mb-6"
+              tabindex="-1"
+            >
+              Event Created!
+            </h1>
+            <p class="text-xl">
+              Thanks for creating your event with Guestography! You will receive
+              an email shortly with your printable QR Code.
+            </p>
+            <button
+              id="guest-go-gallery"
+              class="guest-primary mt-8 rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm"
+              type="button"
+            >
+              Go to Gallery
+            </button>
+          </div>
+        </section>
+        <section
+          id="guest-gallery-screen"
+          class="guest-screen overflow-hidden bg-white py-16 px-4 sm:px-6 lg:px-8 lg:py-24"
+          aria-labelledby="guest-gallery-title"
+          hidden
+        >
+          <div class="relative mx-auto max-w-5xl">
+            <h1
+              id="guest-gallery-title"
+              class="text-center text-4xl font-bold tracking-tight text-gray-900"
+              tabindex="-1"
+            >
+              {eventTitle} Gallery
+            </h1>
+            <h2 class="text-2xl font-bold mt-8 mb-4 text-gray-900">Media</h2>
+            <div id="guest-gallery" class="guest-gallery"></div>
+          </div>
+        </section>
+        <section
+          id="guest-upload-screen"
+          class="guest-screen guest-pattern overflow-hidden bg-white px-4 sm:px-6 lg:px-8 pb-16"
+          aria-labelledby="guest-upload-title"
+          hidden
+        >
+          <div class="relative mx-auto max-w-xl">
+            <button
+              id="guest-back-gallery"
+              class="guest-secondary mt-4 mb-8 rounded-md px-4 py-2 text-sm font-medium"
+              type="button"
+            >
+              ← Back to Gallery
+            </button>
+            <div class="text-center">
+              <h1
+                id="guest-upload-title"
+                class="text-4xl font-bold tracking-tight text-gray-900"
+                tabindex="-1"
+              >
+                {eventTitle}
+              </h1>
+              <h2 class="text-xl tracking-tight text-gray-900 sm:text-4xl">
+                Media Upload
+              </h2>
+              <p class="mt-4 text-lg leading-6 text-gray-500">
+                Upload the photos and videos you took of the event!
+              </p>
+            </div>
+            <form id="guest-upload-form" class="mt-12 grid grid-cols-1 gap-y-6">
+              <div>
+                <label
+                  id="guest-media-label"
+                  class="block mb-2 text-sm font-medium text-gray-700"
+                >
+                  Media
+                </label>
+                <div class="guest-file-control">
+                  <button
+                    id="guest-select"
+                    type="button"
+                    aria-labelledby="guest-media-label guest-select-label"
+                  >
+                    <span id="guest-select-label">Choose Files</span>
+                  </button>
+                  <span id="guest-selected-count">No file chosen</span>
+                </div>
+                <ul
+                  id="guest-files"
+                  class="guest-files"
+                  aria-label="Selected media"
+                ></ul>
+              </div>
+              <button
+                id="guest-submit-upload"
+                class="guest-primary inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm"
+                type="submit"
+                disabled
+              >
+                <span id="guest-upload-label">UPLOAD</span>
+                <span
+                  id="guest-upload-spinner"
+                  class="guest-spinner"
+                  role="status"
+                  aria-label="Uploading media"
+                  hidden
+                ></span>
+              </button>
+              <p
+                id="guest-upload-announcement"
+                class="sr-only"
+                aria-live="polite"
+              ></p>
+            </form>
+          </div>
+        </section>
+      </main>
+      <dialog
+        id="guest-name-dialog"
+        class="guest-name-dialog"
+        aria-labelledby="guest-name-title"
+      >
+        <form id="guest-name-form">
+          <h2
+            id="guest-name-title"
+            class="text-lg font-medium leading-6 text-gray-900"
+            tabindex="-1"
+            autofocus
+          >
+            Welcome!
+          </h2>
+          <p class="mt-2 text-sm text-gray-500">
+            Please enter your name to continue
+          </p>
+          <label class="sr-only" for="guest-name">
+            Your name
+          </label>
+          <input
+            id="guest-name"
+            class="guest-field mt-4 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm"
+            placeholder="Your name"
+            autocomplete="off"
+            readonly
+            required
+          />
+          <button
+            id="guest-continue"
+            class="guest-primary mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-base font-medium text-white"
+            type="submit"
+            disabled
+          >
+            Continue
+          </button>
+        </form>
+      </dialog>
+      <dialog id="guest-viewer" class="guest-viewer" aria-label="Event photo">
+        <div class="guest-viewer-toolbar">
+          <a
+            id="guest-download"
+            download="guestography-photo.jpg"
+            aria-label="Download photo"
+          >
+            ↓
+          </a>
+          <button
+            id="guest-close-viewer"
+            type="button"
+            aria-label="Close photo"
+          >
+            ×
+          </button>
+        </div>
+        <button
+          id="guest-prev"
+          class="guest-viewer-prev"
+          type="button"
+          aria-label="Previous photo"
+        >
+          ‹
+        </button>
+        <img id="guest-viewer-image" alt="" />
+        <button
+          id="guest-next"
+          class="guest-viewer-next"
+          type="button"
+          aria-label="Next photo"
+        >
+          ›
+        </button>
+        <span
+          id="guest-photo-position"
+          class="sr-only"
+          aria-live="polite"
+        ></span>
+      </dialog>
+    </div>
+    <script>
+      import '../../lib/demos/guestography/client';
+    </script>
+  </body>
+</html>

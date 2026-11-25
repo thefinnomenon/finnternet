@@ -8,6 +8,17 @@ import {
 import { demoProjects } from './demo-projects';
 
 function messageCopy(message: FmailMessage) {
+  if (message.project === 'guestography') {
+    return {
+      sender: 'Guestography',
+      subject: fmailSubject(message.kind, message.project),
+      paragraphs: [
+        `Your ${demoProjects.guestography.eventTitle} gallery is now live and ready for guests! Share the QR code with your guests so they can view and upload photos from your event.`,
+        '5 Printable QR Card Templates Attached!',
+      ],
+      snippet: 'Your event gallery and printable QR code cards are ready.',
+    };
+  }
   const { title, username } = demoProjects[message.project];
   const ready = message.kind === 'ready';
   const faceReel = message.project === 'facereel';
@@ -109,6 +120,30 @@ function openMessage(message: FmailMessage): void {
       return p;
     }),
   );
+  if (message.project === 'guestography') {
+    const cards = document.createElement('div');
+    cards.className = 'fmail-qr-cards';
+    for (const style of [
+      'classic',
+      'celebration',
+      'modern',
+      'elegant',
+      'minimal',
+    ]) {
+      const figure = document.createElement('figure');
+      const image = document.createElement('img');
+      image.src = `/demos/guestography/qr-${style}.png`;
+      image.alt = `${style} QR card for ${demoProjects.guestography.eventTitle}`;
+      image.width = 1200;
+      image.height = 1800;
+      image.loading = 'lazy';
+      const caption = document.createElement('figcaption');
+      caption.textContent = `${style[0]?.toUpperCase()}${style.slice(1)}`;
+      figure.append(image, caption);
+      cards.append(figure);
+    }
+    required('#fmail-content', HTMLDivElement).append(cards);
+  }
   if (!modal.open) modal.showModal();
 }
 

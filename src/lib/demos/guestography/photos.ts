@@ -1,0 +1,17 @@
+export const photos = [
+  { id: 0, width: 400, height: 600 },
+  { id: 1, width: 400, height: 600 },
+  { id: 2, width: 400, height: 600 },
+  { id: 3, width: 400, height: 600 },
+  { id: 4, width: 400, height: 600 },
+  { id: 5, width: 400, height: 600 },
+  { id: 6, width: 400, height: 616 },
+  { id: 7, width: 400, height: 599 },
+  { id: 8, width: 400, height: 600 },
+  { id: 9, width: 400, height: 638 },
+  { id: 10, width: 400, height: 600 },
+  { id: 11, width: 400, height: 500 },
+  { id: 12, width: 400, height: 586 },
+  { id: 13, width: 400, height: 600 },
+  { id: 14, width: 400, height: 600 },
+] as const;

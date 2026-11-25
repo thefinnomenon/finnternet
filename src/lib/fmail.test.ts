@@ -309,3 +309,42 @@ test('legacy mail defaults to InstaMosaic while unknown stored projects are reje
     ],
   );
 });
+
+test('Guestography delivers only its gallery-ready email after navigation', () => {
+  const clock = fixture();
+  const firstPage = clock.create();
+  firstPage.start('guest-1', 'guestography');
+  assert.equal(firstPage.snapshot().messages.length, 0);
+  assert.equal(firstPage.snapshot().pending.length, 1);
+  clock.setTime(9000);
+  const nextPage = clock.create();
+  nextPage.deliverDue();
+  nextPage.complete('guest-1');
+  assert.deepEqual(
+    nextPage
+      .snapshot()
+      .messages.map(({ kind, project }) => ({ kind, project })),
+    [{ kind: 'ready', project: 'guestography' }],
+  );
+});
+
+test('repeated Guestography creation replaces the email and ignores superseded runs', () => {
+  const clock = fixture();
+  const mail = clock.create();
+  mail.start('guest-old', 'guestography');
+  clock.setTime(2000);
+  mail.start('guest-new', 'guestography');
+  mail.complete('guest-old');
+  assert.equal(mail.snapshot().messages.length, 0);
+  mail.complete('guest-new');
+  mail.markRead('guest-new:ready');
+  clock.setTime(3000);
+  mail.start('guest-latest', 'guestography');
+  mail.complete('guest-latest');
+  assert.deepEqual(
+    mail
+      .snapshot()
+      .messages.map(({ id, project, read }) => ({ id, project, read })),
+    [{ id: 'guest-latest:ready', project: 'guestography', read: false }],
+  );
+});
