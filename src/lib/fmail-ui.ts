@@ -68,8 +68,83 @@ const toast = required('#fmail-toast', HTMLElement);
 const store = getFmailStore();
 const locale = root.lang || 'en';
 let timer: number | undefined;
+let toastTimer: number | undefined;
+let toastAnimation: Animation | undefined;
+const TOAST_DURATION_MS = 3000;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let lastMessageId = store.snapshot().messages[0]?.id ?? '';
 let toastMessageId: string | undefined;
+
+function pauseToastDismissal(): void {
+  window.clearTimeout(toastTimer);
+  toastTimer = undefined;
+}
+
+function hideToast(): void {
+  pauseToastDismissal();
+  toastAnimation?.cancel();
+  toastAnimation = undefined;
+  toast.hidden = true;
+}
+
+function dismissToast(): void {
+  pauseToastDismissal();
+  if (toast.hidden) return;
+  toastAnimation?.cancel();
+  if (reducedMotion.matches) {
+    hideToast();
+    return;
+  }
+  const animation = toast.animate(
+    [
+      { opacity: 1, transform: 'translateX(0)' },
+      { opacity: 0, transform: 'translateX(12px)' },
+    ],
+    { duration: 160, easing: 'ease-in' },
+  );
+  toastAnimation = animation;
+  animation.addEventListener(
+    'finish',
+    () => {
+      if (toastAnimation === animation) hideToast();
+    },
+    { once: true },
+  );
+}
+
+function showToast(): void {
+  toastAnimation?.cancel();
+  toastAnimation = undefined;
+  toast.hidden = false;
+  if (!reducedMotion.matches) {
+    toastAnimation = toast.animate(
+      [
+        { opacity: 0, transform: 'translateX(16px)' },
+        { opacity: 1, transform: 'translateX(0)' },
+      ],
+      { duration: 200, easing: 'ease-out' },
+    );
+  }
+  scheduleToastDismissal();
+}
+
+function scheduleToastDismissal(): void {
+  pauseToastDismissal();
+  if (
+    toast.hidden ||
+    toast.matches(':hover') ||
+    toast.contains(document.activeElement)
+  )
+    return;
+  toastTimer = window.setTimeout(dismissToast, TOAST_DURATION_MS);
+}
+
+toast.addEventListener('mouseenter', pauseToastDismissal);
+toast.addEventListener('mouseleave', scheduleToastDismissal);
+toast.addEventListener('focusin', pauseToastDismissal);
+toast.addEventListener('focusout', () =>
+  queueMicrotask(scheduleToastDismissal),
+);
 
 function positionPopup(): void {
   const bounds = trigger.getBoundingClientRect();
@@ -102,7 +177,7 @@ window.addEventListener(
 
 function openMessage(message: FmailMessage): void {
   const copy = messageCopy(message);
-  toast.hidden = true;
+  hideToast();
   store.markRead(message.id);
   if (popup.matches(':popover-open')) popup.hidePopover();
   required('#fmail-subject', HTMLHeadingElement).textContent = copy.subject;
@@ -216,7 +291,7 @@ function render(): void {
     required('#fmail-toast-snippet', HTMLSpanElement).textContent =
       copy.snippet;
     toastMessageId = latest.id;
-    toast.hidden = false;
+    showToast();
   }
   lastMessageId = latest?.id ?? '';
   window.clearTimeout(timer);
@@ -236,9 +311,7 @@ required('#fmail-close', HTMLButtonElement).addEventListener('click', () =>
 );
 required('#fmail-toast-dismiss', HTMLButtonElement).addEventListener(
   'click',
-  () => {
-    toast.hidden = true;
-  },
+  dismissToast,
 );
 required('#fmail-toast-open', HTMLButtonElement).addEventListener(
   'click',

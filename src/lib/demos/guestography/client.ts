@@ -6,6 +6,8 @@ type Phase = 'form' | 'processing' | 'ready';
 const ASSETS = '/demos/guestography/';
 const GENERATION_MS = 8000;
 const UPLOAD_MS = 3500;
+const PRESET_EMAIL = 'user@finnternet.com';
+const PRESET_NAME = 'Awesome User';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const { eventTitle } = demoProjects.guestography;
 
@@ -86,18 +88,18 @@ function updateCreate(): void {
   create.disabled =
     phase !== 'form' ||
     title.value !== eventTitle ||
-    email.value !== 'user@finnternet.com';
+    email.value !== PRESET_EMAIL;
 }
 for (const [input, value] of [
   [title, eventTitle],
-  [email, 'user@finnternet.com'],
+  [email, PRESET_EMAIL],
 ] as const) {
   const typeValue = () => fill(input, value, updateCreate);
   input.addEventListener('focus', typeValue);
   input.addEventListener('click', typeValue);
 }
 const fillName = () =>
-  fill(name, 'Chris Finn', () => {
+  fill(name, PRESET_NAME, () => {
     required('#guest-continue', HTMLButtonElement).disabled = false;
   });
 name.addEventListener('focus', fillName);
@@ -169,7 +171,7 @@ required('#guest-name-form', HTMLFormElement).addEventListener(
   'submit',
   (event) => {
     event.preventDefault();
-    if (name.value !== 'Chris Finn') return;
+    if (name.value !== PRESET_NAME) return;
     hasGuest = true;
     nameDialog.close();
     select.focus();
