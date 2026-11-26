@@ -310,16 +310,16 @@ test('legacy mail defaults to InstaMosaic while unknown stored projects are reje
   );
 });
 
-test('Guestography delivers its gallery-ready email after four seconds, including navigation', () => {
+test('Guestography delivers its gallery-ready email after two seconds, including navigation', () => {
   const clock = fixture();
   const firstPage = clock.create();
   firstPage.start('guest-1', 'guestography');
   assert.equal(firstPage.snapshot().messages.length, 0);
   assert.equal(firstPage.snapshot().pending.length, 1);
-  clock.setTime(4999);
+  clock.setTime(2999);
   firstPage.deliverDue();
   assert.equal(firstPage.snapshot().messages.length, 0);
-  clock.setTime(5000);
+  clock.setTime(3000);
   const nextPage = clock.create();
   nextPage.deliverDue();
   assert.deepEqual(
@@ -328,7 +328,7 @@ test('Guestography delivers its gallery-ready email after four seconds, includin
       .messages.map(({ kind, project }) => ({ kind, project })),
     [{ kind: 'ready', project: 'guestography' }],
   );
-  assert.equal(nextPage.snapshot().messages[0]?.receivedAt, 5000);
+  assert.equal(nextPage.snapshot().messages[0]?.receivedAt, 3000);
   nextPage.complete('guest-1');
   assert.equal(nextPage.snapshot().messages.length, 1);
 });

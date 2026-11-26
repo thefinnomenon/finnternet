@@ -4,7 +4,7 @@ export const demoProjects = {
   guestography: {
     title: 'Guestography',
     eventTitle: "Alyssa & Mike's Wedding",
-    generationMs: 4000,
+    generationMs: 2000,
   },
 } as const;
 
