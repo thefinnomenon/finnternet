@@ -28,7 +28,7 @@ const { title } = portfolioDemos[project];
           height="640"
           loading="lazy"
           allow="fullscreen; web-share; clipboard-write"
-          sandbox="allow-scripts allow-same-origin allow-downloads allow-forms"
+          sandbox={`allow-scripts allow-same-origin allow-downloads allow-forms${project === 'creatorkitchen' ? ' allow-popups' : ''}`}
         ></iframe>
       </Window>
       <button

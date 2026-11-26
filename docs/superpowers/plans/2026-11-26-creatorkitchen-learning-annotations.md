@@ -1,17 +1,13 @@
-# CreatorKitchen learning annotations
+# CreatorKitchen original editor
 
-The owner identified hover tooltips and audio links as core features of the original editor and described its early intent to support areas such as language learning. Preserve both interactions in the isolated portfolio replay and make this purpose prominent in the project description and functionality list.
-
-Use the existing Astro/TypeScript replay, its editor, local publication snapshots and shared theme support. Match the original extensions' inline annotation semantics and dotted/wavy underlines without importing the retired authenticated application. No new framework, backend, uploads or provider calls. Use a short Portuguese article and locally generated pronunciation recordings.
+The portfolio must run the working original editor, especially its custom tooltip and audio extensions. The surrounding sidebar and navigation should keep the portfolio demo's earlier styling. Content Settings belongs behind the gear at every viewport size. Visitors can create documents and see local saving feedback, without preview, publishing, or external-site navigation.
 
 Implementation:
 
-1. Extend text runs with escaped tooltip content and approved local audio identifiers. Preserve both marks through editing, preview and independent publication snapshots.
-2. Add selection-based Tooltip and Audio link controls with editable annotations and removal. Keep the existing layout and compact mobile toolbar.
-3. Show hover/focus/tap tooltips; play pronunciation on click or keyboard activation, with one audio stream at a time and visible failure feedback.
-4. Update source-backed portfolio copy to explain the broader publishing idea and language-learning use case. The public source already contains the actual Tiptap extensions.
-5. Verify serialization and snapshot regressions, real audio playback, selection/edit/remove flows, both themes, mobile, keyboard, and the existing editor/publishing flow. Run required checks, commit/push on main and verify CI, deployment and production.
+1. Bundle the original React 17/Tiptap editor and its extensions unchanged from the sanitized public source archive. Verify every archived file against a recorded SHA-256 before building. Pin the original editor and ProseMirror dependency versions.
+2. Mount the original editor inside the existing styled sidebar and top bar. Keep initial editor content stable while typing and remount only when switching documents. Store each document's title, description, and exact editor HTML in memory.
+3. Put title and description in a native modal settings drawer with keyboard dismissal and focus return. Preserve adding documents and local save feedback. Remove the recreated editor, preview, publishing, and external-site flow.
+4. Replace only retired file storage with browser object URLs. Keep original editor tools and original tooltip/audio markup. Use local pronunciation fixtures, shared theme messages, and accessible editor labeling.
+5. Verify document isolation and exact HTML preservation, original toolbar and audio behavior, settings and document switching, desktop/mobile layouts, and both themes. Run formatting, lint, typecheck, tests, and production build. Commit and push on the existing main branch, follow CI and deployment, and verify production.
 
-The earlier instruction to continue without questions applies. The implementation approach is an agent choice, and the final handoff must distinguish the recreated demo from the original source application.
-
-Verification: 31 tests pass, including annotation escaping, independent publication snapshots, selections across annotation boundaries, annotation grouping through formatting and formatting toggles. Prettier, ESLint, Astro checks (70 files, zero diagnostics) and the 44-page production build pass. Independent review findings were corrected. Browser checks verified annotation creation/edit/removal, two real local audio clips, keyboard explanations and playback, 320px layout without overflow, light/dark themes, and published content remaining unchanged after later draft edits. Provider services and original Tiptap runtime were not used. Production verification follows the main-branch push.
+The archived source is intentionally excluded from the site's current lint, formatter, and TypeScript checks. Its hashes are checked before every build; the new shell and adapters remain subject to the site's strict checks. No original authentication, database, email, or publishing services are restored.

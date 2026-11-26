@@ -7,5 +7,11 @@
     "noUnusedParameters": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "demos/creatorkitchen/vendor",
+    "demos/creatorkitchen/original-entry.js",
+    "public/demos/creatorkitchen/app"
+  ]
 }

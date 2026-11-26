@@ -1,0 +1,113 @@
+.ck-app {
+  grid-template-columns: 180px minmax(0, 1fr);
+}
+.ck-topbar {
+  border-bottom: 1px solid var(--ck-rule);
+}
+.ck-settings-toggle {
+  display: grid;
+}
+.ck-settings-toggle svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.ck-site-button {
+  margin: 0;
+}
+.ck-editor-body .ProseMirror {
+  padding: 0;
+  max-width: none;
+  overflow: visible;
+  color: var(--ck-ink);
+}
+.ck-editor-body .ProseMirror:focus {
+  outline: none;
+}
+.ck-editor-body .prose :where(h1, h2, h3, h4, strong, blockquote) {
+  color: var(--ck-ink);
+}
+.ck-settings-dialog {
+  position: fixed;
+  left: auto;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  width: min(300px, calc(100vw - 24px));
+  height: 100%;
+  max-height: none;
+  border: 0;
+  border-left: 1px solid var(--ck-rule);
+  background: var(--ck-panel);
+  color: var(--ck-ink);
+  box-shadow: var(--ck-shadow);
+}
+.ck-settings-dialog::backdrop {
+  background: #10182838;
+}
+.ck-settings-dialog .ck-settings {
+  position: static;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-shadow: none;
+  border: 0;
+}
+.ck-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 12px;
+}
+.ck-settings-header h2 {
+  font-size: 22px;
+  padding: 22px 16px;
+}
+.ck-settings-dialog .ck-settings form {
+  overflow: auto;
+}
+.tippy-box {
+  max-width: min(500px, calc(100vw - 16px)) !important;
+}
+.tippy-content .flex {
+  flex-wrap: wrap;
+}
+:root[data-theme='dark'] .bg-gray-100,
+:root[data-theme='dark'] .bg-gray-200,
+:root[data-theme='dark'] .bg-white,
+:root[data-theme='dark'] .ProseMirror table th {
+  background: var(--ck-panel);
+}
+:root[data-theme='dark'] .hover\:bg-gray-300:hover {
+  background: var(--ck-hover);
+}
+:root[data-theme='dark'] .text-gray-700 {
+  color: var(--ck-ink);
+}
+:root[data-theme='dark'] .text-gray-400,
+:root[data-theme='dark'] .text-gray-500 {
+  color: var(--ck-muted);
+}
+:root[data-theme='dark'] .text-blue-500 {
+  color: var(--ck-link);
+}
+@media (min-width: 1050px) {
+  .ck-app {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .ck-app {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+}
+@media (max-width: 470px) {
+  .ck-app {
+    grid-template-columns: 1fr;
+  }
+}

@@ -3,3 +3,6 @@ dist
 .astro
 .sites-runtime
 package-lock.json
+demos/creatorkitchen/vendor
+demos/creatorkitchen/.generated
+public/demos/creatorkitchen/app

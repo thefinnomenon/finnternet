@@ -48,7 +48,7 @@ Whistle presents the original mobile sports-prediction flow with local game fixt
 
 GraphQL Algolia Transformer illustrates an Amplify schema directive, DynamoDB stream events, Lambda indexing, field selection, and generated search queries. Its diagram and search use local records and do not provision AWS or connect to Algolia.
 
-CreatorKitchen replays the original content editor, formatting and media tools, preview, and publishing flow. Draft edits and published snapshots stay local to the browser. The original Amplify authentication, uploads, and publishing services are not called.
+CreatorKitchen runs the original React/Tiptap editor, including its tooltip and audio extensions, inside the portfolio's styled sidebar and top bar. Visitors can add documents, edit their content, and open document settings with the gear. Drafts and uploaded files stay in memory for that visit. There is no publishing or external-site flow, and the original Amplify services are not called. `npm run build:creatorkitchen` verifies the archived source hashes and bundles this isolated editor before Astro builds; `npm run dev` runs that step automatically. See `demos/creatorkitchen/README.md` for provenance and adaptations.
 
 The InstaMosaic page pairs a resizable product window with project details, completion date, source link, grouped tech stack, and functionality. Its isolated iframe uses the original product styling with preset interactions and precomputed image and video exports. It does not call the original backend, process user uploads, send email, or start a checkout. The former `/previews/instamosaic/` URL forwards to `/projects/instamosaic/`.
 
