@@ -1,108 +1,159 @@
 /** @jsxImportSource react */
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+} from 'react';
 import ReactDOM from 'react-dom';
 import { delegate, roundArrow } from 'tippy.js';
 import { Editor } from '@creatorkitchen/original';
 import { createDraft, updateDraft, type Draft } from './fixtures';
 import { installFixtureFetch } from './adapters/services';
+import { readOnlyHTML } from './preview';
+import { EditorBridge } from './adapters/editor-bridge';
+import type { Editor as TiptapEditor } from '@tiptap/react';
 import './.generated/base.css';
 import './shell.css';
 import './theme.css';
 
 installFixtureFetch();
 
+function pauseMedia(root: ParentNode = document): void {
+  for (const media of root.querySelectorAll<HTMLMediaElement>('audio, video'))
+    media.pause();
+}
+
 function EditorPane({
   initialContent,
   onChange,
+  preview,
 }: {
   initialContent: string;
   onChange: (html: string) => void;
+  preview: boolean;
 }): ReactElement {
   const root = useRef<HTMLDivElement>(null);
-  const audioHost = useRef<HTMLDivElement>(null);
+  const html = useMemo(
+    () => (preview ? readOnlyHTML(initialContent) : ''),
+    [preview, initialContent],
+  );
   useEffect(() => {
     const container = root.current;
-    const media = audioHost.current;
-    if (!container || !media) return;
-    const audio = new Map<string, HTMLAudioElement>();
-    const sync = () => {
+    if (!container) return;
+    const label = () => {
       const editor = container.querySelector(
         '.ProseMirror[contenteditable=true]',
       );
-      if (!editor) return;
-      if (!editor.hasAttribute('aria-label')) {
+      if (editor && !editor.hasAttribute('aria-label')) {
         editor.setAttribute('role', 'textbox');
         editor.setAttribute('aria-multiline', 'true');
         editor.setAttribute('aria-label', 'Post content');
       }
-      // ProseMirror owns mark children while editing. Keep the original mark's
-      // audio targets outside that DOM so its unchanged inline handler can play.
-      const sources = new Set(
-        Array.from(editor.querySelectorAll('[data-type="audiolink"][src]'))
-          .map((mark) => mark.getAttribute('src'))
-          .filter((src): src is string => Boolean(src)),
-      );
-      for (const [src, element] of audio) {
-        if (sources.has(src)) continue;
-        element.pause();
-        element.remove();
-        audio.delete(src);
-      }
-      for (const src of sources) {
-        if (audio.has(src)) continue;
-        const element = document.createElement('audio');
-        element.id = src;
-        element.src = src;
-        element.preload = 'none';
-        media.appendChild(element);
-        audio.set(src, element);
+      for (const button of container.querySelectorAll('.node-callout button'))
+        button.setAttribute('aria-label', 'Change callout style');
+      for (const select of container.querySelectorAll('.code-block select'))
+        select.setAttribute('aria-label', 'Code language');
+      for (const video of container.querySelectorAll('video')) {
+        video.setAttribute(
+          'aria-label',
+          video.closest('[data-type="media"]')?.getAttribute('alt') ||
+            'Lesson pronunciation video',
+        );
       }
     };
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(container, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['src'],
-    });
-    // The original reader's Tippy behavior, attached to changing editor markup.
-    const tooltips = delegate(container, {
-      target: '[data-tooltip-content]',
-      interactive: true,
-      appendTo: () => document.body,
-      allowHTML: true,
-      arrow: roundArrow,
-      theme: 'my-tippy',
-      onShow(instance) {
-        if (!window.getSelection()?.isCollapsed) return false;
-        const content = instance.reference.getAttribute('data-tooltip-content');
-        if (!content) return false;
-        instance.setContent(content);
-        return undefined;
-      },
-    });
+    label();
+    const observer = new MutationObserver(label);
+    observer.observe(container, { childList: true, subtree: true });
+    const tooltips = preview
+      ? delegate(container, {
+          target: '[data-tooltip-content]',
+          interactive: true,
+          hideOnClick: false,
+          appendTo: () => document.body,
+          allowHTML: true,
+          arrow: roundArrow,
+          theme: 'my-tippy',
+          onShow(instance) {
+            const content = instance.reference.getAttribute(
+              'data-tooltip-content',
+            );
+            if (!content) return false;
+            instance.setContent(readOnlyHTML(content));
+            return undefined;
+          },
+        })
+      : null;
+    if (preview) {
+      container
+        .querySelectorAll<HTMLElement>('[data-type="audiolink"]')
+        .forEach((link) => {
+          link.tabIndex = 0;
+          link.setAttribute('role', 'button');
+          link.setAttribute(
+            'aria-label',
+            `Play audio: ${link.textContent?.trim() || 'pronunciation'}`,
+          );
+        });
+    }
+    const playWithKeyboard = (event: KeyboardEvent) => {
+      if (!preview || (event.key !== 'Enter' && event.key !== ' ')) return;
+      if (
+        !(event.target instanceof HTMLElement) ||
+        !event.target.matches('[data-type="audiolink"]')
+      )
+        return;
+      event.preventDefault();
+      event.target.click();
+    };
+    container.addEventListener('keydown', playWithKeyboard);
     return () => {
       observer.disconnect();
-      for (const element of audio.values()) {
-        element.pause();
-        element.remove();
-      }
-      for (const instance of Array.isArray(tooltips) ? tooltips : [tooltips])
-        instance.destroy();
+      container.removeEventListener('keydown', playWithKeyboard);
+      pauseMedia(container);
+      if (tooltips)
+        for (const instance of Array.isArray(tooltips) ? tooltips : [tooltips])
+          instance.destroy();
     };
-  }, []);
+  }, [preview]);
   return (
-    <>
-      <div ref={root} className="ck-editor-body ck-prose">
+    <div
+      ref={root}
+      className="ck-editor-body ck-prose"
+      onPlayCapture={(event) => {
+        for (const media of event.currentTarget.querySelectorAll<HTMLMediaElement>(
+          'audio, video',
+        ))
+          if (media !== event.target) media.pause();
+      }}
+      onClickCapture={(event) => {
+        if (
+          !preview &&
+          event.target instanceof Element &&
+          event.target.closest('[data-type="audiolink"]')
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+    >
+      {preview ? (
+        <div
+          className="ProseMirror prose"
+          role="document"
+          aria-label="Content preview"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      ) : (
         <Editor
           initialContent={initialContent}
           onChange={onChange}
           preview={false}
         />
-      </div>
-      <div ref={audioHost} hidden aria-hidden="true" />
-    </>
+      )}
+    </div>
   );
 }
 
@@ -115,6 +166,13 @@ function App(): ReactElement {
     () => createDraft('lesson', true).content,
   );
   const [saved, setSaved] = useState(true);
+  const [preview, setPreview] = useState(false);
+  const [editorReady, setEditorReady] = useState(false);
+  const editor = useRef<TiptapEditor | null>(null);
+  const registerEditor = useCallback((value: TiptapEditor | null) => {
+    editor.current = value;
+    setEditorReady(Boolean(value));
+  }, []);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const settings = useRef<HTMLDialogElement>(null);
@@ -147,6 +205,7 @@ function App(): ReactElement {
     timer.current = setTimeout(() => setSaved(true), 350);
   }
   function select(draft: Draft): void {
+    pauseMedia();
     clearTimeout(timer.current);
     setSaved(true);
     setInitialHTML(draft.content);
@@ -159,11 +218,12 @@ function App(): ReactElement {
   }
   function add(): void {
     const next = createDraft(crypto.randomUUID());
+    setPreview(false);
     setDrafts((items) => [...items, next]);
     select(next);
   }
   return (
-    <>
+    <EditorBridge.Provider value={registerEditor}>
       <div className="ck-app">
         <aside className="ck-sidebar" aria-label="Content">
           <div className="ck-content-heading">
@@ -204,26 +264,51 @@ function App(): ReactElement {
             <span className="ck-save-status" role="status">
               {saved ? 'Saved' : 'Saving…'}
             </span>
-            <button
-              ref={gear}
-              className="ck-icon-button ck-settings-toggle"
-              type="button"
-              aria-label="Content settings"
-              aria-haspopup="dialog"
-              aria-expanded={settingsOpen}
-              onClick={openSettings}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3h-6Z" />
-                <circle cx="12" cy="11" r="3" />
-              </svg>
-            </button>
+            <div className="ck-actions">
+              <button
+                type="button"
+                className="ck-text-button"
+                aria-label={preview ? 'Back to editor' : 'Preview content'}
+                disabled={!preview && !editorReady}
+                onClick={() => {
+                  pauseMedia();
+                  const content = preview
+                    ? current.content
+                    : editor.current?.getHTML();
+                  if (content === undefined) return;
+                  if (!preview)
+                    setDrafts((items) =>
+                      updateDraft(items, active, { content }),
+                    );
+                  setInitialHTML(content);
+                  setPreview((value) => !value);
+                }}
+              >
+                {preview ? 'Edit' : 'Preview'}
+              </button>
+              <button
+                ref={gear}
+                disabled={preview}
+                className="ck-icon-button ck-settings-toggle"
+                type="button"
+                aria-label="Content settings"
+                aria-haspopup="dialog"
+                aria-expanded={settingsOpen}
+                onClick={openSettings}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3h-6Z" />
+                  <circle cx="12" cy="11" r="3" />
+                </svg>
+              </button>
+            </div>
           </div>
           <div className="ck-document-scroll">
             <article className="ck-document">
               <h1>{current.title || 'Untitled'}</h1>
               <EditorPane
-                key={active}
+                key={`${active}:${preview ? 'preview' : 'edit'}`}
+                preview={preview}
                 initialContent={initialHTML}
                 onChange={(content) => change(active, { content })}
               />
@@ -290,7 +375,7 @@ function App(): ReactElement {
           </form>
         </aside>
       </dialog>
-    </>
+    </EditorBridge.Provider>
   );
 }
 

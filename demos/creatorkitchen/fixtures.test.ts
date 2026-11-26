@@ -21,5 +21,5 @@ test('metadata changes keep a document’s saved editor content', () => {
   });
   assert.equal(updated[0]?.title, 'My language notes');
   assert.equal(updated[0]?.content, first.content);
-  assert.equal(first.title, 'A little Portuguese');
+  assert.equal(first.title, 'Portuguese: the present subjunctive');
 });

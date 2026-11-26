@@ -37,6 +37,61 @@
 .ck-editor-body .prose :where(h1, h2, h3, h4, strong, blockquote) {
   color: var(--ck-ink);
 }
+.ck-editor-body .prose :where(th, td, thead) {
+  color: var(--ck-ink);
+}
+.ck-editor-body .ProseMirror table {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ck-editor-body .ProseMirror :is(th, td) {
+  padding: 7px 5px;
+  border: 1px solid var(--ck-rule);
+}
+.ck-editor-body .prose a {
+  color: var(--ck-link);
+}
+.ck-editor-body mark {
+  padding: 0 0.1em;
+  background: var(--ck-selected);
+  color: var(--ck-ink);
+}
+.ck-editor-body
+  :is([data-type='callout'], .node-callout)
+  [data-node-view-wrapper] {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  padding: 14px;
+  background: var(--ck-selected);
+  border-color: var(--ck-blue);
+  color: var(--ck-ink);
+}
+.ck-editor-body
+  :is([data-type='callout'], .node-callout)
+  [data-node-view-content] {
+  min-width: 0;
+  padding: 0;
+}
+.ck-editor-body
+  :is([data-type='callout'], .node-callout)
+  :is(button, .ck-callout-icon) {
+  flex-shrink: 0;
+  padding: 2px;
+  font-size: 20px;
+  color: var(--ck-link);
+}
+.ck-editor-body :is([data-type='callout'], .node-callout) button svg {
+  color: inherit;
+}
+.ck-editor-body :is([data-type='callout'], .node-callout) p:last-child {
+  margin-bottom: 0;
+}
+.ck-editor-body .embed {
+  box-shadow: none;
+  border-radius: 8px;
+  max-width: 100%;
+}
 .ck-settings-dialog {
   position: fixed;
   left: auto;
@@ -79,10 +134,93 @@
   overflow: auto;
 }
 .tippy-box {
-  max-width: min(500px, calc(100vw - 16px)) !important;
+  max-width: min(640px, calc(100vw - 16px)) !important;
 }
-.tippy-content .flex:not(.flex-col) {
-  flex-wrap: wrap;
+.tippy-content > .bg-gray-100:has(> button) {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px;
+  border: 1px solid var(--ck-rule);
+  border-radius: 6px;
+  background: var(--ck-panel);
+}
+.tippy-content > .bg-gray-100:has(> button) > button {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 7px;
+  font-size: 17px;
+}
+.ck-audio-toolbar {
+  width: min(340px, calc(100vw - 16px));
+  padding: 5px;
+  border: 1px solid var(--ck-rule);
+  border-radius: 6px;
+  background: var(--ck-panel);
+  color: var(--ck-ink);
+  box-shadow: 0 5px 16px #0002;
+}
+.ck-audio-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+}
+.ck-audio-file {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  padding: 6px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: 12px;
+  line-height: 18px;
+  background: var(--ck-input);
+  border: 1px solid var(--ck-rule);
+  border-radius: 4px;
+}
+.ck-tool-button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 32px;
+  border-radius: 4px;
+  font-size: 18px;
+}
+.ck-audio-error {
+  margin: 5px 2px 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.ck-hover-tooltip {
+  min-width: 80px;
+  max-width: 240px;
+  padding: 2px;
+  color: #fff;
+}
+.ck-hover-tooltip:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+.ck-media-placeholder {
+  padding: 24px;
+  margin: 20px 0;
+  border: 1px dashed var(--ck-rule);
+  border-radius: 6px;
+  color: var(--ck-muted);
+  font-size: 13px;
+  text-align: center;
+}
+.ck-editor-body [data-type='audiolink']:focus-visible {
+  outline: 2px solid var(--ck-blue);
+  outline-offset: 3px;
 }
 .ck-command-menu {
   position: relative;
@@ -167,5 +305,11 @@
 @media (max-width: 470px) {
   .ck-app {
     grid-template-columns: 1fr;
+  }
+  .ck-editor-body .ProseMirror table {
+    font-size: 13px;
+  }
+  .ck-editor-body .ProseMirror :is(th, td) {
+    padding: 7px 4px;
   }
 }

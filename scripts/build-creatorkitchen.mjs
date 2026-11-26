@@ -68,8 +68,27 @@ const result = await build({
   },
   plugins: [
     {
-      name: 'retired-service-boundaries',
+      name: 'creatorkitchen-portfolio-adapters',
       setup(builder) {
+        builder.onLoad(
+          { filter: /vendor\/components\/Callout\/Callout\.tsx$/ },
+          async (args) => {
+            const source = await readFile(args.path, 'utf8');
+            const original =
+              'const nextType = types[types.indexOf(props.node.attrs.type) + 1];';
+            if (!source.includes(original))
+              throw new Error(
+                'Original callout cycle patch no longer matches.',
+              );
+            return {
+              contents: source.replace(
+                original,
+                'const nextType = types[(types.indexOf(props.node.attrs.type) + 1) % types.length];',
+              ),
+              loader: 'tsx',
+            };
+          },
+        );
         builder.onResolve({ filter: /^@creatorkitchen\/original$/ }, () => ({
           path: path.join(app, 'original-entry.js'),
         }));
@@ -97,6 +116,16 @@ const result = await build({
             path: path.join(adapters, 'CommandList.tsx'),
           }),
         );
+        builder.onResolve(
+          { filter: /^\.\/(AudioLinkInput|TooltipUI)$/ },
+          (args) => {
+            if (args.importer !== path.join(vendor, 'components/TipTap.tsx'))
+              return;
+            return {
+              path: path.join(adapters, `${path.basename(args.path)}.tsx`),
+            };
+          },
+        );
       },
     },
   ],
@@ -115,5 +144,5 @@ await writeFile(
   }) + '\n',
 );
 log(
-  `Built ${Object.keys(manifest.files).length} original CreatorKitchen source files; built the original editor.`,
+  `Verified ${Object.keys(manifest.files).length} original CreatorKitchen source files; built the original editor.`,
 );
