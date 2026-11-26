@@ -1,0 +1,36 @@
+---
+import { translations, type Locale } from '../lib/i18n';
+import { educationEntries } from '../lib/portfolio';
+import '../styles/resume.css';
+
+interface Props {
+  locale: Locale;
+  compact?: boolean;
+}
+
+const { locale, compact = false } = Astro.props;
+const t = translations[locale];
+const entries = [...educationEntries].sort((a, b) =>
+  b.endedOn.localeCompare(a.endedOn),
+);
+---
+
+<ol class:list={['resume-history', 'education-history', { compact }]}>
+  {entries.map((entry) => (
+    <li class="resume-row education-row">
+      <article class="resume-row-header">
+        <div>
+          <h2>{entry.school}</h2>
+          {entry.qualificationKeys.map((key) => (
+            <p class="resume-subtitle">{t[key]}</p>
+          ))}
+        </div>
+        <p class="resume-dates">
+          <time datetime={entry.startedOn}>{entry.startedOn}</time>
+          {' – '}
+          <time datetime={entry.endedOn}>{entry.endedOn}</time>
+        </p>
+      </article>
+    </li>
+  ))}
+</ol>

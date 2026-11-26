@@ -1,0 +1,51 @@
+.resume-history {
+  list-style: none;
+  padding: 0;
+}
+.resume-row + .resume-row {
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--rule);
+}
+.resume-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+}
+.resume-row h2 {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.resume-subtitle {
+  margin-top: var(--space-1);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.resume-dates {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.resume-location {
+  margin-top: var(--space-1);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.resume-dates time {
+  white-space: nowrap;
+}
+.resume-description {
+  margin-top: var(--space-3);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.resume-history.compact .resume-row-header {
+  display: block;
+}
+.resume-history.compact .resume-dates {
+  margin-top: var(--space-3);
+}

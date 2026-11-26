@@ -5,6 +5,7 @@ import Computer from './Computer.astro';
 import PixelIcon from './PixelIcon.astro';
 import PostList from './PostList.astro';
 import WorkHistory from './WorkHistory.astro';
+import EducationHistory from './EducationHistory.astro';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
 import { postsForLocale } from '../lib/posts';
 import { projectEntries } from '../lib/portfolio';
@@ -57,12 +58,15 @@ const alternates = Object.fromEntries(
         <Computer />
       </Window>
       <div class="home-columns">
-        <aside class="home-work-rail" aria-label={t.work}>
+        <aside class="home-work-rail" aria-label={`${t.work} / ${t.education}`}>
           <Window title={t.work} class="work-window">
             <WorkHistory locale={locale} compact />
             <a class="window-bottom-link" href={localePath(locale, 'work')}>
               {t.allWork} <span aria-hidden="true">→</span>
             </a>
+          </Window>
+          <Window title={t.education} class="education-window">
+            <EducationHistory locale={locale} compact />
           </Window>
         </aside>
         <div class="home-main-column">

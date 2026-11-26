@@ -4,6 +4,7 @@ import Window from './Window.astro';
 import PostList from './PostList.astro';
 import Computer from './Computer.astro';
 import WorkHistory from './WorkHistory.astro';
+import EducationHistory from './EducationHistory.astro';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
 import { postsForLocale } from '../lib/posts';
 import { projectEntries } from '../lib/portfolio';
@@ -35,7 +36,7 @@ const description =
   path={section}
   alternates={alternates}
 >
-  <div class="section-page">
+  <div class:list={['section-page', { 'resume-page': section === 'work' }]}>
     <Window title={t[section]}>
       {section === 'writing' && (
         <>
@@ -98,5 +99,10 @@ const description =
         </div>
       )}
     </Window>
+    {section === 'work' && (
+      <Window title={t.education} class="education-window">
+        <EducationHistory locale={locale} />
+      </Window>
+    )}
   </div>
 </Base>

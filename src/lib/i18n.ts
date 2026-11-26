@@ -13,6 +13,13 @@ const en = {
   navigation: 'Navigation',
   writing: 'Writing',
   work: 'Work',
+  education: 'Education',
+  mitEntrepreneurshipBootcamp: 'Entrepreneurship Online Bootcamp',
+  mastersElectricalComputerEngineering:
+    'Master of Electrical & Computer Engineering',
+  bachelorsComputerScience: 'Bachelor of Arts, Computer Science',
+  bachelorsComputerSystemsEngineering:
+    'Bachelor of Science, Computer Systems Engineering',
   workIntro: 'Professional experience.',
   allWork: 'View work',
   whistleDescription:
@@ -100,6 +107,13 @@ export const translations = {
     navigation: 'Navegación',
     writing: 'Artículos',
     work: 'Trabajo',
+    education: 'Educación',
+    mitEntrepreneurshipBootcamp: 'Bootcamp en línea de emprendimiento',
+    mastersElectricalComputerEngineering:
+      'Máster en Ingeniería Eléctrica e Informática',
+    bachelorsComputerScience: 'Bachelor of Arts en Ciencias de la Computación',
+    bachelorsComputerSystemsEngineering:
+      'Bachelor of Science en Ingeniería de Sistemas Informáticos',
     workIntro: 'Experiencia profesional.',
     allWork: 'Ver trabajo',
     whistleDescription:
@@ -183,6 +197,13 @@ export const translations = {
     navigation: 'Navegação',
     writing: 'Artigos',
     work: 'Trabalho',
+    education: 'Formação',
+    mitEntrepreneurshipBootcamp: 'Bootcamp online de empreendedorismo',
+    mastersElectricalComputerEngineering:
+      'Master of Electrical & Computer Engineering',
+    bachelorsComputerScience: 'Bachelor of Arts em Ciência da Computação',
+    bachelorsComputerSystemsEngineering:
+      'Bachelor of Science em Engenharia de Sistemas Computacionais',
     workIntro: 'Experiência profissional.',
     allWork: 'Ver trabalho',
     whistleDescription:
@@ -267,6 +288,13 @@ export const translations = {
     navigation: 'Navigazione',
     writing: 'Articoli',
     work: 'Lavoro',
+    education: 'Formazione',
+    mitEntrepreneurshipBootcamp: 'Bootcamp online di imprenditorialità',
+    mastersElectricalComputerEngineering:
+      'Master of Electrical & Computer Engineering',
+    bachelorsComputerScience: 'Bachelor of Arts in Informatica',
+    bachelorsComputerSystemsEngineering:
+      'Bachelor of Science in Ingegneria dei sistemi informatici',
     workIntro: 'Esperienza professionale.',
     allWork: 'Vedi il lavoro',
     whistleDescription:

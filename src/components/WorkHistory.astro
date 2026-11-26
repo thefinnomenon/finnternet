@@ -1,6 +1,7 @@
 ---
 import { translations, type Locale } from '../lib/i18n';
 import { workEntries } from '../lib/portfolio';
+import '../styles/resume.css';
 
 interface Props {
   locale: Locale;
@@ -21,23 +22,35 @@ const entries = [...workEntries].sort(
 );
 ---
 
-<ol class:list={['work-history', { compact }]}>
+<ol class:list={['resume-history', 'work-history', { compact }]}>
   {entries.map((entry) => (
-    <li class="work-row">
+    <li class="resume-row work-row">
       <article>
-        <div class="work-row-header">
+        <div class="resume-row-header">
           <div>
             <h2>
               {entry.href ? (
-                <a href={entry.href}>{entry.company}</a>
+                <a
+                  href={entry.href}
+                  target={
+                    entry.href.startsWith('https://') ? '_blank' : undefined
+                  }
+                  rel={
+                    entry.href.startsWith('https://')
+                      ? 'noopener noreferrer'
+                      : undefined
+                  }
+                >
+                  {entry.company}
+                </a>
               ) : (
                 entry.company
               )}
             </h2>
-            <p class="work-role">{t[entry.roleKey]}</p>
+            <p class="resume-subtitle">{t[entry.roleKey]}</p>
           </div>
-          <div class="work-period">
-            <p class="work-dates">
+          <div class="resume-period">
+            <p class="resume-dates">
               <time datetime={entry.startedOn}>
                 {dateFormat.format(new Date(`${entry.startedOn}-01T00:00:00Z`))}
               </time>
@@ -47,68 +60,14 @@ const entries = [...workEntries].sort(
               </time>
             </p>
             {entry.locationKey && (
-              <p class="work-location">{t[entry.locationKey]}</p>
+              <p class="resume-location">{t[entry.locationKey]}</p>
             )}
           </div>
         </div>
         {entry.descriptionKey && (
-          <p class="work-description">{t[entry.descriptionKey]}</p>
+          <p class="resume-description">{t[entry.descriptionKey]}</p>
         )}
       </article>
     </li>
   ))}
 </ol>
-
-<style>
-  .work-history {
-    list-style: none;
-    padding: 0;
-  }
-  .work-row + .work-row {
-    margin-top: var(--space-6);
-    padding-top: var(--space-6);
-    border-top: 1px solid var(--rule);
-  }
-  .work-row-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-6);
-  }
-  h2 {
-    font-size: 1.15rem;
-    line-height: 1.4;
-    letter-spacing: -0.02em;
-  }
-  .work-role {
-    margin-top: var(--space-1);
-    font-size: 0.95rem;
-    font-weight: 600;
-  }
-  .work-dates {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-  .work-location {
-    margin-top: var(--space-1);
-    color: var(--muted);
-    font-size: 0.8rem;
-  }
-  time {
-    white-space: nowrap;
-  }
-  .work-description {
-    margin-top: var(--space-3);
-    color: var(--muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-  .compact .work-row-header {
-    display: block;
-  }
-  .compact .work-dates {
-    margin-top: var(--space-3);
-  }
-</style>

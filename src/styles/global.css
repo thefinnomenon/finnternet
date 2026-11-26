@@ -552,6 +552,8 @@
   .home-work-rail {
     grid-area: work;
     min-width: 0;
+    display: grid;
+    gap: var(--space-6);
   }
   .post-list {
     list-style: none;
@@ -715,6 +717,10 @@
   }
   .section-page {
     max-width: 920px;
+  }
+  .resume-page {
+    display: grid;
+    gap: var(--space-6);
   }
   .section-heading {
     padding-bottom: var(--space-6);
@@ -1031,7 +1037,8 @@
       font-size: 0.73rem;
     }
     .home-columns,
-    .home-main-column {
+    .home-main-column,
+    .home-work-rail {
       gap: var(--space-5);
     }
     .home-project {

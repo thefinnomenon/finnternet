@@ -23,6 +23,7 @@ export const workEntries: readonly WorkEntry[] = [
   whistleWork,
   {
     company: 'Paragraph LLC',
+    href: 'https://paragraph.com/',
     roleKey: 'seniorSoftwareEngineer',
     descriptionKey: 'paragraphWorkDescription',
     locationKey: 'remoteLocation',
@@ -81,6 +82,30 @@ export const workEntries: readonly WorkEntry[] = [
     endedOn: '2010-12',
   },
 ];
+
+export const educationEntries = [
+  {
+    school: 'Massachusetts Institute of Technology',
+    qualificationKeys: ['mitEntrepreneurshipBootcamp'],
+    startedOn: '2017',
+    endedOn: '2018',
+  },
+  {
+    school: 'Northeastern University',
+    qualificationKeys: ['mastersElectricalComputerEngineering'],
+    startedOn: '2014',
+    endedOn: '2015',
+  },
+  {
+    school: 'University of Massachusetts Amherst',
+    qualificationKeys: [
+      'bachelorsComputerScience',
+      'bachelorsComputerSystemsEngineering',
+    ],
+    startedOn: '2009',
+    endedOn: '2013',
+  },
+] as const;
 
 export const projectEntries = [
   {
