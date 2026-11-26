@@ -161,7 +161,6 @@ function App(): ReactElement {
     const next = createDraft(crypto.randomUUID());
     setDrafts((items) => [...items, next]);
     select(next);
-    openSettings();
   }
   return (
     <>
