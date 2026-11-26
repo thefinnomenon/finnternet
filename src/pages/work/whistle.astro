@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import ProjectLayout from '../../components/ProjectLayout.astro';
 import WhistleDemo from '../../components/demos/WhistleDemo.astro';
 import ProjectDetails from '../../components/ProjectDetails.astro';
+import { whistleWork } from '../../lib/portfolio';
+import { translations } from '../../lib/i18n';
 
 const stack = [
   {
@@ -24,8 +26,7 @@ const stack = [
       'FCM, native iOS notification extensions, Android notifications, Expo EAS, Sentry, Mixpanel',
   },
 ];
-const description =
-  'A live mobile sports prediction app that turns watching sports games into a real-time interactive competition, one play at a time.';
+const description = translations.en[whistleWork.descriptionKey];
 const features = [
   'Browse sports games, join a game lobby and compete against other players.',
   'Answer short predictions about the next play, a player or the rest of a period.',
@@ -46,8 +47,13 @@ const features = [
   <ProjectLayout>
     <ProjectDetails
       slot="details"
-      title="Whistle"
+      title={whistleWork.company}
       description={description}
+      experience={{
+        role: translations.en[whistleWork.roleKey],
+        startedOn: whistleWork.startedOn,
+        endedOn: whistleWork.endedOn,
+      }}
       website="https://whistlesports.net/"
       inactive
       github="https://github.com/thefinnomenon/whistle-public"

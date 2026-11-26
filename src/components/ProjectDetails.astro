@@ -4,6 +4,7 @@ import Window from './Window.astro';
 interface Props {
   title: string;
   description: string;
+  experience?: { role: string; startedOn: string; endedOn: string };
   completedOn?: string;
   website: string;
   inactive?: boolean;
@@ -15,6 +16,7 @@ interface Props {
 const {
   title,
   description,
+  experience,
   completedOn,
   website,
   inactive = false,
@@ -23,6 +25,11 @@ const {
   features,
 } = Astro.props;
 const domain = new URL(website).hostname;
+const experienceDateFormat = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  timeZone: 'UTC',
+});
 const completionDate = completedOn
   ? new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
@@ -37,6 +44,24 @@ const completionDate = completedOn
   <Window title="Project details">
     <div class="project-summary">
       <h1 id="project-title">{title}</h1>
+      {experience && (
+        <div class="project-experience">
+          <p class="project-role">{experience.role}</p>
+          <p class="project-dates">
+            <time datetime={experience.startedOn}>
+              {experienceDateFormat.format(
+                new Date(`${experience.startedOn}-01T00:00:00Z`),
+              )}
+            </time>
+            {' – '}
+            <time datetime={experience.endedOn}>
+              {experienceDateFormat.format(
+                new Date(`${experience.endedOn}-01T00:00:00Z`),
+              )}
+            </time>
+          </p>
+        </div>
+      )}
       <p class="project-description">{description}</p>
       <dl class="project-links">
         {completedOn && (
@@ -118,6 +143,20 @@ const completionDate = completedOn
     color: var(--muted);
     font-size: 16px;
     line-height: 1.6;
+  }
+  .project-experience {
+    margin-top: var(--space-3);
+  }
+  .project-role {
+    font-weight: 600;
+  }
+  .project-dates {
+    margin-top: var(--space-2);
+    color: var(--muted);
+    font: 0.8rem/1.6 var(--font-mono);
+  }
+  .project-dates time {
+    white-space: nowrap;
   }
   .project-links {
     display: grid;
