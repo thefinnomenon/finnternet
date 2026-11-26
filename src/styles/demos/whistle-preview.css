@@ -1,0 +1,135 @@
+.whistle-preview {
+  --phone-hardware: #22252c;
+  --phone-edge: #555b66;
+  --phone-display: #fff;
+  --phone-ink: #09090b;
+}
+.whistle-preview [hidden] {
+  display: none !important;
+}
+.whistle-preview .window-body {
+  padding: 0;
+}
+.whistle-landing-frame {
+  display: block;
+  width: 100%;
+  height: 680px;
+  border: 0;
+  background: #0b1020;
+}
+.whistle-phone-stage {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.whistle-phone-stage[data-theme='dark'] {
+  --phone-display: #09090b;
+  --phone-ink: #fafafa;
+}
+.whistle-exit-demo {
+  border: 0;
+  padding: 10px 14px;
+  min-height: 44px;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.whistle-phone {
+  position: relative;
+  display: flex;
+  width: min(350px, calc(100% - 12px));
+  aspect-ratio: 715 / 1496;
+  padding: 7px;
+  border: 2px solid var(--phone-edge);
+  border-radius: 48px;
+  background: var(--phone-hardware);
+  box-shadow:
+    0 18px 40px #0003,
+    inset 0 0 0 2px #0008;
+}
+.whistle-phone-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 39px;
+  background: var(--phone-display);
+  color: var(--phone-ink);
+}
+.whistle-phone-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 0 0 48px;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.whistle-phone-speaker {
+  position: relative;
+  width: 86px;
+  height: 25px;
+  border-radius: 20px;
+  background: #050506;
+}
+.whistle-phone-speaker::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #111827;
+}
+.whistle-phone::before,
+.whistle-phone::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--phone-edge);
+}
+.whistle-phone::before {
+  left: -4px;
+  top: 120px;
+  height: 54px;
+}
+.whistle-phone::after {
+  right: -4px;
+  top: 164px;
+  height: 66px;
+}
+.whistle-phone-status svg {
+  width: 38px;
+  height: 16px;
+}
+.whistle-phone iframe {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  height: 0;
+  border: 0;
+  background: var(--phone-display);
+}
+.whistle-phone-bottom {
+  display: grid;
+  place-items: center;
+  flex: 0 0 22px;
+}
+.whistle-phone-bottom span {
+  width: 100px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--phone-ink);
+}
+.whistle-phone-caption {
+  color: var(--muted);
+  text-align: center;
+  font-size: 14px;
+}

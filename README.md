@@ -44,7 +44,7 @@ Portfolio entries live under `src/pages/projects/` and appear in the localized P
 
 ## Portfolio demos
 
-Whistle presents the original mobile sports-prediction flow with local game fixtures, lobbies, questions, weighted scoring, and a leaderboard. Its business page describes the product and engineering scope without invented commercial metrics or employment dates.
+Whistle starts with its original landing page and media. Play opens the game inside an iPhone-proportioned frame, with a fixed seven-day basketball/football schedule (six games per sport/day), dollar-valued game pools, direct game entry, iOS-style top banners that expand into 30-second countdown notifications, scoring, and a leaderboard. The first question arrives after one second; subsequent questions arrive one second after the previous question resolves or times out. Questions continue in fresh rounds for as long as the visitor plays, with a bounded recent answer history. Settings retains account, winnings and appearance controls. Returning to the landing page ends the session. Its business page describes the product and engineering scope without invented commercial metrics or employment dates.
 
 GraphQL Algolia Transformer illustrates an Amplify schema directive, DynamoDB stream events, Lambda indexing, field selection, and generated search queries. Its diagram and search use local records and do not provision AWS or connect to Algolia.
 

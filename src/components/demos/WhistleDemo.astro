@@ -1,0 +1,70 @@
+---
+import Window from '../Window.astro';
+import '../../styles/demos/whistle-preview.css';
+---
+
+<section class="whistle-preview" aria-label="Whistle interactive demo">
+  <div id="whistle-landing">
+    <Window title="Whistle">
+      <iframe
+        id="whistle-landing-frame"
+        class="whistle-landing-frame"
+        src="/demos/whistle-landing/"
+        title="Whistle original landing page"
+        height="680"
+        allow="autoplay; fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      ></iframe>
+    </Window>
+  </div>
+  <div id="whistle-phone-stage" class="whistle-phone-stage" hidden>
+    <button type="button" id="whistle-exit-demo" class="whistle-exit-demo">
+      Back to landing page
+    </button>
+    <div class="whistle-phone" aria-label="Phone simulator">
+      <div class="whistle-phone-screen">
+        <div class="whistle-phone-status" aria-hidden="true">
+          <span>9:41</span>
+          <span class="whistle-phone-speaker"></span>
+          <svg viewBox="0 0 44 16">
+            <path
+              d="M2 12V9m4 3V6m4 6V3m4 9V1"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            ></path>
+            <rect
+              x="24"
+              y="3"
+              width="16"
+              height="10"
+              rx="2"
+              fill="none"
+              stroke="currentColor"
+            ></rect>
+            <path d="M27 6h10v4H27zm14 1h2v2h-2z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <iframe
+          id="whistle-phone-frame"
+          title="Whistle mobile app"
+          allow="fullscreen"
+          sandbox="allow-scripts allow-same-origin"
+        ></iframe>
+        <div class="whistle-phone-bottom" aria-hidden="true">
+          <span></span>
+        </div>
+      </div>
+    </div>
+    <p class="whistle-phone-caption">
+      Join a game to try the push notifications.
+    </p>
+  </div>
+  <noscript>
+    <p>Enable JavaScript to play the Whistle demo.</p>
+  </noscript>
+</section>
+
+<script>
+  import '../../lib/demos/whistle/preview';
+</script>

@@ -1,0 +1,54 @@
+---
+import basketball from '../../assets/demos/whistle-icons/basketball-outline.svg?raw';
+import football from '../../assets/demos/whistle-icons/american-football-outline.svg?raw';
+import soccer from '../../assets/demos/whistle-icons/football-outline.svg?raw';
+import baseball from '../../assets/demos/whistle-icons/baseball-outline.svg?raw';
+import settings from '../../assets/demos/whistle-icons/settings-outline.svg?raw';
+import people from '../../assets/demos/whistle-icons/people-outline.svg?raw';
+import trophy from '../../assets/demos/whistle-icons/trophy-outline.svg?raw';
+import back from '../../assets/demos/whistle-icons/arrow-back-outline.svg?raw';
+import close from '../../assets/demos/whistle-icons/close-outline.svg?raw';
+import score from '../../assets/demos/whistle-icons/star-outline.svg?raw';
+import sun from '../../assets/demos/whistle-icons/sunny-outline.svg?raw';
+import moon from '../../assets/demos/whistle-icons/moon-outline.svg?raw';
+import chevron from '../../assets/demos/whistle-icons/chevron-forward-outline.svg?raw';
+import rules from '../../assets/demos/whistle-icons/document-text-outline.svg?raw';
+import feedback from '../../assets/demos/whistle-icons/chatbox-ellipses-outline.svg?raw';
+import mail from '../../assets/demos/whistle-icons/mail-outline.svg?raw';
+import signout from '../../assets/demos/whistle-icons/log-out-outline.svg?raw';
+const icons = {
+  basketball,
+  football,
+  soccer,
+  baseball,
+  settings,
+  people,
+  trophy,
+  back,
+  close,
+  score,
+  sun,
+  moon,
+  chevron,
+  rules,
+  feedback,
+  mail,
+  signout,
+};
+interface Props {
+  name: keyof typeof icons;
+}
+const { name } = Astro.props;
+// Trusted, locally archived Ionicons v7.4.0; retain their paths and use theme colors.
+const markup = icons[name]
+  .replace(/^<svg[^>]*>/, '')
+  .replace(/<\/svg>$/, '')
+  .replaceAll('#000', 'currentColor');
+---
+
+<svg
+  viewBox="0 0 512 512"
+  aria-hidden="true"
+  class="whistle-icon"
+  set:html={markup}
+/>

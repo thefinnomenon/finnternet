@@ -1,6 +1,7 @@
 ---
 import '../../styles/demos/whistle.css';
-import { games } from '../../lib/demos/whistle/model';
+import { games, teamImage, scheduleDays } from '../../lib/demos/whistle/model';
+import WhistleIcon from '../../components/demos/WhistleIcon.astro';
 ---
 
 <!doctype html>
@@ -12,20 +13,73 @@ import { games } from '../../lib/demos/whistle/model';
     <title>Whistle</title>
     <script is:inline>
       (() => {
-        let theme = matchMedia('(prefers-color-scheme: dark)').matches
+        const theme = matchMedia('(prefers-color-scheme: dark)').matches
           ? 'dark'
           : 'light';
-        try {
-          const saved = localStorage.getItem('finnternet-theme');
-          if (saved === 'light' || saved === 'dark') theme = saved;
-        } catch {
-          /* Follow system appearance when storage is unavailable. */
-        }
         document.documentElement.dataset.theme = theme;
       })();
     </script>
   </head>
   <body>
+    <aside
+      id="whistle-notification"
+      class="push-notification"
+      aria-label="Whistle push notification"
+      hidden
+    >
+      <button
+        type="button"
+        id="whistle-dismiss-notification"
+        aria-label="Dismiss notification"
+      >
+        <WhistleIcon name="close" />
+      </button>
+      <button
+        type="button"
+        id="whistle-open-notification"
+        class="push-preview"
+        aria-expanded="false"
+        aria-controls="whistle-notification-expanded"
+      >
+        <span class="push-app">
+          <img src="/demos/whistle/icon.png" alt="" width="24" height="24" />
+          <strong>Whistle</strong>
+          <span>now</span>
+        </span>
+        <span
+          id="whistle-notification-preview"
+          class="push-preview-question"
+        ></span>
+        <span class="push-preview-hint">Tap to answer</span>
+      </button>
+      <div id="whistle-notification-expanded" hidden>
+        <div
+          id="whistle-countdown"
+          class="push-countdown"
+          role="timer"
+          aria-label="Time remaining"
+          aria-live="off"
+        >
+          <svg viewBox="0 0 72 72" aria-hidden="true">
+            <circle class="countdown-track" cx="36" cy="36" r="30" />
+            <circle
+              id="whistle-countdown-ring"
+              class="countdown-progress"
+              cx="36"
+              cy="36"
+              r="30"
+              pathLength="1"
+            />
+          </svg>
+          <span>
+            <span id="whistle-countdown-seconds">30</span>
+            <span class="sr-only"> seconds</span>
+          </span>
+        </div>
+        <h2 id="whistle-notification-title"></h2>
+        <div id="whistle-notification-choices" class="push-choices"></div>
+      </div>
+    </aside>
     <main class="whistle-app" id="whistle-app">
       <section id="whistle-home" aria-label="Games">
         <header class="home-header">
@@ -34,28 +88,39 @@ import { games } from '../../lib/demos/whistle/model';
             Whistle
           </h1>
           <div class="home-tools">
-            <span class="balance" aria-label="1240 Whistle points">
-              ◉ 1,240
-            </span>
             <button
               class="icon-button"
               data-settings
               aria-label="Settings"
               title="Settings"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3h-6Z" />
-                <circle cx="12" cy="11" r="3" />
-              </svg>
+              <WhistleIcon name="settings" />
             </button>
           </div>
         </header>
+        <nav class="sport-switch" aria-label="Sport">
+          {(
+            [
+              { sport: 'basketball', label: 'Basketball', supported: true },
+              { sport: 'football', label: 'Football', supported: true },
+              { sport: 'soccer', label: 'Soccer', supported: false },
+              { sport: 'baseball', label: 'Baseball', supported: false },
+            ] as const
+          ).map(({ sport, label, supported }) => (
+            <button
+              type="button"
+              data-sport={supported ? sport : undefined}
+              aria-pressed={supported ? sport === 'basketball' : undefined}
+              aria-label={supported ? label : `${label} (not available)`}
+              title={supported ? label : `${label} (not available)`}
+              disabled={!supported}
+            >
+              <WhistleIcon name={sport} />
+            </button>
+          ))}
+        </nav>
         <nav class="date-strip" aria-label="Game date">
-          {[
-            { label: 'SAT', day: 14 },
-            { label: 'SUN', day: 15 },
-            { label: 'MON', day: 16 },
-          ].map(({ label, day }) => (
+          {scheduleDays.map(({ label, day }) => (
             <button class="day" data-day={day} aria-pressed={day === 14}>
               <span>{label}</span>
               <span>{day}</span>
@@ -68,12 +133,13 @@ import { games } from '../../lib/demos/whistle/model';
               class="game-card"
               data-game-card={game.id}
               data-card-day={game.day}
-              hidden={game.day !== 14}
+              data-card-sport={game.sport}
+              hidden={game.day !== 14 || game.sport !== 'basketball'}
             >
               <div class="card-teams">
                 <div class="team">
                   <img
-                    src={`/demos/whistle/${game.away}.png`}
+                    src={teamImage(game.away, game)}
                     width="64"
                     height="64"
                     alt=""
@@ -83,7 +149,7 @@ import { games } from '../../lib/demos/whistle/model';
                 <b class="versus">vs</b>
                 <div class="team">
                   <img
-                    src={`/demos/whistle/${game.home}.png`}
+                    src={teamImage(game.home, game)}
                     width="64"
                     height="64"
                     alt=""
@@ -93,8 +159,16 @@ import { games } from '../../lib/demos/whistle/model';
               </div>
               <div class="card-info">
                 <strong>{game.time}</strong>
-                <span>♜ ◉ {game.prize}</span>
-                <span class="player-count">♧ 3</span>
+                <span class="game-value">
+                  ${game.prize.toLocaleString('en-US')}
+                </span>
+                <span
+                  class="player-count"
+                  aria-label={`${game.players} players`}
+                >
+                  <WhistleIcon name="people" />
+                  <span data-player-count={game.id}>{game.players}</span>
+                </span>
                 <button
                   class="primary"
                   data-open-game={game.id}
@@ -107,58 +181,25 @@ import { games } from '../../lib/demos/whistle/model';
           ))}
         </div>
       </section>
-      <section
-        id="whistle-lobby"
-        class="lobby"
-        aria-labelledby="whistle-lobby-title"
-        hidden
-      >
-        <header class="screen-header">
-          <button class="icon-button" data-home aria-label="Back to games">
-            ←
-          </button>
-          <h1 id="whistle-lobby-title" tabindex="-1">
-            Game lobby
-          </h1>
-          <button class="icon-button" data-settings aria-label="Settings">
-            ⚙
-          </button>
-        </header>
-        <div class="lobby-teams" id="whistle-lobby-teams"></div>
-        <div class="lobby-details">
-          <strong class="lobby-prize" id="whistle-lobby-prize"></strong>
-          <span class="lobby-players">♧ 3</span>
-          <div class="lobby-date">
-            <span id="whistle-lobby-date"></span>
-            <span id="whistle-lobby-time"></span>
-          </div>
-        </div>
-        <button class="primary join-game" id="whistle-join">
-          JOIN GAME
-        </button>
-      </section>
       <section id="whistle-game" aria-label="Game predictions" hidden>
         <header class="game-header">
           <button class="icon-button" data-home aria-label="Back to games">
-            ←
+            <WhistleIcon name="back" />
           </button>
           <h1 class="game-matchup" id="whistle-game-title" tabindex="-1"></h1>
-          <button
-            class="icon-button"
-            id="whistle-leave"
-            aria-label="Leave game"
-            title="Leave game"
-          >
-            ⇥
-          </button>
+          <span></span>
         </header>
         <div class="game-info">
           <span aria-label="Your score">
-            ★ <strong id="whistle-score">0</strong>
+            <WhistleIcon name="score" />
+            <strong id="whistle-score">0</strong>
           </span>
-          <span aria-label="Players">♧ 4</span>
-          <span aria-label="Whistle point prize">
-            ◉ <span id="whistle-game-prize"></span>
+          <span aria-label="Players">
+            <WhistleIcon name="people" />
+            <span id="whistle-game-players"></span>
+          </span>
+          <span aria-label="Game prize">
+            $<span id="whistle-game-prize"></span>
           </span>
           <button
             class="icon-button"
@@ -166,9 +207,7 @@ import { games } from '../../lib/demos/whistle/model';
             aria-label="Leaderboard"
             title="Leaderboard"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 3h10v5a5 5 0 0 1-10 0V3ZM7 5H3v3a4 4 0 0 0 5 4m9-7h4v3a4 4 0 0 1-5 4m-4 1v6m-4 2h8" />
-            </svg>
+            <WhistleIcon name="trophy" />
           </button>
         </div>
         <div id="whistle-questions" class="question-list"></div>
@@ -184,7 +223,7 @@ import { games } from '../../lib/demos/whistle/model';
             id="whistle-back-game"
             aria-label="Back to predictions"
           >
-            ←
+            <WhistleIcon name="back" />
           </button>
           <h1 id="whistle-leaderboard-title" tabindex="-1">
             Leaderboard
@@ -196,7 +235,7 @@ import { games } from '../../lib/demos/whistle/model';
             <tr>
               <th scope="col">Place</th>
               <th scope="col">Player</th>
-              <th scope="col">Points</th>
+              <th scope="col">Score</th>
             </tr>
           </thead>
           <tbody id="whistle-rankings"></tbody>
@@ -207,31 +246,111 @@ import { games } from '../../lib/demos/whistle/model';
         aria-labelledby="whistle-settings-title"
         hidden
       >
-        <header class="screen-header">
-          <button
-            class="icon-button"
-            id="whistle-back-settings"
-            aria-label="Back"
-          >
-            ←
-          </button>
+        <header class="settings-header">
           <h1 id="whistle-settings-title" tabindex="-1">
             Settings
           </h1>
-          <span></span>
+          <button
+            class="icon-button"
+            id="whistle-back-settings"
+            aria-label="Close settings"
+          >
+            <WhistleIcon name="close" />
+          </button>
         </header>
-        <div class="account">
-          <h2>Account</h2>
-          <dl>
-            <div>
-              <dt>Username</dt>
-              <dd>Awesome User</dd>
+        <div class="settings-content">
+          <section
+            class="settings-section"
+            aria-labelledby="whistle-account-title"
+          >
+            <h2 id="whistle-account-title">Account</h2>
+            <dl class="settings-card account-details">
+              <div>
+                <dt>Username</dt>
+                <dd>Awesome User</dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd>user@finnternet.com</dd>
+              </div>
+            </dl>
+          </section>
+          <section
+            class="settings-section"
+            aria-labelledby="whistle-winnings-title"
+          >
+            <h2 id="whistle-winnings-title">Winnings</h2>
+            <div class="settings-card winnings-card">
+              <div class="winnings-balance">
+                <span>Total Winnings</span>
+                <strong>$0.00</strong>
+              </div>
+              <button type="button" class="withdraw-button" disabled>
+                Minimum $10 to Withdraw
+              </button>
             </div>
-            <div>
-              <dt>Email</dt>
-              <dd>user@finnternet.com</dd>
+          </section>
+          <section
+            class="settings-section"
+            aria-labelledby="whistle-preferences-title"
+          >
+            <h2 id="whistle-preferences-title">Preferences</h2>
+            <div class="settings-card">
+              <button
+                type="button"
+                id="whistle-appearance"
+                class="settings-row"
+                aria-label="Appearance: Auto"
+              >
+                <span class="settings-row-label">
+                  <span data-appearance-icon="light">
+                    <WhistleIcon name="sun" />
+                  </span>
+                  <span data-appearance-icon="dark" hidden>
+                    <WhistleIcon name="moon" />
+                  </span>
+                  Appearance
+                </span>
+                <span class="settings-row-value">
+                  <span id="whistle-theme-label">Auto</span>
+                  <WhistleIcon name="chevron" />
+                </span>
+              </button>
             </div>
-          </dl>
+          </section>
+          <section
+            class="settings-section"
+            aria-labelledby="whistle-actions-title"
+          >
+            <h2 id="whistle-actions-title">Actions</h2>
+            <div class="settings-actions">
+              <button class="settings-row settings-card" type="button" disabled>
+                <span>Competition rules</span>
+                <WhistleIcon name="rules" />
+              </button>
+              <button class="settings-row settings-card" type="button" disabled>
+                <span>Submit feedback</span>
+                <WhistleIcon name="feedback" />
+              </button>
+              <button class="settings-row settings-card" type="button" disabled>
+                <span>Support</span>
+                <WhistleIcon name="mail" />
+              </button>
+              <button class="settings-row settings-card" type="button" disabled>
+                <span>Sign Out</span>
+                <WhistleIcon name="signout" />
+              </button>
+            </div>
+          </section>
+          <section
+            class="settings-section"
+            aria-labelledby="whistle-danger-title"
+          >
+            <h2 id="whistle-danger-title">Danger Zone</h2>
+            <button type="button" class="delete-account" disabled>
+              Delete Account
+            </button>
+          </section>
           <p class="version">Whistle v2.0.6</p>
         </div>
       </section>
@@ -242,22 +361,7 @@ import { games } from '../../lib/demos/whistle/model';
         aria-live="polite"
       ></p>
     </main>
-    <dialog
-      id="whistle-answer-dialog"
-      aria-labelledby="whistle-question-title"
-      aria-describedby="whistle-question-points"
-    >
-      <button
-        class="dialog-close icon-button"
-        id="whistle-close-question"
-        aria-label="Close question"
-      >
-        ×
-      </button>
-      <h2 id="whistle-question-title"></h2>
-      <p id="whistle-question-points"></p>
-      <div id="whistle-choices" class="choices"></div>
-    </dialog>
+
     <noscript>
       <p class="no-script">
         Enable JavaScript to join a game and make predictions.
