@@ -1,6 +1,11 @@
 .ck-app {
   grid-template-columns: 180px minmax(0, 1fr);
 }
+.ck-workspace,
+.ck-sidebar,
+.ck-document-scroll {
+  min-height: 0;
+}
 .ck-topbar {
   border-bottom: 1px solid var(--ck-rule);
 }
@@ -20,6 +25,8 @@
 }
 .ck-editor-body .ProseMirror {
   padding: 0;
+  height: auto;
+  min-height: max(240px, calc(100svh - 240px));
   max-width: none;
   overflow: visible;
   color: var(--ck-ink);
@@ -74,8 +81,59 @@
 .tippy-box {
   max-width: min(500px, calc(100vw - 16px)) !important;
 }
-.tippy-content .flex {
+.tippy-content .flex:not(.flex-col) {
   flex-wrap: wrap;
+}
+.ck-command-menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: min(190px, calc(100vw - 24px));
+  max-height: min(224px, calc(100svh - 80px));
+  padding: 4px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border: 1px solid var(--ck-rule);
+  border-radius: 8px;
+  background: var(--ck-bg);
+  color: var(--ck-ink);
+  box-shadow: 0 8px 24px #0002;
+}
+.ck-command-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 9px;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 20px;
+}
+.ck-command-option svg {
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--ck-muted);
+}
+.ck-command-option[aria-selected='true'],
+.ck-command-option:hover {
+  background: var(--ck-selected);
+  color: var(--ck-link);
+}
+.ck-command-option[aria-selected='true'] svg {
+  color: inherit;
+}
+.ck-command-empty {
+  margin: 0;
+  padding: 10px;
+  color: var(--ck-muted);
+  font-size: 12px;
 }
 :root[data-theme='dark'] .bg-gray-100,
 :root[data-theme='dark'] .bg-gray-200,

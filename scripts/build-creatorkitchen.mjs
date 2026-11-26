@@ -91,6 +91,12 @@ const result = await build({
         builder.onResolve({ filter: /(?:^|\/)lib\/amplify$/ }, () => ({
           path: path.join(adapters, 'services.ts'),
         }));
+        builder.onResolve(
+          { filter: /^\.\.\/\.\.\/\.\.\/components\/CommandList$/ },
+          () => ({
+            path: path.join(adapters, 'CommandList.tsx'),
+          }),
+        );
       },
     },
   ],

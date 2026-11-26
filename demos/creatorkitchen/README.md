@@ -10,6 +10,7 @@ The portfolio integration adds:
 - An accessibility label on the original contenteditable element and the original reader's Tippy hover behavior for inline tooltips. Popups mount outside ProseMirror, and a separate hidden audio host supplies the targets used by the original audio marks' inline handlers while editing.
 - A file-storage adapter that returns browser object URLs for the original audio and file controls. Files stay on the visitor's device, and URLs are revoked when the page closes.
 - Theme synchronization with the parent portfolio, responsive styles, and bundled local pronunciation fixtures.
+- A compact, scrollable command-menu presentation adapter with icons. The original suggestion filtering and editor command implementation remain unchanged.
 
 Publishing, preview, external-site navigation, and the original dashboard are not mounted. No Amplify, authentication, database, or publishing services are called. Original image-search requests receive empty local responses; other fetch requests fail with an archived-service message. The isolated page's CSP blocks network connections.
 
