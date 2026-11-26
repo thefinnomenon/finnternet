@@ -22,15 +22,6 @@ const en = {
   allWriting: 'All writing',
   writingIntro: 'Notes, experiments, and the occasional rabbit hole.',
   projectsIntro: 'A little collection of things from the workbench.',
-  experiment: 'Try an experiment',
-  playground: 'Spring playground',
-  stiffness: 'Stiffness',
-  damping: 'Damping',
-  replay: 'Replay',
-  demoDescription:
-    'A spring pulls a block towards its resting position. Adjust stiffness and damping, then replay the motion.',
-  demoHint: 'Try less damping. Watch it overshoot.',
-  reducedMotion: 'Motion is paused to respect your system preference.',
   contents: 'On this page',
   by: 'By',
   minRead: 'min read',
@@ -52,8 +43,6 @@ const en = {
     'One corner of the internet, a few different languages: English, Spanish, Portuguese, and Italian.',
   aboutLink: 'Explore the writing',
   example: 'Demo article',
-  springProject:
-    'A small experiment in motion. Move a slider and find out what makes an interface feel alive.',
   instamosaicDescription:
     'Turn your Instagram photos into a mosaic of an image you choose.',
   faceReelDescription:
@@ -65,7 +54,6 @@ const en = {
   notFoundBody:
     'The page you’re looking for isn’t here. Head back to the desktop and try another folder.',
   backHome: 'Back to home',
-  experimentLink: 'Read the story behind it',
 };
 
 type Dictionary = { [Key in keyof typeof en]: string };
@@ -86,16 +74,6 @@ export const translations = {
     allWriting: 'Todos los artículos',
     writingIntro: 'Notas, experimentos y alguna que otra curiosidad.',
     projectsIntro: 'Una pequeña colección de cosas del taller.',
-    experiment: 'Prueba un experimento',
-    playground: 'Laboratorio de muelles',
-    stiffness: 'Rigidez',
-    damping: 'Amortiguación',
-    replay: 'Repetir',
-    demoDescription:
-      'Un muelle lleva un bloque a su posición de reposo. Ajusta la rigidez y la amortiguación y repite el movimiento.',
-    demoHint: 'Prueba menos amortiguación. Mira cómo se pasa.',
-    reducedMotion:
-      'La animación está pausada según tus preferencias del sistema.',
     contents: 'En esta página',
     by: 'Por',
     minRead: 'min de lectura',
@@ -117,8 +95,6 @@ export const translations = {
       'Un rincón de internet en varios idiomas: inglés, español, portugués e italiano.',
     aboutLink: 'Explorar los artículos',
     example: 'Artículo de ejemplo',
-    springProject:
-      'Un pequeño experimento de movimiento. Mueve un control y descubre qué hace que una interfaz cobre vida.',
     instamosaicDescription:
       'Convierte tus fotos de Instagram en un mosaico de la imagen que elijas.',
     faceReelDescription:
@@ -130,7 +106,6 @@ export const translations = {
     notFoundBody:
       'La página que buscas no está aquí. Vuelve al escritorio y prueba otra carpeta.',
     backHome: 'Volver al inicio',
-    experimentLink: 'Lee la historia del experimento',
   },
   pt: {
     home: 'Início',
@@ -147,16 +122,6 @@ export const translations = {
     allWriting: 'Todos os artigos',
     writingIntro: 'Notas, experimentos e uma curiosidade aqui e ali.',
     projectsIntro: 'Uma pequena coleção de coisas da bancada.',
-    experiment: 'Teste um experimento',
-    playground: 'Laboratório de molas',
-    stiffness: 'Rigidez',
-    damping: 'Amortecimento',
-    replay: 'Repetir',
-    demoDescription:
-      'Uma mola puxa um bloco para a posição de repouso. Ajuste a rigidez e o amortecimento e repita o movimento.',
-    demoHint: 'Tente menos amortecimento. Veja como ele passa do ponto.',
-    reducedMotion:
-      'A animação está pausada para respeitar a preferência do seu sistema.',
     contents: 'Nesta página',
     by: 'Por',
     minRead: 'min de leitura',
@@ -178,8 +143,6 @@ export const translations = {
       'Um cantinho da internet em alguns idiomas: inglês, espanhol, português e italiano.',
     aboutLink: 'Explorar os artigos',
     example: 'Artigo de exemplo',
-    springProject:
-      'Um pequeno experimento de movimento. Mexa nos controles e descubra o que dá vida a uma interface.',
     instamosaicDescription:
       'Transforme suas fotos do Instagram em um mosaico da imagem que você escolher.',
     faceReelDescription:
@@ -191,7 +154,6 @@ export const translations = {
     notFoundBody:
       'A página que você procura não está aqui. Volte à área de trabalho e tente outra pasta.',
     backHome: 'Voltar ao início',
-    experimentLink: 'Leia a história do experimento',
   },
   it: {
     home: 'Home',
@@ -207,16 +169,6 @@ export const translations = {
     allWriting: 'Tutti gli articoli',
     writingIntro: 'Appunti, esperimenti e qualche piccola curiosità.',
     projectsIntro: 'Una piccola raccolta di cose dal laboratorio.',
-    experiment: 'Prova un esperimento',
-    playground: 'Laboratorio di molle',
-    stiffness: 'Rigidità',
-    damping: 'Smorzamento',
-    replay: 'Ripeti',
-    demoDescription:
-      'Una molla tira un blocco verso la posizione di riposo. Regola rigidità e smorzamento e ripeti il movimento.',
-    demoHint: 'Prova meno smorzamento. Guarda come supera il punto di riposo.',
-    reducedMotion:
-      'L’animazione è in pausa per rispettare le preferenze del sistema.',
     contents: 'In questa pagina',
     by: 'Di',
     minRead: 'min di lettura',
@@ -238,8 +190,6 @@ export const translations = {
       'Un angolo di internet in più lingue: inglese, spagnolo, portoghese e italiano.',
     aboutLink: 'Esplora gli articoli',
     example: 'Articolo dimostrativo',
-    springProject:
-      'Un piccolo esperimento sul movimento. Muovi un cursore e scopri cosa rende viva un’interfaccia.',
     instamosaicDescription:
       'Trasforma le tue foto di Instagram in un mosaico di un’immagine a tua scelta.',
     faceReelDescription:
@@ -251,7 +201,6 @@ export const translations = {
     notFoundBody:
       'La pagina che cerchi non è qui. Torna alla scrivania e prova un’altra cartella.',
     backHome: 'Torna alla home',
-    experimentLink: 'Leggi la storia dell’esperimento',
   },
 } satisfies Record<Locale, Dictionary>;
 

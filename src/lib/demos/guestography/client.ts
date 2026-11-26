@@ -4,7 +4,7 @@ import { photos } from './photos';
 type Screen = 'home' | 'create' | 'success' | 'gallery' | 'upload';
 type Phase = 'form' | 'processing' | 'ready';
 const ASSETS = '/demos/guestography/';
-const GENERATION_MS = 8000;
+const GENERATION_MS = demoProjects.guestography.generationMs;
 const UPLOAD_MS = 3500;
 const PRESET_EMAIL = 'user@finnternet.com';
 const PRESET_NAME = 'Awesome User';

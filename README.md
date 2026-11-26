@@ -40,7 +40,7 @@ Use the same `translationKey` across translations, with a language-specific `pat
 
 The ten original English travel posts are migrated from Finnternet's public Notion pages, including their original dates, captions, links, 87 photos, and 10 YouTube embeds. The original photos live under `src/assets/travel/`; the site does not depend on Notion to serve articles or photos. The migration manifest is `src/data/travel-migration.json`.
 
-The spring article remains clearly marked as a demo and appears after real articles in listings. Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. Guestography, InstaMosaic, and FaceReel also feature in the homepage's Projects window.
+Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. Guestography, InstaMosaic, and FaceReel also feature in the homepage's Projects window.
 
 ## Portfolio demos
 
@@ -71,15 +71,7 @@ YouTube embeds use `VideoEmbed.astro`, a reserved 16:9 layout, lazy loading, and
 
 ## Interactive posts
 
-Import a Solid component into MDX and choose when it hydrates:
-
-```mdx
-import SpringPlayground from '../../../components/SpringPlayground';
-
-<SpringPlayground locale="en" client:visible />
-```
-
-The rest of the article stays static HTML. The spring playground stops its animation once settled, respects reduced motion, and has labelled, keyboard-operable controls. Syntax highlighting happens at build time.
+MDX articles can import Solid components and use Astro's `client:visible` directive to hydrate them when they enter the viewport. The rest of the article stays static HTML. Interactive components should respect reduced motion and support keyboard controls. Syntax highlighting happens at build time.
 
 ## Languages and themes
 

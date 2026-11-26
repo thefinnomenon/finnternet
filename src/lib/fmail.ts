@@ -177,7 +177,11 @@ export function createFmailStore(
       // Guestography originally sends its gallery-ready email after creation.
       if (project !== 'guestography')
         add(box, runId, 'processing', now(), project);
-      box.pending.push({ runId, readyAt: now() + GENERATION_MS, project });
+      const generationMs =
+        project === 'guestography'
+          ? demoProjects.guestography.generationMs
+          : GENERATION_MS;
+      box.pending.push({ runId, readyAt: now() + generationMs, project });
       box.pending = box.pending.slice(-1);
       save(box);
     },

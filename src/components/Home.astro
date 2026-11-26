@@ -4,18 +4,14 @@ import Window from './Window.astro';
 import Computer from './Computer.astro';
 import PixelIcon from './PixelIcon.astro';
 import PostList from './PostList.astro';
-import SpringPlayground from './SpringPlayground';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
-import { postsForLocale, postPath } from '../lib/posts';
+import { postsForLocale } from '../lib/posts';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const t = translations[locale];
 const posts = await postsForLocale(locale);
-const experimentPost = posts.find(
-  (post) => post.data.translationKey === 'springs',
-);
 const alternates = Object.fromEntries(
   locales.map((lang) => [lang, localePath(lang)]),
 );
@@ -88,14 +84,6 @@ const alternates = Object.fromEntries(
           </div>
         </Window>
       </div>
-      <Window title={t.experiment} class="experiment-window">
-        <SpringPlayground locale={locale} compact client:visible />
-        {experimentPost && (
-          <a class="window-bottom-link" href={postPath(experimentPost)}>
-            {t.experimentLink} <span aria-hidden="true">→</span>
-          </a>
-        )}
-      </Window>
     </div>
   </div>
 </Base>

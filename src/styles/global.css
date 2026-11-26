@@ -642,96 +642,6 @@
     transform: translate(1px, 1px);
     box-shadow: 1px 1px 0 var(--shadow);
   }
-  .spring-stage {
-    border: 1px solid var(--rule);
-    background: var(--surface-raised);
-    overflow: hidden;
-  }
-  .spring-stage svg {
-    width: 100%;
-    height: auto;
-    max-height: 190px;
-  }
-  .spring-grid-line {
-    stroke: var(--grid);
-    stroke-width: 0.7;
-  }
-  .spring-wall,
-  .spring-coil {
-    stroke: var(--ink);
-    stroke-width: 2.5;
-  }
-  .spring-rest {
-    stroke: var(--muted);
-    stroke-width: 1;
-  }
-  .spring-block {
-    fill: var(--accent-fill);
-    stroke: var(--ink);
-    stroke-width: 2;
-  }
-  .spring-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    align-items: end;
-    gap: var(--space-6);
-    margin-top: var(--space-5);
-  }
-  .spring-control {
-    min-width: 0;
-  }
-  .spring-control label {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-    font-size: 0.77rem;
-    font-weight: 650;
-  }
-  .spring-control output {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 400;
-    color: var(--muted);
-  }
-  .spring-control input {
-    display: block;
-    width: 100%;
-    margin: var(--space-2) 0 0;
-    accent-color: var(--accent);
-    height: 24px;
-    cursor: pointer;
-  }
-  .spring-hint {
-    color: var(--muted);
-    font-size: 0.76rem;
-    line-height: 1.4;
-    margin-top: var(--space-4);
-  }
-  .spring-compact {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4) var(--space-8);
-  }
-  .spring-compact .spring-stage {
-    grid-row: span 2;
-  }
-  .spring-compact .spring-stage svg {
-    min-height: 160px;
-  }
-  .spring-compact .spring-inputs {
-    margin-top: 0;
-    gap: var(--space-3);
-    grid-template-columns: 1fr 1fr;
-  }
-  .spring-compact .replay-button {
-    grid-column: span 2;
-    justify-self: start;
-  }
-  .spring-compact .spring-hint {
-    margin-top: 0;
-    align-self: end;
-  }
   .site-footer {
     border-top: var(--frame-width) solid var(--frame);
     background: var(--surface);
@@ -953,21 +863,6 @@
     margin: var(--space-6) 0;
     color: var(--muted);
   }
-  .prose .article-demo {
-    margin: var(--space-6) 0;
-  }
-  .article-demo .window {
-    box-shadow: 2px 2px 0 var(--shadow);
-  }
-  .article-demo .window-body {
-    padding: var(--space-5);
-  }
-  .article-demo p {
-    margin-bottom: 0;
-  }
-  .article-demo input {
-    margin-top: var(--space-2);
-  }
   .article-end {
     margin-top: var(--space-10);
     padding-top: var(--space-5);
@@ -1131,27 +1026,6 @@
     .project-folder {
       margin-bottom: var(--space-4);
     }
-    .spring-inputs {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-4);
-    }
-    .replay-button {
-      grid-column: span 2;
-      justify-self: start;
-    }
-    .spring-compact {
-      display: block;
-    }
-    .spring-compact .spring-stage svg {
-      min-height: 0;
-    }
-    .spring-compact .spring-inputs {
-      margin-top: var(--space-4);
-      grid-template-columns: 1fr 1fr;
-    }
-    .spring-compact .spring-hint {
-      margin-top: var(--space-4);
-    }
     .section-page,
     .article-page {
       padding: var(--space-5) var(--space-4) var(--space-10);
@@ -1180,12 +1054,6 @@
       padding: var(--space-4);
       font-size: 0.72rem;
     }
-    .article-demo .window-body {
-      padding: var(--space-4);
-    }
-    .article-demo .window-title {
-      font-size: 0.68rem;
-    }
     .about-content {
       display: block;
     }
@@ -1200,9 +1068,6 @@
   @media (max-width: 400px) {
     .window-controls span:last-child {
       display: none;
-    }
-    .spring-control label {
-      font-size: 0.72rem;
     }
   }
   @media (max-width: 359px) {
