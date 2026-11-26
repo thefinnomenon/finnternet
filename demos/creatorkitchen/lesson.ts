@@ -71,5 +71,5 @@ Espero que nós falemos português.</code></pre>
 <p>Espero que hoje…</p><p>Quero que meu amigo / minha amiga…</p><p>Talvez amanhã…</p>
 <div data-type="callout" type="note"><p><strong>Takeaway:</strong> start with the meaning. Are you stating a fact, expressing a wish, or describing a possibility? A handful of useful sentence frames will get you speaking before every ending feels automatic.</p></div>
 <h4>Keep exploring</h4>
-<p>Grammar references: <a href="https://www.instituto-camoes.pt/activity/centro-virtual/referencial-camoes-ple-2" target="_blank" rel="noopener noreferrer">Camões: expressing wishes</a> and <a href="https://michaelis.uol.com.br/moderno-portugues/nocoes-gramaticais/verbos/" target="_blank" rel="noopener noreferrer">Michaelis: Portuguese verb forms</a>.</p>
+<p>Grammar reference: <a href="https://michaelis.uol.com.br/moderno-portugues/nocoes-gramaticais/verbos/" target="_blank" rel="noopener noreferrer">Michaelis: Portuguese verb forms</a>.</p>
 `;
