@@ -24,11 +24,13 @@
     "@astrojs/mdx": "^8.1.2",
     "@astrojs/solid-js": "^7.1.2",
     "astro": "^7.4.5",
+    "d3-geo": "^3.1.2",
     "solid-js": "^1.9.13"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
     "@eslint/js": "^10.0.1",
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "^24.19.4",
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "~3.2.1",

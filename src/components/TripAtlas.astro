@@ -1,0 +1,590 @@
+---
+import {
+  formatDistance,
+  formatTravelTime,
+  legReadout,
+} from '../lib/travel/trajectory';
+import Window from './Window.astro';
+import type { Leg } from '../lib/travel/itineraries';
+
+interface Props {
+  legs: readonly Leg[];
+}
+const { legs } = Astro.props;
+const itinerary = legs.map((leg) => ({ leg, ...legReadout(leg) }));
+const totalDistance = itinerary.reduce((sum, item) => sum + item.distanceKm, 0);
+const totalMinutes = itinerary.reduce((sum, item) => sum + item.minutes, 0);
+const stops = [
+  ...new Map(
+    legs.flatMap(([from, to]) => [from, to]).map((place) => [place[0], place]),
+  ).values(),
+];
+---
+
+<Window title="Trip atlas" class="atlas-window">
+  <trip-atlas data-legs={JSON.stringify(legs)}>
+    <div class="radar">
+      <canvas aria-hidden="true" width="120" height="120"></canvas>
+      <svg aria-hidden="true" viewBox="0 0 240 240">
+        <path class="route" />
+        <path class="motion-path" />
+        {stops.map(([, longitude, latitude]) => (
+          <circle
+            class="stop"
+            r="3.5"
+            data-longitude={longitude}
+            data-latitude={latitude}
+          />
+        ))}
+        <g class="vehicle-sprite">
+          <path />
+        </g>
+        <text
+          class="vehicle"
+          text-anchor="middle"
+          dominant-baseline="central"
+        ></text>
+      </svg>
+      <button type="button" class="play" aria-label="Play trip" disabled>
+        ▶
+      </button>
+    </div>
+    <ol aria-label="Itinerary">
+      {itinerary.map(({ leg, distanceKm, distanceLabel, minutes }) => {
+        const [from, to, , inferred] = leg;
+        return (
+          <li
+            title={
+              inferred
+                ? 'Part of this leg is inferred from the post'
+                : undefined
+            }
+          >
+            <span>
+              {from[0]} → {to[0]}
+            </span>
+            <span class="readout">
+              <span title={distanceLabel}>
+                {distanceLabel === 'Direct distance' ? 'Direct ' : '~'}
+                <span data-distance-km={distanceKm}>
+                  {formatDistance(distanceKm)}
+                </span>
+              </span>
+              <span aria-hidden="true"> · </span>
+              <span title="Estimated travel time">
+                ~{formatTravelTime(minutes)}
+              </span>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+    <div class="trip-totals">
+      <strong>Trip total</strong>
+      <span>
+        ~
+        <span data-distance-km={totalDistance}>
+          {formatDistance(totalDistance)}
+        </span>{' '}
+        · ~{formatTravelTime(totalMinutes)}
+      </span>
+    </div>
+    <span class="sr-only" role="status"></span>
+  </trip-atlas>
+</Window>
+
+<script>
+  import {
+    geoDistance,
+    geoGraticule10,
+    geoInterpolate,
+    geoOrthographic,
+    geoPath,
+  } from 'd3-geo';
+  import type { Geometry } from 'geojson';
+  import { formatDistance, trajectory } from '../lib/travel/trajectory';
+  import coastlines from '../lib/travel/coastlines.json';
+  import type { Leg, Mode } from '../lib/travel/itineraries';
+
+  const icons: Record<Mode, string> = {
+    Flight: '✈️',
+    Drive: '🚗',
+    Train: '🚆',
+    Ferry: '⛴️',
+    Underground: '🚇',
+  };
+
+  // Pixel silhouettes from the original atlas prototype.
+  const sprites = {
+    Drive: [
+      '....####......',
+      '...##..##.....',
+      '..#########...',
+      '#############.',
+      '#############.',
+      '.##.......##..',
+      '.##.......##..',
+    ],
+    Flight: [
+      '.....#.....',
+      '....###....',
+      '....###....',
+      '....###....',
+      '...#####...',
+      '.#########.',
+      '###########',
+      '....###....',
+      '....###....',
+      '...#####...',
+      '...#####...',
+    ],
+  };
+  const spritePath = (rows: string[]) =>
+    rows
+      .flatMap((row, y) =>
+        Array.from(row, (pixel, x) =>
+          pixel === '#'
+            ? 'M' +
+              (x * 2 - row.length) +
+              ',' +
+              (y * 2 - rows.length) +
+              'h2v2h-2Z'
+            : '',
+        ),
+      )
+      .join('');
+  const land = coastlines.land as Geometry;
+  const lakes = coastlines.lakes as Geometry[];
+  const borders = coastlines.borders as Geometry[];
+  const grid = geoGraticule10();
+
+  type Camera = { center: [number, number]; scale: number };
+
+  function cameraFor(points: [number, number][]): Camera {
+    let center: [number, number] = points[0] ?? [0, 0];
+    let diameter = 0;
+    for (const [index, from] of points.entries()) {
+      for (const to of points.slice(index + 1)) {
+        const distance = geoDistance(from, to);
+        if (distance > diameter) {
+          diameter = distance;
+          center = geoInterpolate(from, to)(0.5);
+        }
+      }
+    }
+    const radius = Math.max(
+      0.01,
+      ...points.map((point) => geoDistance(center, point)),
+    );
+    return {
+      center,
+      scale: Math.min(6000, 91 / Math.sin(Math.min(radius, Math.PI / 2))),
+    };
+  }
+
+  class TripAtlas extends HTMLElement {
+    connectedCallback() {
+      for (const readout of this.querySelectorAll<HTMLElement>(
+        '[data-distance-km]',
+      )) {
+        readout.textContent = formatDistance(
+          Number(readout.dataset.distanceKm),
+          navigator.language,
+        );
+      }
+
+      const rows = Array.from(this.querySelectorAll('li'));
+      const ctx = this.querySelector('canvas')?.getContext('2d');
+      const route = this.querySelector<SVGPathElement>('.route');
+      const motionPath = this.querySelector<SVGPathElement>('.motion-path');
+      const stops = this.querySelectorAll<SVGCircleElement>('.stop');
+      const sprite = this.querySelector('.vehicle-sprite path');
+      const vehicle = this.querySelector('.vehicle');
+      const play = this.querySelector('button');
+      const status = this.querySelector('[role="status"]');
+      if (
+        !ctx ||
+        !route ||
+        !motionPath ||
+        !vehicle ||
+        !sprite ||
+        !play ||
+        !status
+      )
+        return;
+
+      const legs: Leg[] = JSON.parse(this.dataset.legs ?? '[]');
+      const trajectories = legs.map(trajectory);
+      const first = legs[0];
+      if (!first) return;
+      const target = cameraFor(trajectories.flatMap(({ samples }) => samples));
+      const overview: Camera = {
+        ...target,
+        scale: Math.min(102, target.scale),
+      };
+      // Keep nearby legs in one view, with a separate view for long flights.
+      const groups: (typeof trajectories)[] = [];
+      let local: typeof trajectories = [];
+      legs.forEach((leg, i) => {
+        const path = trajectories[i];
+        if (!path) return;
+        if (leg[2] === 'Flight' && path.km >= 1200) {
+          if (local.length) groups.push(local);
+          groups.push([path]);
+          local = [];
+        } else {
+          local.push(path);
+        }
+      });
+      if (local.length) groups.push(local);
+
+      const travelTime = 2200;
+      let endTime = 650;
+      let previousCamera = overview;
+      const sequence = groups.flatMap((group) => {
+        const fit = cameraFor(group.flatMap(({ samples }) => samples));
+        const camera =
+          group.length === 1 &&
+          group[0] &&
+          legs[trajectories.indexOf(group[0])]?.[2] === 'Flight' &&
+          group[0].km >= 1200
+            ? { ...fit, scale: Math.min(102, fit.scale) }
+            : fit;
+        const transition = {
+          from: previousCamera,
+          to: camera,
+          start: endTime,
+          end: endTime + 2100,
+        };
+        endTime = transition.end;
+        previousCamera = camera;
+        return group.map((_, offset) => {
+          const start = endTime;
+          endTime += travelTime;
+          return {
+            camera,
+            start,
+            end: endTime,
+            transition: offset === 0 ? transition : undefined,
+          };
+        });
+      });
+
+      let paintedView: Camera | undefined;
+      let projectedPaths: string[] = [];
+      let elapsed = 0;
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+      let index = 0;
+      let frame = 0;
+      let started = false;
+      let complete = false;
+      let progress = 0;
+
+      const placeVehicle = () => {
+        const { x, y } = motionPath.getPointAtLength(
+          motionPath.getTotalLength() * progress,
+        );
+        sprite.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
+        vehicle.setAttribute('x', String(x));
+        vehicle.setAttribute('y', String(y));
+      };
+
+      const stop = () => {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        play.textContent = complete ? '↺' : '▶';
+        play.setAttribute(
+          'aria-label',
+          complete ? 'Replay trip' : started ? 'Resume trip' : 'Play trip',
+        );
+      };
+
+      const showLeg = (view: Camera) => {
+        const leg = legs[index];
+        if (!leg) return;
+        rows.forEach((row, i) => {
+          if (started && i === index) row.setAttribute('aria-current', 'step');
+          else row.removeAttribute('aria-current');
+        });
+        const mode = leg[2];
+        if (paintedView !== view) {
+          paintedView = view;
+          const projection = geoOrthographic()
+            .rotate([-view.center[0], -view.center[1]])
+            .translate([120, 120])
+            .scale(view.scale)
+            .clipAngle(90);
+          const path = geoPath(projection, ctx);
+          ctx.setTransform(0.5, 0, 0, 0.5, 0, 0);
+          ctx.fillStyle = '#172822';
+          ctx.fillRect(0, 0, 240, 240);
+          const fill = (
+            shape: Geometry | { type: 'Sphere' },
+            color: string,
+          ) => {
+            ctx.beginPath();
+            path(shape);
+            ctx.fillStyle = color;
+            ctx.fill();
+          };
+          fill({ type: 'Sphere' }, '#294539');
+          fill(land, '#8fa684');
+          for (const lake of lakes) fill(lake, '#294539');
+          ctx.beginPath();
+          path(grid);
+          for (const border of borders) path(border);
+          ctx.strokeStyle = '#718675';
+          ctx.lineWidth = 0.65;
+          ctx.stroke();
+
+          projectedPaths = trajectories.map(({ samples }) =>
+            samples
+              .map((point, step) => {
+                const [x, y] = projection(point) ?? [120, 120];
+                return `${step === 0 ? 'M' : 'L'}${x},${y}`;
+              })
+              .join(' '),
+          );
+          const visiblePaths = trajectories.map(({ samples }) => {
+            let previousVisible = false;
+            return samples
+              .map((point) => {
+                const visible = geoDistance(view.center, point) <= Math.PI / 2;
+                const [x, y] = projection(point) ?? [120, 120];
+                const command = previousVisible ? 'L' : 'M';
+                previousVisible = visible;
+                return visible ? `${command}${x},${y}` : '';
+              })
+              .join(' ');
+          });
+          route.setAttribute('d', visiblePaths.join(' '));
+          for (const stop of stops) {
+            const point: [number, number] = [
+              Number(stop.dataset.longitude),
+              Number(stop.dataset.latitude),
+            ];
+            const [x, y] = projection(point) ?? [120, 120];
+            stop.style.visibility =
+              geoDistance(view.center, point) > Math.PI / 2 ? 'hidden' : '';
+            stop.setAttribute('cx', String(x));
+            stop.setAttribute('cy', String(y));
+          }
+        }
+        motionPath.setAttribute('d', projectedPaths[index] ?? '');
+        const pixelRows =
+          mode === 'Drive' || mode === 'Flight' ? sprites[mode] : undefined;
+        sprite.setAttribute('d', pixelRows ? spritePath(pixelRows) : '');
+        vehicle.textContent = pixelRows ? '' : icons[mode];
+        placeVehicle();
+        play.disabled = false;
+      };
+
+      play.addEventListener('click', () => {
+        if (frame) {
+          stop();
+          return;
+        }
+        if (!started || complete) {
+          index = 0;
+          started = true;
+          complete = false;
+          elapsed = 0;
+          progress = 0;
+          showLeg(overview);
+        }
+        const arrive = () => {
+          complete = true;
+          stop();
+          status.textContent = 'Trip complete.';
+        };
+        const finishWithoutMotion = () => {
+          index = legs.length - 1;
+          progress = 1;
+          showLeg(sequence[index]?.camera ?? target);
+          arrive();
+        };
+        if (reducedMotion.matches) {
+          finishWithoutMotion();
+          return;
+        }
+        status.textContent = '';
+        const startTime = performance.now() - elapsed;
+        const tick = (time: number) => {
+          if (reducedMotion.matches) {
+            finishWithoutMotion();
+            return;
+          }
+          elapsed = time - startTime;
+          if (elapsed >= 650) {
+            const active = sequence.findIndex((stage) => elapsed < stage.end);
+            const next = active < 0 ? sequence.length - 1 : active;
+            const stage = sequence[next];
+            if (!stage) return;
+            const changedLeg = index !== next;
+            index = next;
+            progress = Math.max(
+              0,
+              Math.min(1, (elapsed - stage.start) / travelTime),
+            );
+            const transition = stage.transition;
+            if (transition && elapsed < transition.end) {
+              const t =
+                (elapsed - transition.start) /
+                (transition.end - transition.start);
+              const ease = t * t * (3 - 2 * t);
+              showLeg({
+                center: geoInterpolate(
+                  transition.from.center,
+                  transition.to.center,
+                )(ease),
+                scale:
+                  transition.from.scale *
+                  (transition.to.scale / transition.from.scale) ** ease,
+              });
+            } else if (changedLeg || paintedView !== stage.camera) {
+              showLeg(stage.camera);
+            } else {
+              placeVehicle();
+            }
+            if (active < 0) {
+              arrive();
+              return;
+            }
+          }
+          frame = requestAnimationFrame(tick);
+        };
+        play.textContent = 'Ⅱ';
+        play.setAttribute('aria-label', 'Pause trip');
+        frame = requestAnimationFrame(tick);
+      });
+      showLeg(overview);
+    }
+  }
+
+  customElements.define('trip-atlas', TripAtlas);
+</script>
+
+<style>
+  :global(.atlas-window > .window-body) {
+    padding: 0;
+    background: #172822;
+  }
+  trip-atlas {
+    display: grid;
+    min-width: 0;
+  }
+  .radar {
+    position: relative;
+    width: 100%;
+    margin-inline: auto;
+    aspect-ratio: 1;
+    overflow: hidden;
+    color: #f0f3df;
+    background: #172822;
+  }
+  .radar > canvas,
+  .radar > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  canvas {
+    image-rendering: pixelated;
+  }
+  .radar::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: '';
+    background: repeating-linear-gradient(transparent 0 2px, #0c20162e 2px 3px);
+    box-shadow: inset 0 0 24px #0c201688;
+  }
+  .play {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.45rem;
+    right: 0.45rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid #8fa684;
+    border-radius: 0;
+    background: #172822;
+    color: #e7f0d8;
+    font: 1rem monospace;
+    cursor: pointer;
+  }
+  .play:hover {
+    background: #294539;
+  }
+  .play:focus-visible {
+    outline: 2px solid #ffbc78;
+    outline-offset: 2px;
+  }
+  .route {
+    fill: none;
+    stroke: #ffce98;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 0.2 5;
+  }
+  .motion-path {
+    fill: none;
+    visibility: hidden;
+  }
+  .stop,
+  .vehicle-sprite {
+    fill: #ffbc78;
+  }
+  .vehicle {
+    font-size: 20px;
+  }
+  ol {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #718675;
+    background: #172822;
+    color: #dce7d2;
+    font: 0.72rem/1.45 monospace;
+  }
+  li {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.4rem 0.55rem;
+    overflow-wrap: anywhere;
+  }
+  li + li {
+    border-top: 1px solid #52695b;
+  }
+  .trip-totals {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+    padding: 0.55rem;
+    border-top: 1px solid #718675;
+    background: #294539;
+    color: #e7f0d8;
+    font: 0.72rem/1.45 monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .readout {
+    color: #b4c9b0;
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+  }
+  li[aria-current='step'] {
+    color: #ffce98;
+    background: #294539;
+    box-shadow: inset 2px 0 #ffbc78;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

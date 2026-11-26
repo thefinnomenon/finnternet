@@ -1,6 +1,8 @@
 ---
 import { render } from 'astro:content';
 import Base from './Base.astro';
+import TripAtlas from '../components/TripAtlas.astro';
+import { itineraries } from '../lib/travel/itineraries';
 import Window from '../components/Window.astro';
 import { translations, localePath } from '../lib/i18n';
 import { postDate, postPath, publishedPosts, type Post } from '../lib/posts';
@@ -17,6 +19,7 @@ const versions = (await publishedPosts()).filter(
 const alternates = Object.fromEntries(
   versions.map((entry) => [entry.data.lang, postPath(entry)]),
 );
+const legs = itineraries[post.data.translationKey];
 const contents = headings.filter((heading) => heading.depth === 2);
 ---
 
@@ -64,21 +67,57 @@ const contents = headings.filter((heading) => heading.depth === 2);
           </div>
         </article>
       </Window>
-      {contents.length > 0 && (
-        <aside class="article-sidebar">
-          <Window title={t.contents}>
-            <nav aria-label={t.contents}>
-              <ol class="toc">
-                {contents.map((heading) => (
-                  <li>
-                    <a href={`#${heading.slug}`}>{heading.text}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </Window>
+      {(contents.length > 0 || legs) && (
+        <aside class:list={['article-sidebar', { 'has-trip-atlas': legs }]}>
+          {contents.length > 0 && (
+            <Window title={t.contents} class="article-contents">
+              <nav aria-label={t.contents}>
+                <ol class="toc">
+                  {contents.map((heading) => (
+                    <li>
+                      <a href={`#${heading.slug}`}>{heading.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </Window>
+          )}
+          {legs && <TripAtlas legs={legs} />}
         </aside>
       )}
     </div>
   </div>
 </Base>
+
+<script>
+  const article = document.querySelector<HTMLElement>(
+    '.article-layout > .article-window',
+  );
+  const sidebar = document.querySelector<HTMLElement>(
+    '.article-layout > .article-sidebar',
+  );
+
+  if (article && sidebar) {
+    const observer = new ResizeObserver(() => {
+      const articleHeight = article.offsetHeight;
+      const sidebarHeight = sidebar.offsetHeight;
+      const shorter =
+        sidebarHeight > 0 && sidebarHeight < articleHeight
+          ? sidebar
+          : sidebarHeight > articleHeight
+            ? article
+            : undefined;
+
+      for (const column of [article, sidebar]) {
+        column.toggleAttribute('data-sticky-column', column === shorter);
+      }
+      if (shorter)
+        shorter.style.setProperty(
+          '--column-height',
+          `${shorter.offsetHeight}px`,
+        );
+    });
+    observer.observe(article);
+    observer.observe(sidebar);
+  }
+</script>
