@@ -13,11 +13,36 @@ const en = {
   navigation: 'Navigation',
   writing: 'Writing',
   work: 'Work',
-  workIntro: 'Products and businesses I’ve built and worked on.',
+  workIntro: 'Professional experience.',
   allWork: 'View work',
   whistleDescription:
     'A live sports prediction game where fans answer questions while watching.',
   founder: 'Founder',
+  seniorSoftwareEngineer: 'Senior Software Engineer',
+  fullStackEngineer: 'Full Stack Engineer',
+  firefighter: 'Firefighter',
+  cyberResearcher: 'Cyber Researcher',
+  cyberAssessmentIntern: 'Cyber System Assessment Research Intern',
+  undergraduateInstructorsAssistant: "Undergraduate Instructor's Assistant",
+  undergraduateResearchAssistant: 'Undergraduate Research Assistant',
+  undergraduateInstructingAssistant: 'Undergraduate Instructing Assistant',
+  remoteLocation: 'Remote',
+  greaterBostonLocation: 'Greater Boston',
+  saugusLocation: 'Saugus, MA',
+  lexingtonLocation: 'Lexington, MA',
+  amherstLocation: 'Amherst, MA',
+  paragraphWorkDescription:
+    'Built rich text editing, Stripe subscriptions, account management, and email features, incorporating customer feedback.',
+  freelanceWorkDescription:
+    'Delivered full-stack web and mobile applications, from architecture and product design through deployment and maintenance.',
+  lincolnWorkDescription:
+    'Analyzed NFC, Android security, secure elements, and the Google Wallet application.',
+  engineeringLabWorkDescription:
+    'Supported ENGIN112 labs, ordered components, and helped students complete lab assignments.',
+  nfcResearchWorkDescription:
+    'Researched NFC technology and wrote C code to read and transmit tag IDs using a development board and microcontroller.',
+  introEngineeringWorkDescription:
+    'Assisted engineering labs covering circuits, lab instruments, Verilog, and CPLD programming.',
   graphqlAlgoliaDescription:
     'Add search indexing to an AWS Amplify GraphQL API with one directive.',
   creatorKitchenDescription:
@@ -75,11 +100,37 @@ export const translations = {
     navigation: 'Navegación',
     writing: 'Artículos',
     work: 'Trabajo',
-    workIntro: 'Productos y negocios que he creado y en los que he trabajado.',
+    workIntro: 'Experiencia profesional.',
     allWork: 'Ver trabajo',
     whistleDescription:
       'Un juego de predicciones deportivas en directo para responder mientras ves el partido.',
     founder: 'Fundador',
+    seniorSoftwareEngineer: 'Ingeniero de software sénior',
+    fullStackEngineer: 'Ingeniero full stack',
+    firefighter: 'Bombero',
+    cyberResearcher: 'Investigador de ciberseguridad',
+    cyberAssessmentIntern:
+      'Becario de investigación en evaluación de cibersistemas',
+    undergraduateInstructorsAssistant: 'Ayudante de docencia de grado',
+    undergraduateResearchAssistant: 'Ayudante de investigación de grado',
+    undergraduateInstructingAssistant: 'Ayudante de docencia de grado',
+    remoteLocation: 'Remoto',
+    greaterBostonLocation: 'Área metropolitana de Boston',
+    saugusLocation: 'Saugus, MA',
+    lexingtonLocation: 'Lexington, MA',
+    amherstLocation: 'Amherst, MA',
+    paragraphWorkDescription:
+      'Desarrollé edición de texto enriquecido, suscripciones de Stripe, gestión de cuentas y funciones de correo, incorporando comentarios de clientes.',
+    freelanceWorkDescription:
+      'Desarrollé aplicaciones web y móviles full stack, desde la arquitectura y el diseño hasta el despliegue y el mantenimiento.',
+    lincolnWorkDescription:
+      'Analicé NFC, la seguridad de Android, elementos seguros y la aplicación Google Wallet.',
+    engineeringLabWorkDescription:
+      'Apoyé los laboratorios ENGIN112, pedí componentes y ayudé a los estudiantes con sus prácticas.',
+    nfcResearchWorkDescription:
+      'Investigué la tecnología NFC y programé en C la lectura y transmisión de identificadores con una placa de desarrollo y un microcontrolador.',
+    introEngineeringWorkDescription:
+      'Colaboré en laboratorios de circuitos, instrumentos, Verilog y programación de CPLD.',
     graphqlAlgoliaDescription:
       'Añade búsquedas a una API GraphQL de AWS Amplify con una directiva.',
     creatorKitchenDescription:
@@ -132,11 +183,37 @@ export const translations = {
     navigation: 'Navegação',
     writing: 'Artigos',
     work: 'Trabalho',
-    workIntro: 'Produtos e negócios que criei e nos quais trabalhei.',
+    workIntro: 'Experiência profissional.',
     allWork: 'Ver trabalho',
     whistleDescription:
       'Um jogo de palpites esportivos ao vivo para responder enquanto você assiste.',
     founder: 'Fundador',
+    seniorSoftwareEngineer: 'Engenheiro de software sênior',
+    fullStackEngineer: 'Engenheiro full stack',
+    firefighter: 'Bombeiro',
+    cyberResearcher: 'Pesquisador de cibersegurança',
+    cyberAssessmentIntern:
+      'Estagiário de pesquisa em avaliação de sistemas cibernéticos',
+    undergraduateInstructorsAssistant: 'Monitor de ensino de graduação',
+    undergraduateResearchAssistant: 'Assistente de pesquisa de graduação',
+    undergraduateInstructingAssistant: 'Monitor de ensino de graduação',
+    remoteLocation: 'Remoto',
+    greaterBostonLocation: 'Região metropolitana de Boston',
+    saugusLocation: 'Saugus, MA',
+    lexingtonLocation: 'Lexington, MA',
+    amherstLocation: 'Amherst, MA',
+    paragraphWorkDescription:
+      'Desenvolvi edição de texto, assinaturas com Stripe, gestão de contas e recursos de e-mail, incorporando feedback dos clientes.',
+    freelanceWorkDescription:
+      'Desenvolvi aplicações web e móveis full stack, da arquitetura e do design à implantação e manutenção.',
+    lincolnWorkDescription:
+      'Analisei NFC, segurança do Android, elementos seguros e o aplicativo Google Wallet.',
+    engineeringLabWorkDescription:
+      'Apoiei os laboratórios ENGIN112, encomendei componentes e ajudei os alunos com as atividades.',
+    nfcResearchWorkDescription:
+      'Pesquisei a tecnologia NFC e programei em C a leitura e transmissão de identificadores com uma placa de desenvolvimento e um microcontrolador.',
+    introEngineeringWorkDescription:
+      'Auxiliei em laboratórios de circuitos, instrumentos, Verilog e programação de CPLD.',
     graphqlAlgoliaDescription:
       'Adicione busca a uma API GraphQL do AWS Amplify com uma diretiva.',
     creatorKitchenDescription:
@@ -190,11 +267,39 @@ export const translations = {
     navigation: 'Navigazione',
     writing: 'Articoli',
     work: 'Lavoro',
-    workIntro: 'Prodotti e attività che ho creato e a cui ho lavorato.',
+    workIntro: 'Esperienza professionale.',
     allWork: 'Vedi il lavoro',
     whistleDescription:
       'Un gioco di pronostici sportivi in diretta a cui partecipare mentre guardi la partita.',
     founder: 'Fondatore',
+    seniorSoftwareEngineer: 'Ingegnere software senior',
+    fullStackEngineer: 'Ingegnere full stack',
+    firefighter: 'Vigile del fuoco',
+    cyberResearcher: 'Ricercatore di cybersicurezza',
+    cyberAssessmentIntern:
+      'Tirocinante di ricerca nella valutazione dei sistemi informatici',
+    undergraduateInstructorsAssistant:
+      'Assistente alla didattica universitario',
+    undergraduateResearchAssistant: 'Assistente di ricerca universitario',
+    undergraduateInstructingAssistant:
+      'Assistente alla didattica universitario',
+    remoteLocation: 'Da remoto',
+    greaterBostonLocation: 'Area metropolitana di Boston',
+    saugusLocation: 'Saugus, MA',
+    lexingtonLocation: 'Lexington, MA',
+    amherstLocation: 'Amherst, MA',
+    paragraphWorkDescription:
+      'Ho sviluppato modifica del testo, abbonamenti Stripe, gestione degli account e funzioni email, integrando il feedback dei clienti.',
+    freelanceWorkDescription:
+      'Ho realizzato applicazioni web e mobili full stack, dall’architettura e dal design alla distribuzione e manutenzione.',
+    lincolnWorkDescription:
+      'Ho analizzato NFC, sicurezza di Android, elementi sicuri e l’applicazione Google Wallet.',
+    engineeringLabWorkDescription:
+      'Ho supportato i laboratori ENGIN112, ordinato componenti e assistito gli studenti nelle esercitazioni.',
+    nfcResearchWorkDescription:
+      'Ho studiato la tecnologia NFC e scritto codice C per leggere e trasmettere identificatori con una scheda di sviluppo e un microcontrollore.',
+    introEngineeringWorkDescription:
+      'Ho assistito nei laboratori di circuiti, strumenti, Verilog e programmazione CPLD.',
     graphqlAlgoliaDescription:
       'Aggiungi la ricerca a un’API GraphQL di AWS Amplify con una direttiva.',
     creatorKitchenDescription:

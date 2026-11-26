@@ -14,8 +14,10 @@ const dateFormat = new Intl.DateTimeFormat(locale, {
   year: 'numeric',
   timeZone: 'UTC',
 });
-const entries = [...workEntries].sort((a, b) =>
-  b.startedOn.localeCompare(a.startedOn),
+const entries = [...workEntries].sort(
+  (a, b) =>
+    b.startedOn.localeCompare(a.startedOn) ||
+    b.endedOn.localeCompare(a.endedOn),
 );
 ---
 
@@ -26,21 +28,32 @@ const entries = [...workEntries].sort((a, b) =>
         <div class="work-row-header">
           <div>
             <h2>
-              <a href={entry.href}>{entry.company}</a>
+              {entry.href ? (
+                <a href={entry.href}>{entry.company}</a>
+              ) : (
+                entry.company
+              )}
             </h2>
             <p class="work-role">{t[entry.roleKey]}</p>
           </div>
-          <p class="work-dates">
-            <time datetime={entry.startedOn}>
-              {dateFormat.format(new Date(`${entry.startedOn}-01T00:00:00Z`))}
-            </time>
-            {' – '}
-            <time datetime={entry.endedOn}>
-              {dateFormat.format(new Date(`${entry.endedOn}-01T00:00:00Z`))}
-            </time>
-          </p>
+          <div class="work-period">
+            <p class="work-dates">
+              <time datetime={entry.startedOn}>
+                {dateFormat.format(new Date(`${entry.startedOn}-01T00:00:00Z`))}
+              </time>
+              {' – '}
+              <time datetime={entry.endedOn}>
+                {dateFormat.format(new Date(`${entry.endedOn}-01T00:00:00Z`))}
+              </time>
+            </p>
+            {entry.locationKey && (
+              <p class="work-location">{t[entry.locationKey]}</p>
+            )}
+          </div>
         </div>
-        <p class="work-description">{t[entry.descriptionKey]}</p>
+        {entry.descriptionKey && (
+          <p class="work-description">{t[entry.descriptionKey]}</p>
+        )}
       </article>
     </li>
   ))}
@@ -77,6 +90,11 @@ const entries = [...workEntries].sort((a, b) =>
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--muted);
+  }
+  .work-location {
+    margin-top: var(--space-1);
+    color: var(--muted);
+    font-size: 0.8rem;
   }
   time {
     white-space: nowrap;
