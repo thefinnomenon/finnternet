@@ -2,12 +2,17 @@ import {
   createDraft,
   publishDraft,
   renderBlocks,
+  renderRuns,
+  updateRuns,
   slugify,
   type Asset,
   type Block,
   type Draft,
   type TextRun,
+  type TextChange,
+  isAudioClip,
 } from './model';
+import { initLearningAnnotations } from './learning-annotations';
 
 type Entry = { draft: Draft; published: Draft | null };
 type ReaderMode = 'preview' | 'published';
@@ -22,18 +27,52 @@ function element<T extends HTMLElement>(
   return value;
 }
 
-function readRuns(node: Node, bold = false, italic = false): TextRun[] {
+function readRuns(node: Node, marks: Omit<TextRun, 'text'> = {}): TextRun[] {
   if (node.nodeType === Node.TEXT_NODE)
-    return [{ text: node.textContent ?? '', bold, italic }];
+    return [{ text: node.textContent ?? '', ...marks }];
+  if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE)
+    return Array.from(node.childNodes).flatMap((child) =>
+      readRuns(child, marks),
+    );
   if (!(node instanceof HTMLElement)) return [];
-  if (node.tagName === 'BR') return [{ text: '\n', bold, italic }];
-  return Array.from(node.childNodes).flatMap((child) =>
-    readRuns(
-      child,
-      bold || node.tagName === 'STRONG' || node.tagName === 'B',
-      italic || node.tagName === 'EM' || node.tagName === 'I',
-    ),
+  if (node.tagName === 'BR') return [{ text: '\n', ...marks }];
+  const next = {
+    ...marks,
+    bold: marks.bold || node.tagName === 'STRONG' || node.tagName === 'B',
+    italic: marks.italic || node.tagName === 'EM' || node.tagName === 'I',
+  };
+  if (node.dataset.tooltipContent) next.tooltip = node.dataset.tooltipContent;
+  if (isAudioClip(node.dataset.audioClip)) next.audio = node.dataset.audioClip;
+  return Array.from(node.childNodes).flatMap((child) => readRuns(child, next));
+}
+
+function textBoundary(
+  root: HTMLElement,
+  offset: number,
+): { node: Node; offset: number } {
+  const walker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
   );
+  let node = walker.nextNode();
+  let remaining = offset;
+  while (node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const length = node.textContent?.length ?? 0;
+      if (remaining <= length) return { node, offset: remaining };
+      remaining -= length;
+    } else if (node instanceof HTMLBRElement) {
+      const parent = node.parentNode;
+      if (parent && remaining <= 1)
+        return {
+          node: parent,
+          offset: Array.from(parent.childNodes).indexOf(node) + remaining,
+        };
+      remaining--;
+    }
+    node = walker.nextNode();
+  }
+  return { node: root, offset: root.childNodes.length };
 }
 
 function readBlocks(editor: HTMLElement): Block[] {
@@ -84,7 +123,7 @@ export function initCreatorKitchen(): void {
   let saveTimer: ReturnType<typeof setTimeout> | undefined;
   let noticeTimer: ReturnType<typeof setTimeout> | undefined;
   let publishing = false;
-  let siteName = 'A little room';
+  let siteName = 'Language notes';
   let siteSubdomain = 'awesome';
 
   function current(): Entry {
@@ -143,13 +182,14 @@ export function initCreatorKitchen(): void {
 
   function openDraft(index: number): void {
     if (!entries[index]) return;
+    annotations.reset();
     active = index;
     const entry = current();
     title.value = entry.draft.title;
     title.setCustomValidity('');
     description.value = entry.draft.description;
     documentTitle.textContent = entry.draft.title || 'Untitled';
-    editor.innerHTML = renderBlocks(entry.draft.blocks);
+    editor.innerHTML = renderBlocks(entry.draft.blocks, true);
     savedRange = null;
     clearTimeout(saveTimer);
     status.textContent = 'Saved';
@@ -169,6 +209,7 @@ export function initCreatorKitchen(): void {
     const entry = current();
     const content = nextMode === 'published' ? entry.published : entry.draft;
     if (!content) return;
+    annotations.reset();
     if (!content.title.trim()) {
       title.setCustomValidity('Title is required.');
       setSettings(true);
@@ -233,12 +274,36 @@ export function initCreatorKitchen(): void {
   function restoreRange(): Range | null {
     const selection = window.getSelection();
     if (!selection) return null;
-    let range = savedRange;
+    const live = selection.rangeCount ? selection.getRangeAt(0) : null;
+    let range =
+      live && editor.contains(live.commonAncestorContainer)
+        ? live.cloneRange()
+        : savedRange;
     if (!range || !editor.contains(range.commonAncestorContainer)) {
       const block = editor.querySelector('p, h2, blockquote');
       if (!block) return null;
       range = document.createRange();
       range.selectNodeContents(block);
+    }
+    if (!range.collapsed) {
+      const selected = range;
+      const blocks = Array.from(editor.children).flatMap((block): Range[] => {
+        if (
+          !(block instanceof HTMLElement) ||
+          !block.matches('p, h1, h2, h3, blockquote') ||
+          !selected.intersectsNode(block)
+        )
+          return [];
+        const bounds = document.createRange();
+        bounds.selectNodeContents(block);
+        const clipped = selected.cloneRange();
+        if (selected.compareBoundaryPoints(Range.START_TO_START, bounds) < 0)
+          clipped.setStart(block, 0);
+        if (selected.compareBoundaryPoints(Range.END_TO_END, bounds) > 0)
+          clipped.setEnd(block, block.childNodes.length);
+        return clipped.toString().trim() ? [clipped] : [];
+      });
+      if (blocks.length === 1 && blocks[0]) range = blocks[0];
     }
     editor.focus();
     selection.removeAllRanges();
@@ -267,21 +332,45 @@ export function initCreatorKitchen(): void {
       if (!block) return;
       range.selectNodeContents(block);
     }
-    const parent =
-      range.commonAncestorContainer instanceof HTMLElement
-        ? range.commonAncestorContainer
-        : range.commonAncestorContainer.parentElement;
-    const existing = parent?.closest(tag);
-    if (existing && editor.contains(existing)) {
-      existing.replaceWith(...existing.childNodes);
-    } else {
-      const wrapper = document.createElement(tag);
-      wrapper.append(range.extractContents());
-      range.insertNode(wrapper);
-      range.selectNodeContents(wrapper);
-    }
-    savedRange = range;
+    const nextRange = updateSelection(range, {
+      kind: tag === 'strong' ? 'bold' : 'italic',
+    });
+    if (!nextRange) return;
+    savedRange = nextRange;
+    const selection = getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(nextRange);
     syncEditor();
+  }
+
+  function updateSelection(range: Range, change: TextChange): Range | null {
+    const block = activeBlock(range);
+    if (!block || !block.contains(range.endContainer)) {
+      tell('Select text within one paragraph.');
+      return null;
+    }
+    const prefix = document.createRange();
+    prefix.selectNodeContents(block);
+    prefix.setEnd(range.startContainer, range.startOffset);
+    const from = readRuns(prefix.cloneContents()).reduce(
+      (length, run) => length + run.text.length,
+      0,
+    );
+    prefix.setEnd(range.endContainer, range.endOffset);
+    const to = readRuns(prefix.cloneContents()).reduce(
+      (length, run) => length + run.text.length,
+      0,
+    );
+    block.innerHTML = renderRuns(
+      updateRuns(readRuns(block), from, to, change),
+      true,
+    );
+    const next = document.createRange();
+    const start = textBoundary(block, from);
+    const end = textBoundary(block, to);
+    next.setStart(start.node, start.offset);
+    next.setEnd(end.node, end.offset);
+    return next;
   }
 
   function style(kind: 'heading' | 'quote'): void {
@@ -402,6 +491,7 @@ export function initCreatorKitchen(): void {
     else publishContent();
   });
   element('#ck-back', HTMLButtonElement).addEventListener('click', () => {
+    annotations.reset();
     reader.hidden = true;
     app.hidden = false;
     element('#ck-preview', HTMLButtonElement).focus();
@@ -490,6 +580,16 @@ export function initCreatorKitchen(): void {
     ) {
       document.documentElement.dataset.theme = message.theme;
     }
+  });
+  const annotations = initLearningAnnotations({
+    editor,
+    getRange: restoreRange,
+    setRange: (range) => {
+      savedRange = range;
+    },
+    onChange: syncEditor,
+    onNotice: tell,
+    apply: updateSelection,
   });
   listContent();
   updateURL();

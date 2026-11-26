@@ -6,7 +6,11 @@ import ProjectDetails from '../../components/ProjectDetails.astro';
 
 const stack = [
   { label: 'Web', tools: 'Next.js 12, React 17, TypeScript, Tailwind CSS' },
-  { label: 'Editor', tools: 'Tiptap, ProseMirror, lowlight, Headless UI' },
+  {
+    label: 'Editor',
+    tools:
+      'Tiptap, ProseMirror, custom tooltip and audio-link extensions, lowlight, Headless UI',
+  },
   { label: 'Backend', tools: 'AWS Amplify, Cognito, AppSync GraphQL, S3' },
   {
     label: 'Publishing & media',
@@ -14,6 +18,9 @@ const stack = [
   },
 ];
 const features = [
+  'Started as a publishing platform for different subjects, with custom blocks for uses such as language learning.',
+  'Add hover tooltips to selected text for translations, definitions, and explanations.',
+  'Make words and phrases playable as audio links, and combine pronunciation with a tooltip on the same text.',
   'Write and format content in a block editor with headings, tables, code, callouts, and rich media.',
   'Autosave drafts, preview changes, and publish a separate version for readers.',
   'Manage an author profile and publish a site on a subdomain or custom domain.',
@@ -23,7 +30,7 @@ const features = [
 
 <Base
   title="CreatorKitchen"
-  description="A publishing platform with a rich block editor and personal websites."
+  description="A publishing platform with custom tooltips and audio links for learning and other rich content."
   locale="en"
   path="projects/creatorkitchen"
   alternates={{ en: '/projects/creatorkitchen/' }}
@@ -32,7 +39,7 @@ const features = [
     <ProjectDetails
       slot="details"
       title="CreatorKitchen"
-      description="A writing and publishing platform that turns drafts into a personal website, with a rich block editor and custom domains."
+      description="A writing and publishing platform designed for different kinds of content, including language lessons with hover explanations and inline audio."
       completedOn="2022-04-29"
       website="https://creatorkitchen.net/"
       inactive

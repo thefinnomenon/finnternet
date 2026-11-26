@@ -3,6 +3,7 @@ import '../../styles/demos/creatorkitchen.css';
 import {
   createDraft,
   renderBlocks,
+  slugify,
 } from '../../lib/demos/creatorkitchen/model';
 const draft = createDraft();
 ---
@@ -125,6 +126,27 @@ const draft = createDraft();
           >
             ❞
           </button>
+          <button
+            id="ck-add-tooltip"
+            type="button"
+            aria-label="Tooltip"
+            title="Tooltip"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v12H9l-5 4V4Z" />
+              <path d="M8 8h8m-8 4h5" />
+            </svg>
+          </button>
+          <button
+            id="ck-add-audio"
+            type="button"
+            aria-label="Audio link"
+            title="Audio link"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m4 9 5 0 5-4v14l-5-4H4V9Zm13-1a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" />
+            </svg>
+          </button>
           <button id="ck-media" type="button" class="ck-media-button">
             <span aria-hidden="true">▧</span> Media
           </button>
@@ -140,7 +162,7 @@ const draft = createDraft();
               aria-multiline="true"
               contenteditable="true"
               spellcheck="true"
-              set:html={renderBlocks(draft.blocks)}
+              set:html={renderBlocks(draft.blocks, true)}
             />
             <button id="ck-add-block" class="ck-add-block" type="button">
               ＋ Add a block
@@ -167,7 +189,7 @@ const draft = createDraft();
             >{draft.description}</textarea>
             <p class="ck-field-label">URL</p>
             <p id="ck-post-url" class="ck-post-url">
-              awesome.creatorkitchen.net/posts/make-room-for-good-ideas
+              awesome.creatorkitchen.net/posts/{slugify(draft.title)}
             </p>
           </div>
           <div class="ck-settings-bottom">
@@ -189,7 +211,7 @@ const draft = createDraft();
         </button>
       </div>
       <div class="ck-reader-site" id="ck-reader-site">
-        A little room
+        Language notes
       </div>
       <article class="ck-reader-document">
         <h1 id="ck-reader-title" tabindex="-1"></h1>
@@ -259,7 +281,7 @@ const draft = createDraft();
         <label for="ck-site-title">Site Name</label>
         <input
           id="ck-site-title"
-          value="A little room"
+          value="Language notes"
           required
           maxlength="100"
         />
@@ -285,6 +307,73 @@ const draft = createDraft();
         </button>
       </form>
     </dialog>
+    <dialog
+      id="ck-annotation-dialog"
+      class="ck-dialog"
+      aria-labelledby="ck-annotation-heading"
+    >
+      <div class="ck-dialog-heading">
+        <h2 id="ck-annotation-heading">Tooltip</h2>
+        <button
+          type="button"
+          class="ck-icon-button"
+          data-close="ck-annotation-dialog"
+          aria-label="Close annotation"
+        >
+          ×
+        </button>
+      </div>
+      <form id="ck-annotation-form" class="ck-annotation-form">
+        <p id="ck-annotation-selection" class="ck-annotation-selection"></p>
+        <div id="ck-tooltip-fields">
+          <label for="ck-tooltip-text">Tooltip text</label>
+          <input id="ck-tooltip-text" maxlength="300" required />
+        </div>
+        <div id="ck-audio-fields" hidden>
+          <label for="ck-audio-file">Audio file</label>
+          <div class="ck-audio-choice">
+            <select id="ck-audio-file">
+              <option value="hello">ola-tudo-bem.mp3</option>
+              <option value="thanks">obrigado.mp3</option>
+            </select>
+            <button
+              id="ck-play-selected-audio"
+              type="button"
+              class="ck-icon-button"
+              data-audio-clip="hello"
+              aria-label="Play audio"
+              aria-pressed="false"
+              title="Play audio"
+            >
+              ▶
+            </button>
+          </div>
+        </div>
+        <div class="ck-annotation-actions">
+          <button
+            id="ck-remove-annotation"
+            type="button"
+            class="ck-text-button"
+            hidden
+          >
+            Remove
+          </button>
+          <button type="submit" class="ck-primary">
+            Save
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <div
+      id="ck-inline-tooltip"
+      class="ck-inline-tooltip"
+      role="tooltip"
+      hidden
+    ></div>
+    <audio id="ck-audio-player" preload="none"></audio>
+    <p id="ck-audio-error" class="ck-audio-error" role="alert" hidden>
+      Couldn’t play audio. Try again.
+    </p>
     <script>
       import { initCreatorKitchen } from '../../lib/demos/creatorkitchen/client';
       initCreatorKitchen();

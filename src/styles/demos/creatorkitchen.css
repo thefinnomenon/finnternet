@@ -46,6 +46,9 @@ input,
 textarea {
   font: inherit;
 }
+select {
+  font: inherit;
+}
 button {
   cursor: pointer;
 }
@@ -56,6 +59,8 @@ button:disabled {
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
+select:focus-visible,
+[data-type]:focus-visible,
 [contenteditable]:focus-visible {
   outline: 2px solid var(--ck-blue);
   outline-offset: 3px;
@@ -293,6 +298,101 @@ button:hover:not(:disabled) {
 }
 .ck-prose figure {
   margin: 25px 0;
+}
+.ck-prose [data-type='tooltip'] {
+  text-decoration: underline dotted var(--ck-muted);
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+.ck-prose [data-type='audiolink'] {
+  color: var(--ck-link);
+  text-decoration: underline wavy var(--ck-link);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+.ck-editor [data-type='audiolink'] {
+  cursor: text;
+}
+.ck-prose [data-playing='true'] {
+  background: var(--ck-selected);
+  border-radius: 2px;
+}
+.ck-inline-tooltip {
+  position: fixed;
+  z-index: 5;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 16px));
+  padding: 9px 12px;
+  border-radius: 7px;
+  box-shadow: var(--ck-shadow);
+  background: var(--ck-ink);
+  color: var(--ck-bg);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.ck-formatbar svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ck-audio-error {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 6;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ck-panel);
+  color: var(--ck-ink);
+  border: 1px solid var(--ck-rule);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.ck-annotation-form {
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+}
+.ck-annotation-selection {
+  margin: 0;
+  color: var(--ck-muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.ck-annotation-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.ck-annotation-form input,
+.ck-annotation-form select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--ck-rule);
+  border-radius: 6px;
+  padding: 10px;
+  background: var(--ck-input);
+  color: var(--ck-ink);
+  font-size: 14px;
+}
+.ck-audio-choice {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ck-annotation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.ck-annotation-actions #ck-remove-annotation {
+  margin-right: auto;
 }
 .ck-prose figure img {
   display: block;
@@ -690,7 +790,8 @@ button:hover:not(:disabled) {
     font-size: 12px;
   }
   .ck-formatbar {
-    padding: 5px 14px;
+    padding: 5px 8px;
+    flex-wrap: wrap;
     min-height: 39px;
   }
   .ck-document {
