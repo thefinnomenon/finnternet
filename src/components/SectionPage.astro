@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Window from './Window.astro';
 import PostList from './PostList.astro';
 import Computer from './Computer.astro';
+import WorkHistory from './WorkHistory.astro';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
 import { postsForLocale } from '../lib/posts';
 import { projectEntries } from '../lib/portfolio';
@@ -55,13 +56,7 @@ const description =
             <h1>{t.work}</h1>
             <p>{t.workIntro}</p>
           </div>
-          <article class="project-entry work-entry">
-            <h2>
-              <a href="/work/whistle/">Whistle</a>
-            </h2>
-            <p>{t.whistleDescription}</p>
-            <p class="work-summary">{t.whistleBusiness}</p>
-          </article>
+          <WorkHistory locale={locale} />
         </>
       )}
       {section === 'projects' && (

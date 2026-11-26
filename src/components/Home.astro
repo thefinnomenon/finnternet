@@ -4,6 +4,7 @@ import Window from './Window.astro';
 import Computer from './Computer.astro';
 import PixelIcon from './PixelIcon.astro';
 import PostList from './PostList.astro';
+import WorkHistory from './WorkHistory.astro';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
 import { postsForLocale } from '../lib/posts';
 import { projectEntries } from '../lib/portfolio';
@@ -55,39 +56,35 @@ const alternates = Object.fromEntries(
         </div>
         <Computer />
       </Window>
-      <Window title={t.work} class="work-window">
-        <div class="home-work">
-          <a class="project-folder" href="/work/whistle/">
-            <PixelIcon name="folder" size={46} />
-            <span>Whistle</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-          <p class="work-description">{t.whistleDescription}</p>
-          <p class="work-summary">{t.whistleBusiness}</p>
-          <a class="window-bottom-link" href={localePath(locale, 'work')}>
-            {t.allWork} <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </Window>
       <div class="home-columns">
-        <Window title={t.latest} class="writing-window">
-          <PostList posts={posts.slice(0, 3)} locale={locale} />
-          <a class="window-bottom-link" href={localePath(locale, 'writing')}>
-            {t.allWriting} <span aria-hidden="true">→</span>
-          </a>
-        </Window>
-        <Window title={t.projects} class="projects-window">
-          {projectEntries.map((project) => (
-            <div class="home-project">
-              <a class="project-folder" href={project.href}>
-                <PixelIcon name="folder" size={46} />
-                <span>{project.title}</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-              <p class="project-description">{t[project.descriptionKey]}</p>
-            </div>
-          ))}
-        </Window>
+        <aside class="home-work-rail" aria-label={t.work}>
+          <Window title={t.work} class="work-window">
+            <WorkHistory locale={locale} compact />
+            <a class="window-bottom-link" href={localePath(locale, 'work')}>
+              {t.allWork} <span aria-hidden="true">→</span>
+            </a>
+          </Window>
+        </aside>
+        <div class="home-main-column">
+          <Window title={t.latest} class="writing-window">
+            <PostList posts={posts.slice(0, 3)} locale={locale} />
+            <a class="window-bottom-link" href={localePath(locale, 'writing')}>
+              {t.allWriting} <span aria-hidden="true">→</span>
+            </a>
+          </Window>
+          <Window title={t.projects} class="projects-window">
+            {projectEntries.map((project) => (
+              <div class="home-project">
+                <a class="project-folder" href={project.href}>
+                  <PixelIcon name="folder" size={46} />
+                  <span>{project.title}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <p class="project-description">{t[project.descriptionKey]}</p>
+              </div>
+            ))}
+          </Window>
+        </div>
       </div>
     </div>
   </div>

@@ -1,3 +1,14 @@
+export const workEntries = [
+  {
+    company: 'Whistle LLC',
+    href: '/work/whistle/',
+    roleKey: 'founder',
+    descriptionKey: 'whistleDescription',
+    startedOn: '2025-09',
+    endedOn: '2026-09',
+  },
+] as const;
+
 export const projectEntries = [
   {
     title: 'Guestography',

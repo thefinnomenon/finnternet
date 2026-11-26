@@ -17,8 +17,7 @@ const en = {
   allWork: 'View work',
   whistleDescription:
     'A live sports prediction game where fans answer questions while watching.',
-  whistleBusiness:
-    'A sports business spanning a mobile app, live game systems, and backend services.',
+  founder: 'Founder',
   graphqlAlgoliaDescription:
     'Add search indexing to an AWS Amplify GraphQL API with one directive.',
   creatorKitchenDescription:
@@ -80,8 +79,7 @@ export const translations = {
     allWork: 'Ver trabajo',
     whistleDescription:
       'Un juego de predicciones deportivas en directo para responder mientras ves el partido.',
-    whistleBusiness:
-      'Un negocio deportivo con una app móvil, sistemas de juego en directo y servicios de backend.',
+    founder: 'Fundador',
     graphqlAlgoliaDescription:
       'Añade búsquedas a una API GraphQL de AWS Amplify con una directiva.',
     creatorKitchenDescription:
@@ -138,8 +136,7 @@ export const translations = {
     allWork: 'Ver trabalho',
     whistleDescription:
       'Um jogo de palpites esportivos ao vivo para responder enquanto você assiste.',
-    whistleBusiness:
-      'Um negócio esportivo com aplicativo móvel, sistemas de jogo ao vivo e serviços de backend.',
+    founder: 'Fundador',
     graphqlAlgoliaDescription:
       'Adicione busca a uma API GraphQL do AWS Amplify com uma diretiva.',
     creatorKitchenDescription:
@@ -197,8 +194,7 @@ export const translations = {
     allWork: 'Vedi il lavoro',
     whistleDescription:
       'Un gioco di pronostici sportivi in diretta a cui partecipare mentre guardi la partita.',
-    whistleBusiness:
-      'Un’attività sportiva con app mobile, sistemi di gioco in diretta e servizi backend.',
+    founder: 'Fondatore',
     graphqlAlgoliaDescription:
       'Aggiungi la ricerca a un’API GraphQL di AWS Amplify con una direttiva.',
     creatorKitchenDescription:
