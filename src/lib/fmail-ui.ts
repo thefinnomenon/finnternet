@@ -70,7 +70,7 @@ const locale = root.lang || 'en';
 let timer: number | undefined;
 let toastTimer: number | undefined;
 let toastAnimation: Animation | undefined;
-const TOAST_DURATION_MS = 3000;
+const TOAST_DURATION_MS = 5000;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let lastMessageId = store.snapshot().messages[0]?.id ?? '';
 let toastMessageId: string | undefined;

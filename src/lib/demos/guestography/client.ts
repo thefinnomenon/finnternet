@@ -1,7 +1,7 @@
 import { demoProjects } from '../../demo-projects';
 import { photos } from './photos';
 
-type Screen = 'create' | 'success' | 'gallery' | 'upload';
+type Screen = 'home' | 'create' | 'success' | 'gallery' | 'upload';
 type Phase = 'form' | 'processing' | 'ready';
 const ASSETS = '/demos/guestography/';
 const GENERATION_MS = 8000;
@@ -10,6 +10,33 @@ const PRESET_EMAIL = 'user@finnternet.com';
 const PRESET_NAME = 'Awesome User';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const { eventTitle } = demoProjects.guestography;
+const eventTypes = [
+  'Wedding',
+  'Birthday',
+  'New Years',
+  'Trip',
+  'Game Day',
+  'Baby Shower',
+  'Prom',
+  'Bachelor Party',
+  'Bachelorette Party',
+  'Block Party',
+  'Bridal Shower',
+  'Reunion',
+  'Race',
+  'Fundraiser',
+  'House Party',
+  'Pool Party',
+  'Concert',
+] as const;
+const eventColors = [
+  'indigo',
+  'red',
+  'blue',
+  'orange',
+  'green',
+  'violet',
+] as const;
 
 function required<T extends HTMLElement>(
   selector: string,
@@ -41,6 +68,27 @@ let uploaded = false;
 let photoIndex = 0;
 let createTimer: number | undefined;
 let uploadTimer: number | undefined;
+let landingIndex = 0;
+const landingTimer = window.setInterval(() => {
+  if (
+    root.dataset.screen !== 'home' ||
+    reducedMotion.matches ||
+    document.hidden
+  )
+    return;
+  landingIndex += 1;
+  const eventType = required('#guest-event-type', HTMLSpanElement);
+  eventType.textContent =
+    eventTypes[landingIndex % eventTypes.length] ?? 'Wedding';
+  const color = eventColors[landingIndex % eventColors.length] ?? 'indigo';
+  eventType.style.color = `var(--guest-event-${color})`;
+  for (const image of document.querySelectorAll<HTMLImageElement>(
+    '[data-guest-hero-photo]',
+  )) {
+    const offset = Number(image.dataset.guestHeroPhoto);
+    image.src = `${ASSETS}landing/${(landingIndex * 5 + offset) % 52}.jpg`;
+  }
+}, 4000);
 
 function setPhase(next: Phase): void {
   phase = next;
@@ -51,15 +99,46 @@ function setPhase(next: Phase): void {
 }
 function showScreen(screen: Screen): void {
   root.dataset.screen = screen;
-  for (const item of ['create', 'success', 'gallery', 'upload'] as const) {
+  for (const item of [
+    'home',
+    'create',
+    'success',
+    'gallery',
+    'upload',
+  ] as const) {
     required(`#guest-${item}-screen`, HTMLElement).hidden = screen !== item;
   }
   required('#guest-upload-nav', HTMLButtonElement).hidden =
     screen !== 'gallery';
+  required('#guest-create-nav', HTMLButtonElement).hidden = screen !== 'home';
   window.scrollTo(0, 0);
   const heading = document.querySelector(`#guest-${screen}-screen h1`);
-  if (heading instanceof HTMLHeadingElement && screen !== 'create')
+  if (heading instanceof HTMLHeadingElement)
     heading.focus({ preventScroll: true });
+}
+required('.guest-brand', HTMLAnchorElement).addEventListener(
+  'click',
+  (event) => {
+    event.preventDefault();
+    showScreen('home');
+  },
+);
+for (const button of document.querySelectorAll<HTMLButtonElement>(
+  '[data-guest-open]',
+)) {
+  button.addEventListener('click', () => {
+    if (button.dataset.guestOpen === 'gallery') {
+      showGallery();
+      return;
+    }
+    if (phase === 'ready') {
+      setPhase('form');
+      required('#guest-create-label', HTMLSpanElement).hidden = false;
+      required('#guest-create-spinner', HTMLSpanElement).hidden = true;
+      updateCreate();
+    }
+    showScreen('create');
+  });
 }
 function fill(
   input: HTMLInputElement,
@@ -134,7 +213,7 @@ function showGallery(): void {
 function showReady(): void {
   if (phase === 'ready') return;
   window.clearInterval(createTimer);
-  showScreen('success');
+  if (root.dataset.screen === 'create') showScreen('success');
   setPhase('ready');
 }
 required('#guest-create-form', HTMLFormElement).addEventListener(
@@ -313,6 +392,7 @@ window.addEventListener('pagehide', (event) => {
   if (!event.persisted) {
     window.clearInterval(createTimer);
     window.clearInterval(uploadTimer);
+    window.clearInterval(landingTimer);
   }
 });
 setPhase('form');

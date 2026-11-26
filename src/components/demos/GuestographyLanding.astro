@@ -1,0 +1,133 @@
+---
+const steps = [
+  {
+    title: 'Create your gallery',
+    description:
+      'Name your event and receive printable QR code designs, or make your own.',
+  },
+  {
+    title: 'Guests scan & upload',
+    description:
+      'Anyone can add photos and videos from their phone. No app or login.',
+  },
+  {
+    title: 'Enjoy every moment',
+    description: 'View, share, and download everyone’s photos from one place.',
+  },
+];
+const benefits = [
+  { value: '5', label: 'printable QR designs' },
+  { value: '100GB', label: 'of photo and video storage' },
+  { value: '12 months', label: 'of gallery access' },
+  { value: 'No app', label: 'or guest account needed' },
+];
+---
+
+<section
+  id="guest-home-screen"
+  class="guest-screen guest-home"
+  aria-labelledby="guest-home-title"
+>
+  <div class="guest-hero">
+    <div class="guest-hero-grid" aria-hidden="true"></div>
+    <div class="guest-hero-glow" aria-hidden="true"></div>
+    <div class="guest-hero-inner">
+      <div class="guest-hero-copy">
+        <h1 id="guest-home-title" tabindex="-1">
+          Capture your <span id="guest-event-type">Wedding</span> through the
+          eyes of your guests
+        </h1>
+        <p>
+          Collect every guest's photos and videos in one shared gallery. They
+          scan your QR code and upload instantly. No app or account required.
+        </p>
+        <div class="guest-home-actions">
+          <button
+            class="guest-home-primary"
+            data-guest-open="create"
+            type="button"
+          >
+            Create Event
+          </button>
+          <button
+            class="guest-home-link"
+            data-guest-open="gallery"
+            type="button"
+          >
+            See Demo Gallery <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+      <div class="guest-hero-photos" aria-label="Event photographs">
+        {[[0], [1, 2], [3, 4]].map((column) => (
+          <div class="guest-hero-column">
+            {column.map((index) => (
+              <img
+                src={`/demos/guestography/landing/${index}.jpg`}
+                alt="Example event image"
+                width="400"
+                height="600"
+                loading="lazy"
+                decoding="async"
+                data-guest-hero-photo={index}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  <section class="guest-home-how" aria-labelledby="guest-how-title">
+    <div class="guest-home-container">
+      <div class="guest-home-heading">
+        <p class="guest-home-kicker">How it works</p>
+        <h2 id="guest-how-title">One gallery. Every guest's perspective.</h2>
+      </div>
+      <div class="guest-home-steps">
+        {steps.map((step, index) => (
+          <div class="guest-home-step">
+            <span class="guest-step-number">{index + 1}</span>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        ))}
+      </div>
+      <div class="guest-home-centered-action">
+        <button
+          class="guest-home-primary"
+          data-guest-open="gallery"
+          type="button"
+        >
+          See Demo Gallery <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="guest-home-features" aria-labelledby="guest-features-title">
+    <div class="guest-home-container">
+      <div class="guest-home-heading">
+        <h2 id="guest-features-title">Everything you need for one event</h2>
+        <p>
+          Set it up once, share the QR code, and let your guests fill the
+          gallery.
+        </p>
+      </div>
+      <div class="guest-home-benefits">
+        {benefits.map((benefit) => (
+          <div>
+            <p class="guest-benefit-value">{benefit.value}</p>
+            <p>{benefit.label}</p>
+          </div>
+        ))}
+      </div>
+      <div class="guest-home-cta">
+        <h2>Bring every guest's photos together</h2>
+        <p>One event gallery for a one-time payment of $49.</p>
+        <button class="guest-home-white" data-guest-open="create" type="button">
+          Create Event
+        </button>
+      </div>
+    </div>
+  </section>
+  <footer class="guest-home-footer">© 2025 Guestography</footer>
+</section>

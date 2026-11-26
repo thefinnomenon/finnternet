@@ -1,5 +1,6 @@
 ---
 import { demoProjects } from '../../lib/demo-projects';
+import GuestographyLanding from '../../components/demos/GuestographyLanding.astro';
 import '../../styles/demos/guestography-original.css';
 import '../../styles/demos/guestography.css';
 const { eventTitle } = demoProjects.guestography;
@@ -28,7 +29,7 @@ const { eventTitle } = demoProjects.guestography;
     </script>
   </head>
   <body>
-    <div id="guestography-demo" data-screen="create">
+    <div id="guestography-demo" data-screen="home">
       <nav class="bg-indigo-500" aria-label="Guestography">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div class="relative flex h-16 items-center justify-between">
@@ -48,6 +49,14 @@ const { eventTitle } = demoProjects.guestography;
             </a>
             <button
               type="button"
+              id="guest-create-nav"
+              data-guest-open="create"
+              class="guest-nav-button rounded-md bg-white px-6 py-3 text-base font-medium text-indigo-500 shadow-sm"
+            >
+              CREATE EVENT
+            </button>
+            <button
+              type="button"
               id="guest-upload-nav"
               class="guest-nav-button rounded-md bg-white px-6 py-3 text-base font-medium text-indigo-500 shadow-sm"
               hidden
@@ -58,15 +67,18 @@ const { eventTitle } = demoProjects.guestography;
         </div>
       </nav>
       <main>
+        <GuestographyLanding />
         <section
           id="guest-create-screen"
           class="guest-screen guest-pattern overflow-hidden bg-white py-16 px-4 sm:px-6 lg:px-8 lg:py-24"
           aria-labelledby="guest-create-title"
+          hidden
         >
           <div class="relative mx-auto max-w-xl">
             <h1
               id="guest-create-title"
               class="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+              tabindex="-1"
             >
               Create Event
             </h1>
