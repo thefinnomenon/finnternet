@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectLayout from '../../components/ProjectLayout.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+
+const stack = [
+  { label: 'Web', tools: 'Next.js 12, React 17, TypeScript, Tailwind CSS' },
+  { label: 'Editor', tools: 'Tiptap, ProseMirror, lowlight, Headless UI' },
+  { label: 'Backend', tools: 'AWS Amplify, Cognito, AppSync GraphQL, S3' },
+  {
+    label: 'Publishing & media',
+    tools: 'Vercel, custom domains, Unsplash, Giphy, Iframely',
+  },
+];
+const features = [
+  'Write and format content in a block editor with headings, tables, code, callouts, and rich media.',
+  'Autosave drafts, preview changes, and publish a separate version for readers.',
+  'Manage an author profile and publish a site on a subdomain or custom domain.',
+  'Find images and GIFs, upload media, or embed content from a link.',
+];
+---
+
+<Base
+  title="CreatorKitchen"
+  description="A publishing platform with a rich block editor and personal websites."
+  locale="en"
+  path="projects/creatorkitchen"
+  alternates={{ en: '/projects/creatorkitchen/' }}
+>
+  <ProjectLayout>
+    <ProjectDetails
+      slot="details"
+      title="CreatorKitchen"
+      description="A writing and publishing platform that turns drafts into a personal website, with a rich block editor and custom domains."
+      completedOn="2022-04-29"
+      website="https://creatorkitchen.net/"
+      inactive
+      github="https://github.com/thefinnomenon/creatorkitchen-public"
+      stack={stack}
+      features={features}
+    />
+    <ProjectDemo slot="demo" project="creatorkitchen" />
+  </ProjectLayout>
+</Base>

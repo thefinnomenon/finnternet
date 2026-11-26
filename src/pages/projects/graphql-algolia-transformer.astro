@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectLayout from '../../components/ProjectLayout.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+
+const stack = [
+  {
+    label: 'Transformer',
+    tools: 'TypeScript, GraphQL, AWS Amplify Transformer v2, AWS CDK',
+  },
+  {
+    label: 'Indexing & search',
+    tools: 'Python, AWS Lambda, DynamoDB Streams, AWS AppSync, Algolia',
+  },
+];
+const features = [
+  'Add @algolia to an Amplify GraphQL model to generate search infrastructure.',
+  'Stream model changes from DynamoDB through Lambda into an Algolia index.',
+  'Choose which fields enter the search index with include or exclude lists.',
+  'Generate GraphQL search queries that return Algolia results as JSON.',
+];
+---
+
+<Base
+  title="GraphQL Algolia Transformer"
+  description="An AWS Amplify GraphQL directive for Algolia search."
+  locale="en"
+  path="projects/graphql-algolia-transformer"
+  alternates={{ en: '/projects/graphql-algolia-transformer/' }}
+>
+  <ProjectLayout>
+    <ProjectDetails
+      slot="details"
+      title="GraphQL Algolia Transformer"
+      description="An open-source Amplify transformer that turns GraphQL models into searchable Algolia indexes with an @algolia directive."
+      completedOn="2022-09-12"
+      website="https://www.npmjs.com/package/graphql-algolia-transformer"
+      github="https://github.com/thefinnomenon/graphql-algolia-transformer"
+      stack={stack}
+      features={features}
+    />
+    <ProjectDemo slot="demo" project="graphql-algolia-transformer" />
+  </ProjectLayout>
+</Base>

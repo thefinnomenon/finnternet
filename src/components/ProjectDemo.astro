@@ -1,12 +1,15 @@
 ---
 import Window from './Window.astro';
 import PixelIcon from './PixelIcon.astro';
-import { demoProjects, type DemoProject } from '../lib/demo-projects';
+import {
+  portfolioDemos,
+  type PortfolioDemoProject,
+} from '../lib/portfolio-demos';
 interface Props {
-  project?: DemoProject;
+  project?: PortfolioDemoProject;
 }
 const { project = 'instamosaic' } = Astro.props;
-const { title } = demoProjects[project];
+const { title } = portfolioDemos[project];
 ---
 
 <section
@@ -121,9 +124,13 @@ const { title } = demoProjects[project];
 
 <script>
   import { getFmailStore } from '../lib/fmail';
-  import { isDemoProject, type DemoProject } from '../lib/demo-projects';
+  import { isDemoProject } from '../lib/demo-projects';
+  import {
+    isPortfolioDemoProject,
+    type PortfolioDemoProject,
+  } from '../lib/portfolio-demos';
   type Phase = 'form' | 'processing' | 'ready';
-  type DemoMessage = { type: `${DemoProject}:state`; phase: Phase };
+  type DemoMessage = { type: `${PortfolioDemoProject}:state`; phase: Phase };
   function element<T extends HTMLElement>(
     selector: string,
     constructor: { new (): T },
@@ -134,7 +141,8 @@ const { title } = demoProjects[project];
     return node;
   }
   const projectId = element('#project-demo', HTMLElement).dataset.demoProject;
-  if (!isDemoProject(projectId)) throw new Error('Unknown portfolio demo.');
+  if (!isPortfolioDemoProject(projectId))
+    throw new Error('Unknown portfolio demo.');
   const frame = element(`#${projectId}-frame`, HTMLIFrameElement);
   const browser = element('#demo-browser', HTMLDivElement);
   const stage = element('#demo-stage', HTMLDivElement);
@@ -173,6 +181,8 @@ const { title } = demoProjects[project];
       send({ type: `${projectId}:show-result` });
     }
   });
+  // A cached iframe may have loaded before this module registers its listener.
+  syncTheme();
   new MutationObserver(syncTheme).observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme'],
@@ -239,7 +249,8 @@ const { title } = demoProjects[project];
     if (
       event.origin !== window.location.origin ||
       event.source !== frame.contentWindow ||
-      !isDemoMessage(event.data)
+      !isDemoMessage(event.data) ||
+      !isDemoProject(projectId)
     )
       return;
     const previous = phase;

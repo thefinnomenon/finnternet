@@ -1,0 +1,767 @@
+:root {
+  color-scheme: light;
+  --ck-bg: #fff;
+  --ck-panel: #f3f4f6;
+  --ck-hover: #e5e7eb;
+  --ck-ink: #1f2937;
+  --ck-muted: #6b7280;
+  --ck-rule: #e5e7eb;
+  --ck-blue: #2563eb;
+  --ck-link: #1d4ed8;
+  --ck-input: #fff;
+  --ck-selected: #e1e7f0;
+  --ck-shadow: 0 18px 70px #0003;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color: var(--ck-ink);
+  background: var(--ck-bg);
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ck-bg: #171c25;
+  --ck-panel: #1e2531;
+  --ck-hover: #303a49;
+  --ck-ink: #e5e9f1;
+  --ck-muted: #a4afbf;
+  --ck-rule: #354052;
+  --ck-blue: #3b71e9;
+  --ck-link: #9dbdff;
+  --ck-input: #161e2a;
+  --ck-selected: #2b3c58;
+  --ck-shadow: 0 18px 70px #0008;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[contenteditable]:focus-visible {
+  outline: 2px solid var(--ck-blue);
+  outline-offset: 3px;
+}
+button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+button:hover:not(:disabled) {
+  background: var(--ck-hover);
+}
+[hidden] {
+  display: none !important;
+}
+.ck-app {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 210px;
+  height: 100svh;
+  min-height: 360px;
+  overflow: hidden;
+}
+.ck-sidebar {
+  background: var(--ck-panel);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+.ck-content-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px 12px 7px 17px;
+}
+.ck-content-heading h1 {
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+.ck-icon-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  font-size: 26px;
+  border-radius: 7px;
+  line-height: 1;
+}
+.ck-author {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 18px 15px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ck-muted);
+  white-space: nowrap;
+}
+.ck-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: #becdbd;
+  color: #344c3a;
+  font-size: 10px;
+  font-weight: 700;
+}
+.ck-site-button {
+  font-size: 10px;
+  font-weight: 600;
+  text-align: left;
+  overflow-wrap: anywhere;
+  padding: 12px 15px 22px;
+  color: var(--ck-muted);
+  line-height: 1.6;
+}
+.ck-content-list {
+  display: grid;
+  align-content: start;
+  overflow: auto;
+  flex: 1;
+}
+.ck-content-item {
+  text-align: left;
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.ck-content-item[aria-current='page'] {
+  background: var(--ck-selected);
+  color: var(--ck-link);
+}
+.ck-sidebar-footer {
+  color: var(--ck-muted);
+  font-size: 11px;
+  padding: 20px 16px;
+  letter-spacing: 0.3px;
+}
+.ck-workspace {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.ck-topbar {
+  height: 63px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px 10px 17px;
+  gap: 8px;
+}
+.ck-save-status {
+  font-size: 11px;
+  color: var(--ck-muted);
+  white-space: nowrap;
+}
+.ck-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.ck-text-button {
+  color: var(--ck-link);
+  font-weight: 600;
+  padding: 9px 8px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+.ck-primary {
+  background: var(--ck-blue);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ck-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+.ck-view-button {
+  font-size: 25px;
+  color: var(--ck-link);
+  width: 29px;
+}
+.ck-settings-toggle {
+  font-size: 21px;
+  display: none;
+}
+.ck-formatbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--ck-rule);
+  padding: 6px 15px;
+  min-height: 42px;
+  flex-shrink: 0;
+}
+.ck-formatbar button {
+  height: 28px;
+  min-width: 28px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.ck-toolbar-rule {
+  height: 16px;
+  border-left: 1px solid var(--ck-rule);
+  margin: 0 5px;
+}
+.ck-formatbar .ck-media-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 0 8px;
+  color: var(--ck-muted);
+  margin-left: auto;
+}
+.ck-media-button span {
+  font-size: 21px;
+}
+.ck-document-scroll {
+  overflow: auto;
+  flex: 1;
+  scrollbar-width: thin;
+}
+.ck-document {
+  padding: 32px 25px 60px;
+  max-width: 720px;
+  margin: auto;
+}
+.ck-document > h1 {
+  font-size: clamp(26px, 3.6vw, 38px);
+  line-height: 1.18;
+  letter-spacing: -1px;
+  margin: 0 0 27px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+.ck-prose {
+  font-size: 15px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.ck-prose p {
+  margin: 0 0 22px;
+}
+.ck-prose h2 {
+  font-size: 21px;
+  line-height: 1.35;
+  letter-spacing: -0.35px;
+  margin: 26px 0 15px;
+}
+.ck-prose > h2:first-child {
+  margin-top: 0;
+}
+.ck-prose strong {
+  font-weight: 650;
+}
+.ck-prose blockquote {
+  font-style: italic;
+  border-left: 3px solid var(--ck-blue);
+  padding: 3px 0 3px 17px;
+  margin: 25px 0;
+  color: var(--ck-muted);
+  line-height: 1.7;
+}
+.ck-prose figure {
+  margin: 25px 0;
+}
+.ck-prose figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+.ck-prose figcaption {
+  font-size: 10px;
+  color: var(--ck-muted);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.ck-editor {
+  min-height: 240px;
+  outline: none;
+}
+.ck-editor:focus-visible {
+  outline: none;
+}
+.ck-editor:empty::before {
+  content: 'Enter your content…';
+  color: var(--ck-muted);
+}
+.ck-add-block {
+  font-size: 12px;
+  color: var(--ck-muted);
+  padding: 6px 10px;
+  border: 1px solid var(--ck-rule);
+  border-radius: 5px;
+  margin-top: 8px;
+}
+.ck-settings {
+  background: var(--ck-panel);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ck-settings h2 {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 20px 16px;
+  margin: 0;
+  line-height: 1.25;
+}
+.ck-settings form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+}
+.ck-settings-fields {
+  padding: 8px 16px;
+  flex: 1;
+}
+.ck-settings label,
+.ck-field-label {
+  display: block;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+.ck-settings input,
+.ck-settings textarea,
+.ck-site-form input,
+.ck-site-form textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  background: var(--ck-input);
+  color: var(--ck-ink);
+  border: 1px solid var(--ck-rule);
+  border-radius: 7px;
+  padding: 10px 11px;
+  font-size: 12px;
+  line-height: 1.6;
+  box-shadow: 0 1px 3px #0000000d;
+}
+.ck-settings input,
+.ck-settings textarea {
+  margin: 0 0 23px;
+}
+.ck-settings textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+.ck-post-url {
+  font-size: 10px;
+  color: var(--ck-muted);
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+  margin: 0;
+}
+.ck-settings-bottom {
+  padding: 16px;
+}
+.ck-settings-bottom button {
+  width: 100%;
+  height: 37px;
+}
+.ck-notice {
+  position: absolute;
+  bottom: 17px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: var(--ck-shadow);
+  background: var(--ck-ink);
+  color: var(--ck-bg);
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 12px;
+  white-space: nowrap;
+  max-width: calc(100% - 28px);
+  overflow-wrap: anywhere;
+}
+.ck-reader {
+  min-height: 100svh;
+}
+.ck-reader-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ck-rule);
+  padding: 10px 18px;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  background: var(--ck-bg);
+  z-index: 1;
+}
+.ck-reader-bar > span {
+  font-size: 12px;
+  color: var(--ck-muted);
+}
+.ck-reader-site {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-align: center;
+  padding: 35px 20px 10px;
+  color: var(--ck-muted);
+}
+.ck-reader-document {
+  max-width: 640px;
+  margin: auto;
+  padding: 23px 35px 60px;
+}
+.ck-reader-document > h1 {
+  font-size: clamp(32px, 5.5vw, 48px);
+  line-height: 1.15;
+  letter-spacing: -1.4px;
+  margin: 0 0 34px;
+  overflow-wrap: anywhere;
+}
+.ck-reader .ck-prose {
+  font-size: 17px;
+  line-height: 1.85;
+}
+.ck-reader .ck-prose h2 {
+  font-size: 25px;
+}
+.ck-reader-author {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--ck-rule);
+  padding-top: 25px;
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--ck-muted);
+}
+.ck-dialog {
+  width: calc(100% - 36px);
+  max-width: 560px;
+  max-height: calc(100svh - 50px);
+  border: 1px solid var(--ck-rule);
+  padding: 0;
+  border-radius: 10px;
+  background: var(--ck-bg);
+  color: var(--ck-ink);
+  box-shadow: var(--ck-shadow);
+  overflow: auto;
+}
+.ck-dialog::backdrop {
+  background: #10172080;
+}
+.ck-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--ck-rule);
+}
+.ck-dialog h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.ck-media-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 22px;
+}
+.ck-media-choices button {
+  text-align: left;
+  border: 1px solid var(--ck-rule);
+  border-radius: 6px;
+  padding: 0;
+  overflow: hidden;
+}
+.ck-media-choices img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ck-media-choices span {
+  display: block;
+  font-size: 12px;
+  padding: 12px;
+}
+.ck-site-form {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+}
+.ck-site-form label {
+  font-size: 12px;
+  margin-top: 5px;
+}
+.ck-site-form > button {
+  margin-top: 10px;
+}
+.ck-subdomain {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+.ck-subdomain input {
+  border-radius: 7px 0 0 7px;
+  flex: 1;
+}
+.ck-subdomain span {
+  border: 1px solid var(--ck-rule);
+  border-left: 0;
+  padding: 12px 8px;
+  font-size: 11px;
+  background: var(--ck-panel);
+  border-radius: 0 7px 7px 0;
+  white-space: nowrap;
+}
+@media (min-width: 1050px) {
+  .ck-app {
+    grid-template-columns: 220px minmax(0, 1fr) 250px;
+  }
+  .ck-document {
+    padding: 40px;
+  }
+  .ck-author {
+    font-size: 13px;
+  }
+  .ck-site-button {
+    font-size: 12px;
+  }
+  .ck-content-item {
+    font-size: 18px;
+  }
+  .ck-settings h2 {
+    font-size: 27px;
+  }
+  .ck-prose {
+    font-size: 17px;
+  }
+  .ck-settings input,
+  .ck-settings textarea {
+    font-size: 13px;
+  }
+  .ck-text-button,
+  .ck-primary {
+    font-size: 13px;
+  }
+}
+@media (max-width: 760px) {
+  .ck-app {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+  .ck-settings {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 63px;
+    bottom: 0;
+    z-index: 2;
+    width: min(280px, calc(100% - 26px));
+    box-shadow: -10px 0 30px #0002;
+    border-left: 1px solid var(--ck-rule);
+  }
+  .ck-settings[data-open='true'] {
+    display: flex;
+  }
+  .ck-settings-toggle {
+    display: grid;
+  }
+  .ck-content-heading {
+    padding-left: 12px;
+  }
+  .ck-content-heading h1 {
+    font-size: 23px;
+  }
+  .ck-content-item {
+    font-size: 14px;
+    padding: 13px 12px;
+  }
+  .ck-author {
+    padding-left: 12px;
+    font-size: 10px;
+    gap: 6px;
+  }
+  .ck-site-button {
+    padding-left: 12px;
+  }
+  .ck-avatar {
+    width: 25px;
+    height: 25px;
+    font-size: 9px;
+  }
+  .ck-document {
+    padding: 27px 22px;
+  }
+  .ck-document > h1 {
+    font-size: 31px;
+  }
+  .ck-save-status {
+    font-size: 10px;
+  }
+  .ck-topbar {
+    padding-left: 13px;
+  }
+  .ck-prose {
+    font-size: 14px;
+  }
+  .ck-prose h2 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 470px) {
+  .ck-app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .ck-sidebar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    border-bottom: 1px solid var(--ck-rule);
+    padding: 0 8px;
+  }
+  .ck-content-heading {
+    padding: 8px 6px;
+    gap: 4px;
+  }
+  .ck-content-heading h1 {
+    font-size: 18px;
+  }
+  .ck-content-heading .ck-icon-button {
+    width: 28px;
+    height: 32px;
+    font-size: 24px;
+  }
+  .ck-author,
+  .ck-site-button,
+  .ck-sidebar-footer {
+    display: none;
+  }
+  .ck-content-list {
+    display: flex;
+    overflow: auto;
+    align-items: center;
+  }
+  .ck-content-item {
+    font-size: 11px;
+    padding: 8px 10px;
+    line-height: 1.45;
+    min-width: 140px;
+    max-width: 200px;
+    border-radius: 5px;
+    margin: 5px;
+  }
+  .ck-topbar {
+    height: 56px;
+    padding: 7px 10px;
+  }
+  .ck-text-button {
+    font-size: 12px;
+  }
+  .ck-formatbar {
+    padding: 5px 14px;
+    min-height: 39px;
+  }
+  .ck-document {
+    padding: 25px 24px 55px;
+  }
+  .ck-document > h1 {
+    font-size: 33px;
+    max-width: 320px;
+    margin-bottom: 26px;
+  }
+  .ck-prose {
+    font-size: 15px;
+  }
+  .ck-settings {
+    top: 56px;
+  }
+  .ck-reader-bar {
+    padding: 8px 10px;
+  }
+  .ck-reader-site {
+    padding-top: 28px;
+  }
+  .ck-reader-document {
+    padding: 20px 26px 45px;
+  }
+  .ck-reader-document > h1 {
+    font-size: 36px;
+  }
+  .ck-reader .ck-prose {
+    font-size: 16px;
+  }
+  .ck-reader .ck-prose h2 {
+    font-size: 23px;
+  }
+  .ck-media-choices {
+    gap: 10px;
+    padding: 16px;
+  }
+  .ck-media-choices span {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .ck-notice {
+    white-space: normal;
+    text-align: center;
+  }
+  .ck-subdomain span {
+    font-size: 10px;
+  }
+}
+@media (pointer: coarse) {
+  .ck-formatbar button {
+    min-width: 36px;
+    height: 34px;
+  }
+  .ck-formatbar {
+    min-height: 44px;
+  }
+  .ck-icon-button {
+    min-height: 36px;
+  }
+  .ck-content-item {
+    min-height: 44px;
+  }
+  .ck-text-button,
+  .ck-primary {
+    min-height: 38px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}

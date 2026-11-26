@@ -1,0 +1,193 @@
+---
+import '../../styles/demos/graphql-algolia-transformer.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'"
+    />
+    <title>GraphQL Algolia Transformer</title>
+  </head>
+  <body>
+    <main class="transformer-demo">
+      <header class="intro">
+        <div class="directive-mark" aria-hidden="true">
+          @
+        </div>
+        <div>
+          <h1>A directive. A searchable model.</h1>
+          <p>Follow a Post from GraphQL to its search index.</p>
+        </div>
+      </header>
+
+      <section class="schema-section" aria-labelledby="schema-title">
+        <div class="section-title">
+          <h2 id="schema-title">1. Choose indexed fields</h2>
+          <span class="file-label">schema.graphql</span>
+        </div>
+        <div class="schema-grid">
+          <fieldset class="field-policy">
+            <legend>Field selection</legend>
+            <div class="mode-switch">
+              <label>
+                <input type="radio" name="field-mode" value="include" checked />
+                <span>Include</span>
+              </label>
+              <label>
+                <input type="radio" name="field-mode" value="exclude" />
+                <span>Exclude</span>
+              </label>
+            </div>
+            <div class="field-options">
+              <label>
+                <input
+                  type="checkbox"
+                  name="indexed-field"
+                  value="title"
+                  checked
+                />
+                title
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="indexed-field"
+                  value="content"
+                  checked
+                />
+                content
+              </label>
+              <label>
+                <input type="checkbox" name="indexed-field" value="category" />
+                category
+              </label>
+            </div>
+            <p class="field-hint" id="field-hint">
+              Only checked fields enter the index.
+            </p>
+          </fieldset>
+          <pre class="schema-code"><code id="schema-code"></code></pre>
+        </div>
+      </section>
+
+      <section
+        class="stream-section"
+        aria-labelledby="stream-title"
+        id="stream-section"
+      >
+        <div class="section-title">
+          <h2 id="stream-title">2. Change a record</h2>
+          <button type="button" id="reset-demo" class="text-button">
+            Reset
+          </button>
+        </div>
+        <div class="record-editor">
+          <div class="source-record">
+            <span class="record-id">Post / post-03</span>
+            <strong id="source-title">Search beyond SQL</strong>
+            <p id="source-content">Add full-text search to a GraphQL API.</p>
+          </div>
+          <div class="record-actions" aria-label="Post actions">
+            <button type="button" id="create-post" class="primary-button">
+              Create
+            </button>
+            <button type="button" id="update-post" disabled>
+              Update
+            </button>
+            <button type="button" id="delete-post" disabled>
+              Delete
+            </button>
+          </div>
+        </div>
+        <ol class="pipeline" aria-label="Indexing pipeline">
+          <li data-stage="0">
+            <span class="node-icon" aria-hidden="true">
+              {}
+            </span>
+            <strong>GraphQL</strong>
+            <span>Post mutation</span>
+          </li>
+          <li data-stage="1">
+            <span class="node-icon" aria-hidden="true">
+              ≋
+            </span>
+            <strong>DynamoDB</strong>
+            <span id="stream-event">Stream event</span>
+          </li>
+          <li data-stage="2">
+            <span class="node-icon" aria-hidden="true">
+              λ
+            </span>
+            <strong>Lambda</strong>
+            <span>Filter + objectID</span>
+          </li>
+          <li data-stage="3">
+            <span class="node-icon" aria-hidden="true">
+              ⌕
+            </span>
+            <strong>Algolia</strong>
+            <span id="index-action">Search index</span>
+          </li>
+        </ol>
+        <div class="operation-output">
+          <span id="operation-label">Indexed payload</span>
+          <pre><code id="indexed-payload">Create a Post to see its indexed fields.</code></pre>
+        </div>
+        <p class="status" id="pipeline-status" role="status">
+          Ready for a model change.
+        </p>
+      </section>
+
+      <section class="query-section" aria-labelledby="query-title">
+        <div class="section-title">
+          <h2 id="query-title">3. Query the index</h2>
+          <span id="index-size" class="file-label">
+            2 records
+          </span>
+        </div>
+        <label class="search-label" for="search-query">
+          Search posts
+        </label>
+        <div class="search-field">
+          <span aria-hidden="true">⌕</span>
+          <input
+            id="search-query"
+            type="search"
+            value="search"
+            autocomplete="off"
+            placeholder="Search indexed fields"
+          />
+        </div>
+        <pre class="query-code"><code id="query-code"></code></pre>
+        <div class="results-heading">
+          <span>hits</span>
+          <output id="hit-count" for="search-query">
+            1 result
+          </output>
+        </div>
+        <div id="search-results" class="search-results"></div>
+      </section>
+      <footer class="demo-note">
+        <p>Architecture replay. Runs in this browser.</p>
+        <details>
+          <summary>About this demo</summary>
+          <p>
+            Field changes rebuild this preview. A deployed transformer applies
+            them to subsequent stream events. Search uses local text matching;
+            Algolia ranking is not simulated.
+          </p>
+        </details>
+      </footer>
+    </main>
+    <script>
+      import '../../lib/demos/graphql-algolia-transformer/client';
+    </script>
+  </body>
+</html>

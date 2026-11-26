@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import SectionPage from '../components/SectionPage.astro';
 export const getStaticPaths = (() =>
-  (['writing', 'projects', 'about'] as const).map((section) => ({
+  (['writing', 'work', 'projects', 'about'] as const).map((section) => ({
     params: { section },
     props: { section },
   }))) satisfies GetStaticPaths;

@@ -6,6 +6,7 @@ import PixelIcon from './PixelIcon.astro';
 import PostList from './PostList.astro';
 import { locales, localePath, translations, type Locale } from '../lib/i18n';
 import { postsForLocale } from '../lib/posts';
+import { projectEntries } from '../lib/portfolio';
 interface Props {
   locale: Locale;
 }
@@ -25,13 +26,17 @@ const alternates = Object.fromEntries(
 >
   <div class="desktop-layout">
     <nav class="desktop-folders" aria-label={t.home}>
-      <a href={localePath(locale, 'writing')}>
+      <a href={localePath(locale, 'work')}>
         <PixelIcon name="folder" size={48} />
-        <span>{t.writing}</span>
+        <span>{t.work}</span>
       </a>
       <a href={localePath(locale, 'projects')}>
         <PixelIcon name="folder" size={48} />
         <span>{t.projects}</span>
+      </a>
+      <a href={localePath(locale, 'writing')}>
+        <PixelIcon name="document" size={42} />
+        <span>{t.writing}</span>
       </a>
       <a href={localePath(locale, 'about')}>
         <PixelIcon name="document" size={42} />
@@ -50,6 +55,20 @@ const alternates = Object.fromEntries(
         </div>
         <Computer />
       </Window>
+      <Window title={t.work} class="work-window">
+        <div class="home-work">
+          <a class="project-folder" href="/work/whistle/">
+            <PixelIcon name="folder" size={46} />
+            <span>Whistle</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p class="work-description">{t.whistleDescription}</p>
+          <p class="work-summary">{t.whistleBusiness}</p>
+          <a class="window-bottom-link" href={localePath(locale, 'work')}>
+            {t.allWork} <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </Window>
       <div class="home-columns">
         <Window title={t.latest} class="writing-window">
           <PostList posts={posts.slice(0, 3)} locale={locale} />
@@ -58,30 +77,16 @@ const alternates = Object.fromEntries(
           </a>
         </Window>
         <Window title={t.projects} class="projects-window">
-          <div class="home-project">
-            <a class="project-folder" href="/projects/guestography/">
-              <PixelIcon name="folder" size={46} />
-              <span>Guestography</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <p class="project-description">{t.guestographyDescription}</p>
-          </div>
-          <div class="home-project">
-            <a class="project-folder" href="/projects/instamosaic/">
-              <PixelIcon name="folder" size={46} />
-              <span>InstaMosaic</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <p class="project-description">{t.instamosaicDescription}</p>
-          </div>
-          <div class="home-project">
-            <a class="project-folder" href="/projects/facereel/">
-              <PixelIcon name="folder" size={46} />
-              <span>FaceReel</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <p class="project-description">{t.faceReelDescription}</p>
-          </div>
+          {projectEntries.map((project) => (
+            <div class="home-project">
+              <a class="project-folder" href={project.href}>
+                <PixelIcon name="folder" size={46} />
+                <span>{project.title}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <p class="project-description">{t[project.descriptionKey]}</p>
+            </div>
+          ))}
         </Window>
       </div>
     </div>

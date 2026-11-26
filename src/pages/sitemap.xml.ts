@@ -2,17 +2,19 @@ import type { APIRoute } from 'astro';
 import { locales, localePath, htmlLanguage } from '../lib/i18n';
 import { publishedPosts, postPath } from '../lib/posts';
 import { escapeXml } from '../lib/feed';
+import { projectEntries } from '../lib/portfolio';
 
 export const GET: APIRoute = async ({ site }) => {
   if (!site) throw new Error('The site URL is required to build the sitemap.');
   const posts = await publishedPosts();
   const groups = [
-    ...['', 'writing', 'projects', 'about'].map((path) =>
+    ...['', 'writing', 'work', 'projects', 'about'].map((path) =>
       locales.map((lang) => ({ lang, path: localePath(lang, path) })),
     ),
-    [{ lang: 'en' as const, path: '/projects/instamosaic/' }],
-    [{ lang: 'en' as const, path: '/projects/facereel/' }],
-    [{ lang: 'en' as const, path: '/projects/guestography/' }],
+    ...projectEntries.map((project) => [
+      { lang: 'en' as const, path: project.href },
+    ]),
+    [{ lang: 'en' as const, path: '/work/whistle/' }],
     ...[...new Set(posts.map((post) => post.data.translationKey))].map((key) =>
       posts
         .filter((post) => post.data.translationKey === key)

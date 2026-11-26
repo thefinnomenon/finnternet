@@ -611,6 +611,22 @@
     padding-top: var(--space-6);
     border-top: 1px solid var(--rule);
   }
+  .home-work {
+    max-width: 860px;
+  }
+  .home-work .project-folder {
+    max-width: 520px;
+  }
+  .work-description {
+    font-size: 1.08rem;
+    line-height: 1.6;
+  }
+  .work-summary {
+    margin-top: var(--space-3);
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
   .project-folder span:last-child {
     margin-left: auto;
   }

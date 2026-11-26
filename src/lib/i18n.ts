@@ -12,6 +12,17 @@ const en = {
   home: 'Home',
   navigation: 'Navigation',
   writing: 'Writing',
+  work: 'Work',
+  workIntro: 'Products and businesses I’ve built and worked on.',
+  allWork: 'View work',
+  whistleDescription:
+    'A live sports prediction game where fans answer questions while watching.',
+  whistleBusiness:
+    'A sports business spanning a mobile app, live game systems, and backend services.',
+  graphqlAlgoliaDescription:
+    'Add search indexing to an AWS Amplify GraphQL API with one directive.',
+  creatorKitchenDescription:
+    'Write, preview, and publish content on your own website.',
   projects: 'Projects',
   about: 'About',
   welcome: 'Welcome to Finnternet',
@@ -64,6 +75,17 @@ export const translations = {
     home: 'Inicio',
     navigation: 'Navegación',
     writing: 'Artículos',
+    work: 'Trabajo',
+    workIntro: 'Productos y negocios que he creado y en los que he trabajado.',
+    allWork: 'Ver trabajo',
+    whistleDescription:
+      'Un juego de predicciones deportivas en directo para responder mientras ves el partido.',
+    whistleBusiness:
+      'Un negocio deportivo con una app móvil, sistemas de juego en directo y servicios de backend.',
+    graphqlAlgoliaDescription:
+      'Añade búsquedas a una API GraphQL de AWS Amplify con una directiva.',
+    creatorKitchenDescription:
+      'Escribe, previsualiza y publica contenido en tu propio sitio web.',
     projects: 'Proyectos',
     about: 'Sobre mí',
     welcome: 'Bienvenido a Finnternet',
@@ -111,6 +133,17 @@ export const translations = {
     home: 'Início',
     navigation: 'Navegação',
     writing: 'Artigos',
+    work: 'Trabalho',
+    workIntro: 'Produtos e negócios que criei e nos quais trabalhei.',
+    allWork: 'Ver trabalho',
+    whistleDescription:
+      'Um jogo de palpites esportivos ao vivo para responder enquanto você assiste.',
+    whistleBusiness:
+      'Um negócio esportivo com aplicativo móvel, sistemas de jogo ao vivo e serviços de backend.',
+    graphqlAlgoliaDescription:
+      'Adicione busca a uma API GraphQL do AWS Amplify com uma diretiva.',
+    creatorKitchenDescription:
+      'Escreva, visualize e publique conteúdo no seu próprio site.',
     projects: 'Projetos',
     about: 'Sobre mim',
     welcome: 'Bem-vindo ao Finnternet',
@@ -159,6 +192,17 @@ export const translations = {
     home: 'Home',
     navigation: 'Navigazione',
     writing: 'Articoli',
+    work: 'Lavoro',
+    workIntro: 'Prodotti e attività che ho creato e a cui ho lavorato.',
+    allWork: 'Vedi il lavoro',
+    whistleDescription:
+      'Un gioco di pronostici sportivi in diretta a cui partecipare mentre guardi la partita.',
+    whistleBusiness:
+      'Un’attività sportiva con app mobile, sistemi di gioco in diretta e servizi backend.',
+    graphqlAlgoliaDescription:
+      'Aggiungi la ricerca a un’API GraphQL di AWS Amplify con una direttiva.',
+    creatorKitchenDescription:
+      'Scrivi, visualizza in anteprima e pubblica contenuti sul tuo sito.',
     projects: 'Progetti',
     about: 'Chi sono',
     welcome: 'Benvenuto su Finnternet',

@@ -6,7 +6,7 @@ export const getStaticPaths = (() =>
   locales
     .filter((locale) => locale !== 'en')
     .flatMap((locale) =>
-      (['writing', 'projects', 'about'] as const).map((section) => ({
+      (['writing', 'work', 'projects', 'about'] as const).map((section) => ({
         params: { lang: locale, section },
         props: { locale, section },
       })),

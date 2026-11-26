@@ -13,7 +13,7 @@
     "preview": "astro preview --host 127.0.0.1",
     "deploy": "wrangler deploy",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test src/lib/fmail.test.ts",
+    "test": "node --experimental-strip-types --test src/lib/fmail.test.ts src/lib/demos/*/*.test.ts",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

@@ -40,9 +40,15 @@ Use the same `translationKey` across translations, with a language-specific `pat
 
 The ten original English travel posts are migrated from Finnternet's public Notion pages, including their original dates, captions, links, 87 photos, and 10 YouTube embeds. The original photos live under `src/assets/travel/`; the site does not depend on Notion to serve articles or photos. The migration manifest is `src/data/travel-migration.json`.
 
-Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings. Guestography, InstaMosaic, and FaceReel also feature in the homepage's Projects window.
+Portfolio entries live under `src/pages/projects/` and appear in the localized Projects listings and the homepage's Projects window. Business case studies live under `src/pages/work/`. Whistle is featured in the homepage's Work window, with localized Work indexes and shared navigation.
 
 ## Portfolio demos
+
+Whistle presents the original mobile sports-prediction flow with local game fixtures, lobbies, questions, weighted scoring, and a leaderboard. Its business page describes the product and engineering scope without invented commercial metrics or employment dates.
+
+GraphQL Algolia Transformer illustrates an Amplify schema directive, DynamoDB stream events, Lambda indexing, field selection, and generated search queries. Its diagram and search use local records and do not provision AWS or connect to Algolia.
+
+CreatorKitchen replays the original content editor, formatting and media tools, preview, and publishing flow. Draft edits and published snapshots stay local to the browser. The original Amplify authentication, uploads, and publishing services are not called.
 
 The InstaMosaic page pairs a resizable product window with project details, completion date, source link, grouped tech stack, and functionality. Its isolated iframe uses the original product styling with preset interactions and precomputed image and video exports. It does not call the original backend, process user uploads, send email, or start a checkout. The former `/previews/instamosaic/` URL forwards to `/projects/instamosaic/`.
 
@@ -51,6 +57,8 @@ FaceReel uses the same container and project details, with its original form and
 Guestography replays event creation, gallery browsing, and a guest upload with preset details and existing example photos. Its original Tailwind styles are compiled into an isolated stylesheet. Static QR cards come from the original renderer and point back to the portfolio gallery. Only the gallery-ready email is delivered to Fmail; photos and QR images load when their screen or email is opened. Checkout, uploads, and email remain local simulations.
 
 Fmail is a browser-local inbox shared across the site. Each notification retains its project's sender and subject. Demo notifications survive navigation, repeated runs replace previous notifications, and opening an email removes it from the inbox. Email bodies have no navigation links. The mailbox tests run with `npm test`.
+
+The shared iframe registry is broader than the Fmail project registry. Whistle, GraphQL Algolia Transformer, and CreatorKitchen receive theme and resize support without generating mail. Demo model tests run alongside mailbox tests with `npm test`.
 
 ## Images and video
 

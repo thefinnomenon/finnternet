@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectLayout from '../../components/ProjectLayout.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import ProjectDetails from '../../components/ProjectDetails.astro';
+import Window from '../../components/Window.astro';
+
+const stack = [
+  {
+    label: 'Mobile app',
+    tools: 'Expo, React Native, React, TypeScript, NativeWind, Expo Router',
+  },
+  {
+    label: 'Backend & data',
+    tools: 'Node.js, Express, Firebase Auth, Firestore, Firebase Admin',
+  },
+  {
+    label: 'Live game engine',
+    tools:
+      'NBA live feeds, ESPN NFL feeds, EntitySport, question generation, weighted scoring',
+  },
+  {
+    label: 'Delivery & operations',
+    tools:
+      'FCM, native iOS notification extensions, Android notifications, Expo EAS, Sentry, Mixpanel',
+  },
+];
+const features = [
+  'Browse NBA and NFL games, join a game lobby and compete on a shared leaderboard.',
+  'Answer short predictions about the next play, a player or the rest of a period.',
+  'Generate and resolve questions from sports events, with more points for questions that have more answer choices.',
+  'Receive actionable push notifications and answer from native notification interfaces.',
+  'Run featured competitions with participation thresholds, eligibility checks and tied-winner handling.',
+  'Use administration, analytics and stored game replays to inspect question timing and resolution.',
+];
+---
+
+<Base
+  title="Whistle"
+  description="A mobile sports prediction business built around the next play."
+  locale="en"
+  path="work/whistle"
+  alternates={{ en: '/work/whistle/' }}
+>
+  <ProjectLayout>
+    <div slot="details" class="whistle-details">
+      <ProjectDetails
+        title="Whistle"
+        description="A mobile sports prediction business that turns watching NBA and NFL games into a shared competition, one play at a time."
+        website="https://whistlesports.net/"
+        inactive
+        github="https://github.com/thefinnomenon/whistle-public"
+        stack={stack}
+        features={features}
+      />
+      <Window title="Building Whistle">
+        <div class="whistle-story">
+          <p>
+            The product centered on a short loop: join a game, predict what
+            happens next and move up the leaderboard. Featured competitions
+            added a prize pool and explicit eligibility rules.
+          </p>
+          <p>
+            My work covered the mobile app, backend, event-driven question
+            engine, native notification flows and administration tools. The
+            engineering challenge was keeping predictions useful as live feeds
+            arrived, questions closed and results changed.
+          </p>
+        </div>
+      </Window>
+    </div>
+    <ProjectDemo slot="demo" project="whistle" />
+  </ProjectLayout>
+</Base>
+<style>
+  .whistle-details {
+    display: grid;
+    gap: 20px;
+  }
+  .whistle-story {
+    display: grid;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+</style>
