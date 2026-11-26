@@ -64,7 +64,9 @@ const completionDate = completedOn
           <dt>GitHub</dt>
           <dd>
             {github ? (
-              <a href={github}>Source code</a>
+              <a href={github} target="_blank" rel="noopener noreferrer">
+                Source code
+              </a>
             ) : (
               <span class="project-private">Not public yet</span>
             )}
